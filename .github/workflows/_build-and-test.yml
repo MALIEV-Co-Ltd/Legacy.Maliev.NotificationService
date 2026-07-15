@@ -32,7 +32,7 @@ jobs:
           path: .dependencies/Maliev.MessagingContracts
           persist-credentials: false
       - name: Validate .NET solution
-        uses: MALIEV-Co-Ltd/Legacy.Maliev.Workflows/actions/dotnet-validate@f7bafd4ba7e8e6e92a0b7d853150f3ca60e1eae6
+        uses: MALIEV-Co-Ltd/Legacy.Maliev.Workflows/actions/dotnet-validate@6017816fa67f369d785ed30794f002cfd6299af7
         with:
           solution: Legacy.Maliev.NotificationService.slnx
           use-local-maliev-dependencies: 'true'
