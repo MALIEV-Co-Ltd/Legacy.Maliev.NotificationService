@@ -7,6 +7,8 @@ Temporary .NET 10 compatibility service extracted from `maliev-web`. It preserve
 the legacy `Maliev.EmailService` `/Emails` route contract while the new MALIEV
 notification stack is developed independently.
 
+Trusted migrated services use the JSON endpoint instead of the legacy query-string routes, keeping recipient addresses, subjects, and message bodies out of URLs and access logs.
+
 ## Architecture
 
 The service uses clean dependency direction: `Api` calls `Application`, provider-independent
@@ -31,6 +33,7 @@ binding, not from source.
 | Manufacturing plaintext email | `POST` | `/Emails/manufacturing-plaintext` | Authenticated |
 | No-reply plaintext email | `POST` | `/Emails/noreply-plaintext` | Authenticated |
 | Support plaintext email | `POST` | `/Emails/support-plaintext` | Authenticated |
+| Transactional JSON email | `POST` | `/notifications/v1/email/{channel}` | `legacy.notifications.send` permission |
 | Scalar UI | `GET` | `/emails/scalar` | Anonymous |
 
 ## Runtime boundaries
@@ -42,6 +45,7 @@ binding, not from source.
 - Secrets: `Brevo:ApiKey` from `maliev-legacy-secrets`
 - Preserved request fields: `to`, `subject`, `body`, `replyTo`, `cc`, `bcc`, `files`
 - Preserved combined attachment limit: 200 MB
+- Modern JSON request fields: `to`, `subject`, `body`, `replyTo`, `cc`, `bcc`; attachments remain on the compatibility routes until they can be referenced through FileService rather than embedded in JSON
 
 Deployment is intentionally validation-only until a dedicated
 `legacy-maliev-notification` Workload Identity Federation provider and
