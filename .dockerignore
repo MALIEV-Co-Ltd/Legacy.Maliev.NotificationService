@@ -1,0 +1,13 @@
+.git
+.github
+.vs
+.idea
+**/bin
+**/obj
+TestResults
+*.user
+*.suo
+*.pfx
+*.key
+*.pem
+.env

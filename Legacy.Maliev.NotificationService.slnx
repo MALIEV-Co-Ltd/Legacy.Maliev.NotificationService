@@ -1,0 +1,7 @@
+<Solution>
+  <Project Path="Legacy.Maliev.NotificationService.Api/Legacy.Maliev.NotificationService.Api.csproj" />
+  <Project Path="Legacy.Maliev.NotificationService.Application/Legacy.Maliev.NotificationService.Application.csproj" />
+  <Project Path="Legacy.Maliev.NotificationService.Data/Legacy.Maliev.NotificationService.Data.csproj" />
+  <Project Path="Legacy.Maliev.NotificationService.Domain/Legacy.Maliev.NotificationService.Domain.csproj" />
+  <Project Path="Legacy.Maliev.NotificationService.Tests/Legacy.Maliev.NotificationService.Tests.csproj" />
+</Solution>
