@@ -4,10 +4,10 @@ namespace Legacy.Maliev.NotificationService.Api.Models;
 
 /// <summary>JSON request for one provider-independent email notification.</summary>
 public sealed record SendEmailNotificationRequest(
-    [property: Required, EmailAddress] string To,
-    [property: Required, StringLength(200)] string Subject,
-    [property: Required, StringLength(100_000)] string Body,
-    [property: EmailAddress] string? ReplyTo,
+    [param: Required, EmailAddress] string To,
+    [param: Required, StringLength(200)] string Subject,
+    [param: Required, StringLength(100_000)] string Body,
+    [param: EmailAddress] string? ReplyTo,
     IReadOnlyList<string>? Cc,
     IReadOnlyList<string>? Bcc);
 
