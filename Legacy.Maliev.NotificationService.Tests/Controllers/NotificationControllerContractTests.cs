@@ -1,5 +1,6 @@
 using System.Net;
 using System.Reflection;
+using System.ComponentModel.DataAnnotations;
 using Legacy.Maliev.NotificationService.Api.Authorization;
 using Legacy.Maliev.NotificationService.Api.Controllers;
 using Legacy.Maliev.NotificationService.Api.Models;
@@ -25,6 +26,25 @@ public sealed class NotificationControllerContractTests
         Assert.Equal(NotificationPermissions.Send, permission.Permission);
         Assert.False(permission.RequireLiveCheck);
         Assert.NotNull(action.GetParameters()[1].GetCustomAttribute<FromBodyAttribute>());
+    }
+
+    [Fact]
+    public void JsonRequest_DefinesValidationOnPrimaryConstructorParametersForAspNetCore10()
+    {
+        var request = typeof(SendEmailNotificationRequest);
+        var constructor = Assert.Single(request.GetConstructors());
+        var parameters = constructor.GetParameters().ToDictionary(
+            parameter => parameter.Name!,
+            StringComparer.OrdinalIgnoreCase);
+
+        Assert.IsType<RequiredAttribute>(Assert.Single(parameters["To"].GetCustomAttributes<RequiredAttribute>()));
+        Assert.IsType<EmailAddressAttribute>(Assert.Single(parameters["To"].GetCustomAttributes<EmailAddressAttribute>()));
+        Assert.IsType<RequiredAttribute>(Assert.Single(parameters["Subject"].GetCustomAttributes<RequiredAttribute>()));
+        Assert.IsType<RequiredAttribute>(Assert.Single(parameters["Body"].GetCustomAttributes<RequiredAttribute>()));
+        Assert.IsType<EmailAddressAttribute>(Assert.Single(parameters["ReplyTo"].GetCustomAttributes<EmailAddressAttribute>()));
+        Assert.All(
+            request.GetProperties(),
+            property => Assert.Empty(property.GetCustomAttributes<ValidationAttribute>()));
     }
 
     [Fact]
