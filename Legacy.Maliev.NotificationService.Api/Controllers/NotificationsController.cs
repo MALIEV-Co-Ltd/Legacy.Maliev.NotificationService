@@ -20,7 +20,7 @@ public sealed class NotificationsController(INotificationService notificationSer
     /// <param name="cancellationToken">Request cancellation.</param>
     /// <returns>The provider message identifier when available.</returns>
     [HttpPost("{channel}")]
-    [RequirePermission(NotificationPermissions.Send, RequireLiveCheck = true)]
+    [RequirePermission(NotificationPermissions.Send)]
     [ProducesResponseType<SendEmailNotificationResponse>(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]

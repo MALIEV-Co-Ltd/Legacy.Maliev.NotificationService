@@ -23,6 +23,7 @@ public sealed class NotificationControllerContractTests
         var action = controller.GetMethod(nameof(NotificationsController.SendEmailAsync))!;
         var permission = Assert.Single(action.GetCustomAttributes<RequirePermissionAttribute>());
         Assert.Equal(NotificationPermissions.Send, permission.Permission);
+        Assert.False(permission.RequireLiveCheck);
         Assert.NotNull(action.GetParameters()[1].GetCustomAttribute<FromBodyAttribute>());
     }
 
