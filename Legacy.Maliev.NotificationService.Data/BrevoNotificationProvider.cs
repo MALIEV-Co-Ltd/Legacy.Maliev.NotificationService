@@ -1,28 +1,19 @@
 using System.Net;
-using brevo_csharp.Api;
-using brevo_csharp.Client;
-using brevo_csharp.Model;
 using Legacy.Maliev.NotificationService.Application.Interfaces;
 using Legacy.Maliev.NotificationService.Domain;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
 namespace Legacy.Maliev.NotificationService.Data;
 
 /// <summary>Sends legacy notifications through Brevo transactional email.</summary>
-public sealed class BrevoNotificationProvider : INotificationProvider
+public sealed class BrevoNotificationProvider(
+    IBrevoNotificationTransport transport,
+    IOptions<BrevoNotificationOptions> options,
+    TimeProvider timeProvider,
+    ILogger<BrevoNotificationProvider> logger) : INotificationProvider
 {
-    private readonly BrevoNotificationOptions options;
-    private readonly TransactionalEmailsApi transactionalEmailsApi;
-
-    /// <summary>Initializes a new instance of the <see cref="BrevoNotificationProvider"/> class.</summary>
-    public BrevoNotificationProvider(IOptions<BrevoNotificationOptions> options)
-    {
-        this.options = options.Value;
-
-        var configuration = new brevo_csharp.Client.Configuration();
-        configuration.ApiKey["api-key"] = this.options.ApiKey;
-        this.transactionalEmailsApi = new TransactionalEmailsApi(configuration);
-    }
+    private readonly BrevoNotificationOptions options = options.Value;
 
     /// <inheritdoc />
     public async Task<NotificationSendResult> SendAsync(
@@ -35,50 +26,101 @@ public sealed class BrevoNotificationProvider : INotificationProvider
             return new NotificationSendResult(HttpStatusCode.BadRequest);
         }
 
-        var email = new SendSmtpEmail(
-            sender: new SendSmtpEmailSender(name: sender.DisplayName, email: sender.Address),
-            to: new List<SendSmtpEmailTo> { new(request.To) },
-            subject: request.Subject,
-            htmlContent: request.Body)
+        var transportRequest = new BrevoTransportRequest(
+            channel,
+            sender,
+            request,
+            Guid.NewGuid().ToString("D"));
+        var startedAt = timeProvider.GetTimestamp();
+        for (var attempt = 0; ; attempt++)
         {
-            ReplyTo = string.IsNullOrWhiteSpace(request.ReplyTo) ? null : new SendSmtpEmailReplyTo(request.ReplyTo),
-            Attachment = ConvertAttachments(request.Attachments),
-        };
-
-        if (request.Cc is { Count: > 0 })
-        {
-            email.Cc = request.Cc
-                .Where(value => !string.IsNullOrWhiteSpace(value))
-                .Select(value => new SendSmtpEmailCc(value))
-                .ToList();
+            using var attemptTimeout = new CancellationTokenSource(
+                TimeSpan.FromMilliseconds(this.options.AttemptTimeoutMilliseconds),
+                timeProvider);
+            using var attemptCancellation = CancellationTokenSource.CreateLinkedTokenSource(
+                cancellationToken,
+                attemptTimeout.Token);
+            try
+            {
+                var result = await transport.SendAsync(transportRequest, attemptCancellation.Token);
+                logger.LogInformation(
+                    "Brevo delivery completed for channel {Channel} after {AttemptCount} attempt(s) in {ElapsedMilliseconds} ms.",
+                    channel,
+                    attempt + 1,
+                    timeProvider.GetElapsedTime(startedAt).TotalMilliseconds);
+                return new NotificationSendResult(
+                    result.MessageId is null ? HttpStatusCode.BadRequest : HttpStatusCode.OK,
+                    result.MessageId);
+            }
+            catch (BrevoTransportException exception) when (
+                attempt < this.options.MaxRetryAttempts && IsTransient(exception.StatusCode))
+            {
+                logger.LogWarning(
+                    "Brevo transient failure for channel {Channel} with status {StatusCode}; retrying attempt {Attempt}.",
+                    channel,
+                    (int)exception.StatusCode,
+                    attempt + 2);
+                await DelayBeforeRetryAsync(
+                    this.options,
+                    exception.RetryAfter,
+                    timeProvider,
+                    cancellationToken);
+            }
+            catch (HttpRequestException) when (attempt < this.options.MaxRetryAttempts)
+            {
+                logger.LogWarning(
+                    "Brevo transport failure for channel {Channel}; retrying attempt {Attempt}.",
+                    channel,
+                    attempt + 2);
+                await DelayBeforeRetryAsync(this.options, null, timeProvider, cancellationToken);
+            }
+            catch (HttpRequestException)
+            {
+                throw new BrevoTransportException(HttpStatusCode.BadGateway);
+            }
+            catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
+            {
+                throw;
+            }
+            catch (OperationCanceledException) when (
+                attemptTimeout.IsCancellationRequested && attempt < this.options.MaxRetryAttempts)
+            {
+                logger.LogWarning(
+                    "Brevo attempt timed out for channel {Channel}; retrying attempt {Attempt}.",
+                    channel,
+                    attempt + 2);
+                await DelayBeforeRetryAsync(this.options, null, timeProvider, cancellationToken);
+            }
+            catch (OperationCanceledException exception) when (attemptTimeout.IsCancellationRequested)
+            {
+                throw new TimeoutException("Brevo notification delivery timed out.", exception);
+            }
         }
-
-        if (request.Bcc is { Count: > 0 })
-        {
-            email.Bcc = request.Bcc
-                .Where(value => !string.IsNullOrWhiteSpace(value))
-                .Select(value => new SendSmtpEmailBcc(value))
-                .ToList();
-        }
-
-        cancellationToken.ThrowIfCancellationRequested();
-        var result = await this.transactionalEmailsApi.SendTransacEmailAsync(email);
-        return new NotificationSendResult(
-            result.MessageId is null ? HttpStatusCode.BadRequest : HttpStatusCode.OK,
-            result.MessageId);
     }
 
-    private static List<SendSmtpEmailAttachment>? ConvertAttachments(IReadOnlyList<NotificationAttachment>? attachments)
+    private static bool IsTransient(HttpStatusCode statusCode) =>
+        statusCode is HttpStatusCode.RequestTimeout or HttpStatusCode.TooManyRequests ||
+        (int)statusCode >= 500;
+
+    private static Task DelayBeforeRetryAsync(
+        BrevoNotificationOptions options,
+        TimeSpan? providerDelay,
+        TimeProvider timeProvider,
+        CancellationToken cancellationToken)
     {
-        if (attachments is null || attachments.Count == 0)
+        var configuredDelay = TimeSpan.FromMilliseconds(options.RetryDelayMilliseconds);
+        var maximumDelay = TimeSpan.FromMilliseconds(options.MaxRetryDelayMilliseconds);
+        var delay = providerDelay is { } requestedDelay && requestedDelay > configuredDelay
+            ? requestedDelay
+            : configuredDelay;
+        if (delay > maximumDelay)
         {
-            return null;
+            delay = maximumDelay;
         }
 
-        return attachments
-            .Select(attachment => new SendSmtpEmailAttachment(
-                content: attachment.Content,
-                name: attachment.FileName))
-            .ToList();
+        return Task.Delay(
+            delay,
+            timeProvider,
+            cancellationToken);
     }
 }

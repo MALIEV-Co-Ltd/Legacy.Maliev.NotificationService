@@ -33,6 +33,9 @@ else
         .ValidateDataAnnotations()
         .Validate(options => HasAllSenders(options.Senders), "Brevo senders must include Info, Manufacturing, NoReply and Support.")
         .ValidateOnStart();
+    builder.Services.AddSingleton(TimeProvider.System);
+    builder.Services.AddHttpClient<IBrevoNotificationTransport, BrevoNotificationTransport>(client =>
+        client.BaseAddress = new Uri("https://api.brevo.com/v3/"));
     builder.Services.AddScoped<INotificationProvider, BrevoNotificationProvider>();
 }
 

@@ -41,11 +41,17 @@ binding, not from source.
 - Legacy route prefix: `/Emails`
 - Scalar: `/emails/scalar`
 - Provider: Brevo transactional email
+- Delivery resilience: stable idempotency key, 10-second attempt timeout, and at most two retries for network faults, HTTP 408/429, or provider 5xx responses
 - Database: none owned by this service
 - Secrets: `Brevo:ApiKey` from `maliev-legacy-secrets`
 - Preserved request fields: `to`, `subject`, `body`, `replyTo`, `cc`, `bcc`, `files`
 - Preserved combined attachment limit: 200 MB
 - Modern JSON request fields: `to`, `subject`, `body`, `replyTo`, `cc`, `bcc`; attachments remain on the compatibility routes until they can be referenced through FileService rather than embedded in JSON
+
+Provider diagnostics record only the channel, provider status/failure type, attempt count,
+and duration. Recipient addresses, subjects, bodies, attachments, and API keys are never
+written to application logs. Brevo `Retry-After` is honored up to the configured five-second
+cap, and caller cancellation stops delivery without another attempt.
 
 Deployment is intentionally validation-only until a dedicated
 `legacy-maliev-notification` Workload Identity Federation provider and

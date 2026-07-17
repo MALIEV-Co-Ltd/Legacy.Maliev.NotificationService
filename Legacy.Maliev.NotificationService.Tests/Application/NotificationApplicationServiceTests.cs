@@ -2,6 +2,7 @@ using System.Net;
 using Legacy.Maliev.NotificationService.Application.Interfaces;
 using Legacy.Maliev.NotificationService.Application.Services;
 using Legacy.Maliev.NotificationService.Domain;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using Moq;
 
@@ -80,5 +81,102 @@ public sealed class NotificationApplicationServiceTests
             CancellationToken.None);
 
         Assert.Equal(HttpStatusCode.BadGateway, result.StatusCode);
+    }
+
+    [Fact]
+    public async Task SendAsync_WhenCallerCancels_PropagatesCancellation()
+    {
+        using var cancellation = new CancellationTokenSource();
+        cancellation.Cancel();
+        var provider = new Mock<INotificationProvider>(MockBehavior.Strict);
+        provider
+            .Setup(item => item.SendAsync(
+                It.IsAny<EmailChannel>(),
+                It.IsAny<NotificationSendRequest>(),
+                cancellation.Token))
+            .ThrowsAsync(new OperationCanceledException(cancellation.Token));
+        var service = new NotificationApplicationService(
+            provider.Object,
+            NullLogger<NotificationApplicationService>.Instance);
+
+        await Assert.ThrowsAnyAsync<OperationCanceledException>(() => service.SendAsync(
+            EmailChannel.Info,
+            CreateRequest(),
+            cancellation.Token));
+    }
+
+    [Fact]
+    public async Task SendAsync_WhenProviderCancelsWithoutCallerCancellation_ReturnsBadGateway()
+    {
+        var provider = new Mock<INotificationProvider>(MockBehavior.Strict);
+        provider
+            .Setup(item => item.SendAsync(
+                It.IsAny<EmailChannel>(),
+                It.IsAny<NotificationSendRequest>(),
+                CancellationToken.None))
+            .ThrowsAsync(new OperationCanceledException("provider timeout"));
+        var service = new NotificationApplicationService(
+            provider.Object,
+            NullLogger<NotificationApplicationService>.Instance);
+
+        var result = await service.SendAsync(
+            EmailChannel.Info,
+            CreateRequest(),
+            CancellationToken.None);
+
+        Assert.Equal(HttpStatusCode.BadGateway, result.StatusCode);
+    }
+
+    [Fact]
+    public async Task SendAsync_WhenProviderThrows_DoesNotLogProviderMessageOrCustomerData()
+    {
+        var provider = new Mock<INotificationProvider>(MockBehavior.Strict);
+        provider
+            .Setup(item => item.SendAsync(It.IsAny<EmailChannel>(), It.IsAny<NotificationSendRequest>(), It.IsAny<CancellationToken>()))
+            .ThrowsAsync(new InvalidOperationException("customer@example.com api-key-secret"));
+        var logger = new RecordingLogger<NotificationApplicationService>();
+        var service = new NotificationApplicationService(provider.Object, logger);
+
+        await service.SendAsync(
+            EmailChannel.Info,
+            new NotificationSendRequest
+            {
+                To = "customer@example.com",
+                Subject = "Subject",
+                Body = "Body",
+            },
+            CancellationToken.None);
+
+        var log = Assert.Single(logger.Messages);
+        Assert.Contains(nameof(InvalidOperationException), log, StringComparison.Ordinal);
+        Assert.DoesNotContain("customer@example.com", log, StringComparison.Ordinal);
+        Assert.DoesNotContain("api-key-secret", log, StringComparison.Ordinal);
+    }
+
+    private static NotificationSendRequest CreateRequest() => new()
+    {
+        To = "customer@example.com",
+        Subject = "Subject",
+        Body = "Body",
+    };
+
+    private sealed class RecordingLogger<T> : ILogger<T>
+    {
+        public List<string> Messages { get; } = [];
+
+        public IDisposable? BeginScope<TState>(TState state)
+            where TState : notnull => null;
+
+        public bool IsEnabled(LogLevel logLevel) => true;
+
+        public void Log<TState>(
+            LogLevel logLevel,
+            EventId eventId,
+            TState state,
+            Exception? exception,
+            Func<TState, Exception?, string> formatter)
+        {
+            this.Messages.Add(formatter(state, exception) + exception?.ToString());
+        }
     }
 }
