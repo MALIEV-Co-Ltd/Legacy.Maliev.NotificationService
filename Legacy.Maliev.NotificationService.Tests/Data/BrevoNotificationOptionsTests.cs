@@ -37,5 +37,9 @@ public sealed class BrevoNotificationOptionsTests
         Assert.Equal("test-key", options.ApiKey);
         Assert.Equal("info@example.com", options.Senders[EmailChannel.Info].Address);
         Assert.Equal("Support", options.Senders[EmailChannel.Support].DisplayName);
+        Assert.Equal(2, options.MaxRetryAttempts);
+        Assert.Equal(200, options.RetryDelayMilliseconds);
+        Assert.Equal(5000, options.MaxRetryDelayMilliseconds);
+        Assert.Equal(10000, options.AttemptTimeoutMilliseconds);
     }
 }

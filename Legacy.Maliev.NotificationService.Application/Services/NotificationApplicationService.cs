@@ -36,7 +36,10 @@ public sealed class NotificationApplicationService(
         }
         catch (Exception exception)
         {
-            logger.LogError(exception, "Notification provider failed for channel {Channel}.", channel);
+            logger.LogError(
+                "Notification provider failed for channel {Channel} with failure type {FailureType}.",
+                channel,
+                exception.GetType().Name);
             return new NotificationSendResult(HttpStatusCode.BadGateway);
         }
     }
