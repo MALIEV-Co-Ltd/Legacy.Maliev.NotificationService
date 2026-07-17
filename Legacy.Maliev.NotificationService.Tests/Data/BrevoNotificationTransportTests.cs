@@ -3,6 +3,7 @@ using System.Text;
 using Legacy.Maliev.NotificationService.Data;
 using Legacy.Maliev.NotificationService.Domain;
 using Microsoft.Extensions.Options;
+using Microsoft.Extensions.Time.Testing;
 
 namespace Legacy.Maliev.NotificationService.Tests.Data;
 
@@ -68,11 +69,34 @@ public sealed class BrevoNotificationTransportTests
         Assert.DoesNotContain("customer@example.com", exception.Message, StringComparison.Ordinal);
     }
 
-    private static BrevoNotificationTransport CreateTransport(HttpMessageHandler handler)
+    [Fact]
+    public async Task SendAsync_WhenRetryAfterUsesDate_ComputesDelayFromInjectedClock()
+    {
+        var timeProvider = new FakeTimeProvider();
+        var response = new HttpResponseMessage(HttpStatusCode.ServiceUnavailable);
+        response.Headers.RetryAfter = new System.Net.Http.Headers.RetryConditionHeaderValue(
+            timeProvider.GetUtcNow().AddSeconds(3));
+        var transport = CreateTransport(new RecordingHandler(response), timeProvider);
+
+        var exception = await Assert.ThrowsAsync<BrevoTransportException>(() => transport.SendAsync(
+            new BrevoTransportRequest(
+                EmailChannel.Info,
+                new BrevoSenderOptions { Address = "info@example.com", DisplayName = "Info" },
+                new NotificationSendRequest { To = "customer@example.com", Subject = "Subject", Body = "Body" },
+                "idempotency-key"),
+            CancellationToken.None));
+
+        Assert.Equal(TimeSpan.FromSeconds(3), exception.RetryAfter);
+    }
+
+    private static BrevoNotificationTransport CreateTransport(
+        HttpMessageHandler handler,
+        TimeProvider? timeProvider = null)
     {
         return new BrevoNotificationTransport(
             new HttpClient(handler) { BaseAddress = new Uri("https://api.brevo.com/v3/") },
-            Options.Create(new BrevoNotificationOptions { ApiKey = "test-api-key" }));
+            Options.Create(new BrevoNotificationOptions { ApiKey = "test-api-key" }),
+            timeProvider ?? TimeProvider.System);
     }
 
     private sealed class RecordingHandler(HttpResponseMessage response) : HttpMessageHandler

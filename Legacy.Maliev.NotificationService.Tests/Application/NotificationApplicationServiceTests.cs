@@ -84,6 +84,50 @@ public sealed class NotificationApplicationServiceTests
     }
 
     [Fact]
+    public async Task SendAsync_WhenCallerCancels_PropagatesCancellation()
+    {
+        using var cancellation = new CancellationTokenSource();
+        cancellation.Cancel();
+        var provider = new Mock<INotificationProvider>(MockBehavior.Strict);
+        provider
+            .Setup(item => item.SendAsync(
+                It.IsAny<EmailChannel>(),
+                It.IsAny<NotificationSendRequest>(),
+                cancellation.Token))
+            .ThrowsAsync(new OperationCanceledException(cancellation.Token));
+        var service = new NotificationApplicationService(
+            provider.Object,
+            NullLogger<NotificationApplicationService>.Instance);
+
+        await Assert.ThrowsAnyAsync<OperationCanceledException>(() => service.SendAsync(
+            EmailChannel.Info,
+            CreateRequest(),
+            cancellation.Token));
+    }
+
+    [Fact]
+    public async Task SendAsync_WhenProviderCancelsWithoutCallerCancellation_ReturnsBadGateway()
+    {
+        var provider = new Mock<INotificationProvider>(MockBehavior.Strict);
+        provider
+            .Setup(item => item.SendAsync(
+                It.IsAny<EmailChannel>(),
+                It.IsAny<NotificationSendRequest>(),
+                CancellationToken.None))
+            .ThrowsAsync(new OperationCanceledException("provider timeout"));
+        var service = new NotificationApplicationService(
+            provider.Object,
+            NullLogger<NotificationApplicationService>.Instance);
+
+        var result = await service.SendAsync(
+            EmailChannel.Info,
+            CreateRequest(),
+            CancellationToken.None);
+
+        Assert.Equal(HttpStatusCode.BadGateway, result.StatusCode);
+    }
+
+    [Fact]
     public async Task SendAsync_WhenProviderThrows_DoesNotLogProviderMessageOrCustomerData()
     {
         var provider = new Mock<INotificationProvider>(MockBehavior.Strict);
@@ -108,6 +152,13 @@ public sealed class NotificationApplicationServiceTests
         Assert.DoesNotContain("customer@example.com", log, StringComparison.Ordinal);
         Assert.DoesNotContain("api-key-secret", log, StringComparison.Ordinal);
     }
+
+    private static NotificationSendRequest CreateRequest() => new()
+    {
+        To = "customer@example.com",
+        Subject = "Subject",
+        Body = "Body",
+    };
 
     private sealed class RecordingLogger<T> : ILogger<T>
     {

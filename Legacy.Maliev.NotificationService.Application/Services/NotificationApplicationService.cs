@@ -30,7 +30,7 @@ public sealed class NotificationApplicationService(
         {
             return await provider.SendAsync(channel, request, cancellationToken);
         }
-        catch (OperationCanceledException)
+        catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
         {
             throw;
         }

@@ -8,7 +8,8 @@ namespace Legacy.Maliev.NotificationService.Data;
 /// <summary>Calls the Brevo transactional email API through a cancellable HTTP boundary.</summary>
 public sealed class BrevoNotificationTransport(
     HttpClient httpClient,
-    IOptions<BrevoNotificationOptions> options) : IBrevoNotificationTransport
+    IOptions<BrevoNotificationOptions> options,
+    TimeProvider timeProvider) : IBrevoNotificationTransport
 {
     private static readonly JsonSerializerOptions SerializerOptions = new(JsonSerializerDefaults.Web)
     {
@@ -74,7 +75,7 @@ public sealed class BrevoNotificationTransport(
             .ToArray();
     }
 
-    private static TimeSpan? GetRetryAfter(HttpResponseMessage response)
+    private TimeSpan? GetRetryAfter(HttpResponseMessage response)
     {
         var retryAfter = response.Headers.RetryAfter;
         if (retryAfter?.Delta is { } delta)
@@ -84,7 +85,7 @@ public sealed class BrevoNotificationTransport(
 
         if (retryAfter?.Date is { } date)
         {
-            return date - DateTimeOffset.UtcNow;
+            return date - timeProvider.GetUtcNow();
         }
 
         return null;
