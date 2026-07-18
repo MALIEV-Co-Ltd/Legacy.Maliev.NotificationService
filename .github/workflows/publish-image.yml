@@ -1,0 +1,34 @@
+name: Publish dormant legacy image
+
+on:
+  workflow_dispatch:
+    inputs:
+      confirm-publication:
+        description: Confirm owner-approved publication of this validated commit only
+        required: true
+        default: false
+        type: boolean
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    uses: ./.github/workflows/_build-and-test.yml
+
+  publish:
+    needs: validate
+    if: ${{ inputs.confirm-publication == true }}
+    permissions:
+      contents: read
+      id-token: write
+    uses: MALIEV-Co-Ltd/Legacy.Maliev.Workflows/.github/workflows/publish-image.yml@8795fcf351e6861976b0fe9e02fc9703ca112865
+    with:
+      image: asia-southeast1-docker.pkg.dev/maliev-website/maliev-website-artifact-prod/legacy-maliev-notification-service
+      dockerfile: Legacy.Maliev.NotificationService.Api/Dockerfile
+      context: .
+      environment: legacy-image-publication
+      workload-identity-provider: ${{ vars.LEGACY_GCP_WORKLOAD_IDENTITY_PROVIDER }}
+      service-account: ${{ vars.LEGACY_GCP_ARTIFACT_REGISTRY_SERVICE_ACCOUNT }}
+      legacy-service-defaults-ref: bcab875a7f703d1d9c2d535479e93653720eb62d
+      compatibility-contracts-ref: 95c62eb6209411f5aada443b315447a2f76ca0cd

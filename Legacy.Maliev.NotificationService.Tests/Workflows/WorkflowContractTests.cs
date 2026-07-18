@@ -91,6 +91,42 @@ public sealed class WorkflowContractTests
             "          use-local-maliev-dependencies: 'true'\n        env:\n          GITHUB_ACTIONS: 'false'\n");
     }
 
+    [Fact]
+    public void ImagePublication_IsManualValidatedOidcOnlyAndDoesNotDeploy()
+    {
+        var source = File.ReadAllText(FindRepositoryFile(".github", "workflows", "publish-image.yml"));
+
+        Assert.Contains("workflow_dispatch:", source, StringComparison.Ordinal);
+        Assert.Contains("confirm-publication:", source, StringComparison.Ordinal);
+        Assert.Contains("type: boolean", source, StringComparison.Ordinal);
+        Assert.Contains("default: false", source, StringComparison.Ordinal);
+        Assert.Contains("validate:\n    uses: ./.github/workflows/_build-and-test.yml", Normalize(source), StringComparison.Ordinal);
+        Assert.Contains("needs: validate", source, StringComparison.Ordinal);
+        Assert.Contains("inputs.confirm-publication == true", source, StringComparison.Ordinal);
+        Assert.Contains("contents: read", source, StringComparison.Ordinal);
+        Assert.Contains("id-token: write", source, StringComparison.Ordinal);
+        Assert.Matches(
+            @"MALIEV-Co-Ltd/Legacy\.Maliev\.Workflows/\.github/workflows/publish-image\.yml@[0-9a-f]{40}",
+            source);
+        Assert.Contains("image: asia-southeast1-docker.pkg.dev/maliev-website/maliev-website-artifact-prod/legacy-maliev-notification-service", source, StringComparison.Ordinal);
+        Assert.Contains("dockerfile: Legacy.Maliev.NotificationService.Api/Dockerfile", source, StringComparison.Ordinal);
+        Assert.Contains("context: .", source, StringComparison.Ordinal);
+        Assert.Contains("environment: legacy-image-publication", source, StringComparison.Ordinal);
+        Assert.Contains("legacy-service-defaults-ref: bcab875a7f703d1d9c2d535479e93653720eb62d", source, StringComparison.Ordinal);
+        Assert.Contains("compatibility-contracts-ref: 95c62eb6209411f5aada443b315447a2f76ca0cd", source, StringComparison.Ordinal);
+        Assert.Contains("workload-identity-provider: ${{ vars.LEGACY_GCP_WORKLOAD_IDENTITY_PROVIDER }}", source, StringComparison.Ordinal);
+        Assert.Contains("service-account: ${{ vars.LEGACY_GCP_ARTIFACT_REGISTRY_SERVICE_ACCOUNT }}", source, StringComparison.Ordinal);
+
+        Assert.DoesNotContain("push:", source, StringComparison.OrdinalIgnoreCase);
+        Assert.DoesNotContain("pull_request", source, StringComparison.OrdinalIgnoreCase);
+        Assert.DoesNotContain("schedule:", source, StringComparison.OrdinalIgnoreCase);
+        Assert.DoesNotContain("secrets.", source, StringComparison.OrdinalIgnoreCase);
+        Assert.DoesNotContain("credentials_json", source, StringComparison.OrdinalIgnoreCase);
+        Assert.DoesNotContain("kubectl", source, StringComparison.OrdinalIgnoreCase);
+        Assert.DoesNotContain("argocd", source, StringComparison.OrdinalIgnoreCase);
+        Assert.DoesNotContain("gitops", source, StringComparison.OrdinalIgnoreCase);
+    }
+
     private static void AssertMutationRejected(string original, string replacement)
     {
         Assert.Contains(original, Workflow, StringComparison.Ordinal);
@@ -116,6 +152,8 @@ public sealed class WorkflowContractTests
 
         throw new FileNotFoundException($"Could not find repository file '{Path.Combine(segments)}'.");
     }
+
+    private static string Normalize(string value) => value.Replace("\r\n", "\n", StringComparison.Ordinal);
 }
 
 internal static partial class WorkflowContractValidator

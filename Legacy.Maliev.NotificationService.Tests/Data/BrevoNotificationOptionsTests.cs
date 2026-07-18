@@ -9,6 +9,23 @@ namespace Legacy.Maliev.NotificationService.Tests.Data;
 public sealed class BrevoNotificationOptionsTests
 {
     [Fact]
+    public void BrevoOptions_WhenApiKeyIsMissing_FailClosedDuringValidation()
+    {
+        var services = new ServiceCollection();
+        services
+            .AddOptions<BrevoNotificationOptions>()
+            .Bind(new ConfigurationBuilder().AddInMemoryCollection().Build().GetSection(BrevoNotificationOptions.SectionName))
+            .ValidateDataAnnotations();
+
+        var options = services.BuildServiceProvider().GetRequiredService<IOptions<BrevoNotificationOptions>>();
+
+        var exception = Assert.Throws<OptionsValidationException>(() => options.Value);
+        Assert.Contains(
+            exception.Failures,
+            failure => failure.Contains(nameof(BrevoNotificationOptions.ApiKey), StringComparison.Ordinal));
+    }
+
+    [Fact]
     public void BrevoOptions_BindSenderDictionaryByLegacyChannelName()
     {
         var configuration = new ConfigurationBuilder()
