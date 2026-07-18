@@ -59,6 +59,11 @@ Deployment is intentionally validation-only until a dedicated
 `maliev-notification-service` GitOps path is reserved for the new implementation and must
 not be overwritten by this legacy compatibility service.
 
+The prepared image workflow is manual-only and defaults to a non-publishing run. It uses
+the dedicated `legacy-maliev-notification` Workload Identity Federation provider and never
+updates GitOps. The separate legacy GitOps overlay remains dormant until it is explicitly
+added to the manual-sync `maliev-legacy` environment after the Aspire owner review.
+
 ## Validate
 
 ```powershell

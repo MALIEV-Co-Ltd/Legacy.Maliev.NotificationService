@@ -1,0 +1,62 @@
+name: Publish image - owner gated
+
+on:
+  workflow_dispatch:
+    inputs:
+      publish:
+        description: Publish the validated image after owner approval
+        required: true
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+concurrency:
+  group: notification-image-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  validate:
+    uses: ./.github/workflows/_build-and-test.yml
+
+  publish:
+    needs: validate
+    if: ${{ inputs.publish && github.ref == 'refs/heads/main' }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - name: Check out NotificationService
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0
+        with:
+          persist-credentials: false
+      - name: Check out Maliev.Aspire
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0
+        with:
+          repository: MALIEV-Co-Ltd/Maliev.Aspire
+          ref: 085f24b8b6b19c5a8e932b229d93421b03bcd032
+          path: .dependencies/Maliev.Aspire
+          persist-credentials: false
+      - name: Check out Maliev.MessagingContracts
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0
+        with:
+          repository: MALIEV-Co-Ltd/Maliev.MessagingContracts
+          ref: c533c12a8154f5cf7c4fbc9734e82a62705ac60f
+          path: .dependencies/Maliev.MessagingContracts
+          persist-credentials: false
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@7c6bc770dae815cd3e89ee6cdf493a5fab2cc093
+        with:
+          workload_identity_provider: projects/1036965383273/locations/global/workloadIdentityPools/github/providers/legacy-maliev-notification
+          service_account: github-actions-artifact-writer@maliev-website.iam.gserviceaccount.com
+      - name: Configure Google Cloud SDK
+        uses: google-github-actions/setup-gcloud@aa5489c8933f4cc7a4f7d45035b3b1440c9c10db
+      - name: Build and publish immutable image
+        env:
+          IMAGE: asia-southeast1-docker.pkg.dev/maliev-website/maliev-website-artifact-prod/legacy-maliev-notification-service:${{ github.sha }}
+        run: |
+          gcloud auth configure-docker asia-southeast1-docker.pkg.dev --quiet
+          docker build --file Legacy.Maliev.NotificationService.Api/Dockerfile --tag "$IMAGE" .
+          docker push "$IMAGE"
