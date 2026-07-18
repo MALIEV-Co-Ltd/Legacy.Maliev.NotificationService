@@ -26,6 +26,8 @@ public sealed class NotificationControllerContractTests
         Assert.Equal(NotificationPermissions.Send, permission.Permission);
         Assert.False(permission.RequireLiveCheck);
         Assert.NotNull(action.GetParameters()[1].GetCustomAttribute<FromBodyAttribute>());
+        var idempotencyHeader = action.GetParameters()[2].GetCustomAttribute<FromHeaderAttribute>();
+        Assert.Equal("Idempotency-Key", idempotencyHeader?.Name);
     }
 
     [Fact]
@@ -69,7 +71,9 @@ public sealed class NotificationControllerContractTests
                 "<p>Received</p>",
                 "reply@example.com",
                 ["cc@example.com"],
-                ["bcc@example.com"]),
+                ["bcc@example.com"],
+                [new SendEmailNotificationAttachment("receipt.pdf", "application/pdf", [1, 2, 3])]),
+            "9e60b70d-21af-473e-8749-fab4993e4f4f",
             CancellationToken.None);
 
         var response = Assert.IsType<ObjectResult>(result);
@@ -82,6 +86,32 @@ public sealed class NotificationControllerContractTests
         Assert.Equal("reply@example.com", captured.ReplyTo);
         Assert.Equal(["cc@example.com"], captured.Cc);
         Assert.Equal(["bcc@example.com"], captured.Bcc);
-        Assert.Null(captured.Attachments);
+        var attachment = Assert.Single(captured.Attachments!);
+        Assert.Equal("receipt.pdf", attachment.FileName);
+        Assert.Equal("application/pdf", attachment.ContentType);
+        Assert.Equal([1, 2, 3], attachment.Content);
+        Assert.Equal("9e60b70d-21af-473e-8749-fab4993e4f4f", captured.IdempotencyKey);
+    }
+
+    [Fact]
+    public async Task SendEmail_RejectsMalformedIdempotencyKeyBeforeProviderCall()
+    {
+        var service = new Mock<INotificationService>(MockBehavior.Strict);
+        var controller = new NotificationsController(service.Object);
+
+        var result = await controller.SendEmailAsync(
+            EmailChannel.Info,
+            new SendEmailNotificationRequest(
+                "customer@example.com",
+                "Receipt",
+                "Attached",
+                null,
+                null,
+                null,
+                null),
+            "not-an-operation-id",
+            CancellationToken.None);
+
+        Assert.IsType<BadRequestObjectResult>(result);
     }
 }

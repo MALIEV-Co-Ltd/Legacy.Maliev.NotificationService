@@ -23,4 +23,10 @@ public sealed record NotificationSendRequest
 
     /// <summary>Optional attachments.</summary>
     public IReadOnlyList<NotificationAttachment>? Attachments { get; init; }
+
+    /// <summary>
+    /// Optional caller-stable operation identifier used to suppress duplicate provider delivery
+    /// when the same logical send is retried across HTTP requests.
+    /// </summary>
+    public string? IdempotencyKey { get; init; }
 }

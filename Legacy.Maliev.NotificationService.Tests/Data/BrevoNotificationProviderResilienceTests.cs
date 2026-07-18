@@ -9,6 +9,8 @@ namespace Legacy.Maliev.NotificationService.Tests.Data;
 
 public sealed class BrevoNotificationProviderResilienceTests
 {
+    private const string OperationId = "9e60b70d-21af-473e-8749-fab4993e4f4f";
+
     [Fact]
     public async Task SendAsync_WhenFirstAttemptIsTransient_RetriesWithSameIdempotencyKey()
     {
@@ -27,6 +29,21 @@ public sealed class BrevoNotificationProviderResilienceTests
         Assert.Equal(2, transport.Requests.Count);
         Assert.False(string.IsNullOrWhiteSpace(transport.Requests[0].IdempotencyKey));
         Assert.Equal(transport.Requests[0].IdempotencyKey, transport.Requests[1].IdempotencyKey);
+    }
+
+    [Fact]
+    public async Task SendAsync_WhenCallerSuppliesOperationId_ForwardsItAsIdempotencyKey()
+    {
+        var transport = new ScriptedBrevoTransport(new BrevoTransportResult("message-id"));
+        var provider = CreateProvider(transport, maxRetryAttempts: 0);
+        var request = CreateRequest() with
+        {
+            IdempotencyKey = OperationId,
+        };
+
+        await provider.SendAsync(EmailChannel.Info, request, CancellationToken.None);
+
+        Assert.Equal(OperationId, Assert.Single(transport.Requests).IdempotencyKey);
     }
 
     [Fact]

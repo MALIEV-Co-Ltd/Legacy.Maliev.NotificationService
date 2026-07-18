@@ -30,7 +30,7 @@ public sealed class BrevoNotificationProvider(
             channel,
             sender,
             request,
-            Guid.NewGuid().ToString("D"));
+            request.IdempotencyKey ?? Guid.NewGuid().ToString("D"));
         var startedAt = timeProvider.GetTimestamp();
         for (var attempt = 0; ; attempt++)
         {
