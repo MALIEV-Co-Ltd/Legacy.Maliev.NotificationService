@@ -4,11 +4,29 @@ updates:
     directory: /
     schedule:
       interval: weekly
+    open-pull-requests-limit: 10
+    groups:
+      nuget-dependencies:
+        applies-to: version-updates
+        patterns: ["*"]
+        update-types: ["minor", "patch"]
   - package-ecosystem: docker
     directory: /Legacy.Maliev.NotificationService.Api
     schedule:
       interval: weekly
+    open-pull-requests-limit: 5
+    groups:
+      docker-dependencies:
+        applies-to: version-updates
+        patterns: ["*"]
+        update-types: ["minor", "patch"]
   - package-ecosystem: github-actions
     directory: /
     schedule:
       interval: weekly
+    open-pull-requests-limit: 5
+    groups:
+      github-actions:
+        applies-to: version-updates
+        patterns: ["*"]
+        update-types: ["minor", "patch"]
