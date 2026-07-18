@@ -54,11 +54,18 @@ and duration. Recipient addresses, subjects, bodies, attachments, and API keys a
 written to application logs. Brevo `Retry-After` is honored up to the configured five-second
 cap, and caller cancellation stops delivery without another attempt.
 
-Deployment is intentionally validation-only until a dedicated
-`legacy-maliev-notification` Workload Identity Federation provider and
-`maliev-gitops/3-apps/_legacy-notification-service` manifest path exist. Any existing
-`maliev-notification-service` GitOps path is reserved for the new implementation and must
-not be overwritten by this legacy compatibility service.
+The dormant `maliev-gitops/3-apps/_legacy-notification-service` path exists separately from the
+new implementation and remains absent from the enabled legacy environment. Its image tag stays
+`not-published` until owner review is complete.
+
+Image publication is manual-only through `publish-image.yml`. It first runs the complete validation
+workflow, requires the `confirm-publication` boolean, builds with pinned public
+`Legacy.Maliev.ServiceDefaults` and `Legacy.Maliev.CompatibilityContracts` commits, scans before
+publication, and uses OpenID Connect rather than a stored Google service-account key. The repository
+variables `LEGACY_GCP_WORKLOAD_IDENTITY_PROVIDER` and
+`LEGACY_GCP_ARTIFACT_REGISTRY_SERVICE_ACCOUNT` must reference the approved existing identity before
+the workflow can succeed. The workflow publishes only an immutable commit tag; it does not update
+GitOps, apply Kubernetes resources, enable the dormant overlay, or deploy to GKE.
 
 ## Validate
 
