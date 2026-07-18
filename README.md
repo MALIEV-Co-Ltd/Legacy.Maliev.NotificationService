@@ -12,9 +12,10 @@ Trusted migrated services use the JSON endpoint instead of the legacy query-stri
 ## Architecture
 
 The service uses clean dependency direction: `Api` calls `Application`, provider-independent
-domain rules live in `Domain`, and the Brevo provider adapter lives in `Data`. It depends on
-the public MALIEV Aspire source repository during CI and image builds, so no private package
-credentials are required.
+domain rules live in `Domain`, and the Brevo provider adapter lives in `Data`. It depends only on
+the public `Legacy.Maliev.ServiceDefaults` and `Legacy.Maliev.CompatibilityContracts` repositories
+during CI and image builds. Compatibility namespaces and email route/payload behavior remain
+unchanged.
 
 The legacy service did not own a database. This extraction intentionally removes the old
 Identity/EF/NLog/Swagger footprint and keeps provider credentials in runtime configuration

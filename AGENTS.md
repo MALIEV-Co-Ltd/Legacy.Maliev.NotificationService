@@ -30,7 +30,7 @@ gitleaks git . --redact=100 --exit-code 0 --no-banner --no-color
 ## Service conventions
 
 - Runtime: .NET 10.
-- OpenAPI UI: Scalar through `Maliev.Aspire.ServiceDefaults`; no Swashbuckle.
+- OpenAPI UI: Scalar through `Legacy.Maliev.ServiceDefaults` (compatibility namespace retained); no Swashbuckle.
 - Logging: built-in `ILogger<T>` only; do not reintroduce `Maliev.LoggerService`.
 - Auth: legacy `/Emails/*` endpoints remain authenticated.
 - Provider: Brevo transactional email through typed options.
