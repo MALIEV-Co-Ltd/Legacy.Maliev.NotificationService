@@ -14,9 +14,12 @@ namespace Legacy.Maliev.NotificationService.Api.Controllers;
 [Authorize]
 public sealed class NotificationsController(INotificationService notificationService) : ControllerBase
 {
+    private const long AttachmentSizeLimit = 200L * 1024L * 1024L;
+
     /// <summary>Sends one email through the selected configured sender channel.</summary>
     /// <param name="channel">Configured sender channel.</param>
     /// <param name="request">Recipient and message body.</param>
+    /// <param name="idempotencyKey">Optional stable UUID for one logical delivery operation.</param>
     /// <param name="cancellationToken">Request cancellation.</param>
     /// <returns>The provider message identifier when available.</returns>
     [HttpPost("{channel}")]
@@ -29,8 +32,35 @@ public sealed class NotificationsController(INotificationService notificationSer
     public async Task<ActionResult> SendEmailAsync(
         EmailChannel channel,
         [FromBody] SendEmailNotificationRequest request,
+        [FromHeader(Name = "Idempotency-Key")] string? idempotencyKey,
         CancellationToken cancellationToken)
     {
+        if (!string.IsNullOrWhiteSpace(idempotencyKey) &&
+            !Guid.TryParseExact(idempotencyKey, "D", out _))
+        {
+            return this.BadRequest(new ProblemDetails
+            {
+                Status = StatusCodes.Status400BadRequest,
+                Title = "Invalid idempotency key",
+                Detail = "Idempotency-Key must be a UUID in canonical D format.",
+            });
+        }
+
+        if (request.Attachments?.Any(attachment =>
+                attachment is null ||
+                string.IsNullOrWhiteSpace(attachment.FileName) ||
+                attachment.Content is null ||
+                attachment.Content.Length == 0) == true ||
+            request.Attachments?.Sum(attachment => (long)attachment.Content.Length) > AttachmentSizeLimit)
+        {
+            return this.BadRequest(new ProblemDetails
+            {
+                Status = StatusCodes.Status400BadRequest,
+                Title = "Invalid attachment",
+                Detail = "Attachments must be non-empty and may not exceed 200 MiB combined.",
+            });
+        }
+
         var result = await notificationService.SendAsync(
             channel,
             new NotificationSendRequest
@@ -41,6 +71,11 @@ public sealed class NotificationsController(INotificationService notificationSer
                 ReplyTo = request.ReplyTo,
                 Cc = request.Cc,
                 Bcc = request.Bcc,
+                Attachments = request.Attachments?.Select(attachment => new NotificationAttachment(
+                    attachment.FileName,
+                    attachment.ContentType,
+                    attachment.Content)).ToArray(),
+                IdempotencyKey = idempotencyKey,
             },
             cancellationToken);
 

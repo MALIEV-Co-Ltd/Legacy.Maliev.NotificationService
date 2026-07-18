@@ -9,7 +9,14 @@ public sealed record SendEmailNotificationRequest(
     [param: Required, StringLength(100_000)] string Body,
     [param: EmailAddress] string? ReplyTo,
     IReadOnlyList<string>? Cc,
-    IReadOnlyList<string>? Bcc);
+    IReadOnlyList<string>? Bcc,
+    IReadOnlyList<SendEmailNotificationAttachment>? Attachments = null);
+
+/// <summary>Base64-encoded attachment included in a JSON notification request.</summary>
+public sealed record SendEmailNotificationAttachment(
+    [param: Required, StringLength(255)] string FileName,
+    [param: StringLength(255)] string? ContentType,
+    [param: Required] byte[] Content);
 
 /// <summary>JSON response returned after the configured provider accepts an email.</summary>
 public sealed record SendEmailNotificationResponse(string? ProviderMessageId);
