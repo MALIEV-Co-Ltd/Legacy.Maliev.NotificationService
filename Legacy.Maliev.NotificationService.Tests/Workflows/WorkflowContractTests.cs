@@ -103,19 +103,20 @@ public sealed class WorkflowContractTests
         Assert.Contains("validate:\n    uses: ./.github/workflows/_build-and-test.yml", Normalize(source), StringComparison.Ordinal);
         Assert.Contains("needs: validate", source, StringComparison.Ordinal);
         Assert.Contains("inputs.confirm-publication == true", source, StringComparison.Ordinal);
+        Assert.Contains("vars.LEGACY_DEPLOY_ENABLED == 'true'", source, StringComparison.Ordinal);
         Assert.Contains("contents: read", source, StringComparison.Ordinal);
         Assert.Contains("id-token: write", source, StringComparison.Ordinal);
         Assert.Matches(
             @"MALIEV-Co-Ltd/Legacy\.Maliev\.Workflows/\.github/workflows/publish-image\.yml@[0-9a-f]{40}",
             source);
-        Assert.Contains("image: asia-southeast1-docker.pkg.dev/maliev-website/maliev-website-artifact-prod/legacy-maliev-notification-service", source, StringComparison.Ordinal);
+        Assert.Contains("image: ${{ vars.LEGACY_ARTIFACT_REGISTRY }}/legacy-maliev-notification-service", source, StringComparison.Ordinal);
         Assert.Contains("dockerfile: Legacy.Maliev.NotificationService.Api/Dockerfile", source, StringComparison.Ordinal);
         Assert.Contains("context: .", source, StringComparison.Ordinal);
-        Assert.Contains("environment: legacy-image-publication", source, StringComparison.Ordinal);
-        Assert.Contains("legacy-service-defaults-ref: bcab875a7f703d1d9c2d535479e93653720eb62d", source, StringComparison.Ordinal);
-        Assert.Contains("compatibility-contracts-ref: 95c62eb6209411f5aada443b315447a2f76ca0cd", source, StringComparison.Ordinal);
-        Assert.Contains("workload-identity-provider: ${{ vars.LEGACY_GCP_WORKLOAD_IDENTITY_PROVIDER }}", source, StringComparison.Ordinal);
-        Assert.Contains("service-account: ${{ vars.LEGACY_GCP_ARTIFACT_REGISTRY_SERVICE_ACCOUNT }}", source, StringComparison.Ordinal);
+        Assert.Contains("environment: legacy-production", source, StringComparison.Ordinal);
+        Assert.Contains("workload-identity-provider: ${{ vars.LEGACY_WORKLOAD_IDENTITY_PROVIDER }}", source, StringComparison.Ordinal);
+        Assert.Contains("service-account: ${{ vars.LEGACY_NOTIFICATION_PUBLISHER_SERVICE_ACCOUNT }}", source, StringComparison.Ordinal);
+        Assert.DoesNotContain("legacy-service-defaults-ref:", source, StringComparison.Ordinal);
+        Assert.DoesNotContain("compatibility-contracts-ref:", source, StringComparison.Ordinal);
 
         Assert.DoesNotContain("push:", source, StringComparison.OrdinalIgnoreCase);
         Assert.DoesNotContain("pull_request", source, StringComparison.OrdinalIgnoreCase);
