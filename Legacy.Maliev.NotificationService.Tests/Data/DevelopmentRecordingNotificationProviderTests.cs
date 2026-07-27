@@ -1,6 +1,7 @@
 using System.Net;
 using System.Security.Cryptography;
 using System.Text;
+using System.Text.Json;
 using Legacy.Maliev.NotificationService.Data;
 using Legacy.Maliev.NotificationService.Domain;
 using Microsoft.AspNetCore.Hosting;
@@ -72,6 +73,23 @@ public sealed class DevelopmentRecordingNotificationProviderTests
         Assert.Contains("Notifications:UseDevelopmentRecordingProvider", source, StringComparison.Ordinal);
         Assert.Contains("/notifications/development/recorded", source, StringComparison.Ordinal);
         Assert.Contains("ExcludeFromDescription", source, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public void DevelopmentConfiguration_DoesNotContainABrevoApiKey()
+    {
+        var root = FindRepositoryRoot();
+        using var document = JsonDocument.Parse(File.ReadAllText(Path.Combine(
+            root,
+            "Legacy.Maliev.NotificationService.Api",
+            "appsettings.Development.json")));
+
+        var apiKey = document.RootElement
+            .GetProperty("Brevo")
+            .GetProperty("ApiKey")
+            .GetString();
+
+        Assert.True(string.IsNullOrWhiteSpace(apiKey));
     }
 
     [Theory]
