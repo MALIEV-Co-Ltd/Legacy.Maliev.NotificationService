@@ -1,5 +1,7 @@
 using Legacy.Maliev.NotificationService.Application.Interfaces;
+using Legacy.Maliev.NotificationService.Api.Authorization;
 using Legacy.Maliev.NotificationService.Domain;
+using Maliev.Aspire.ServiceDefaults.Authorization;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -9,6 +11,7 @@ namespace Legacy.Maliev.NotificationService.Api.Controllers;
 [ApiController]
 [Route("Emails")]
 [Authorize]
+[RequirePermission(NotificationPermissions.Send)]
 public sealed class EmailsController(INotificationService notificationService) : ControllerBase
 {
     /// <summary>Legacy combined attachment size limit, preserved from UploadService.Common.FileUpload.</summary>
