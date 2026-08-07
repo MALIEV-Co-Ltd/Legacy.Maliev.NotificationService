@@ -29,8 +29,8 @@ public sealed class WorkflowContractTests
     public void BuildAndTest_RejectsCommentedDependencySha()
     {
         AssertMutationRejected(
-            "ref: bcab875a7f703d1d9c2d535479e93653720eb62d",
-            "ref: main # bcab875a7f703d1d9c2d535479e93653720eb62d");
+            "ref: 2833d30c492d9c40869d9bfac30e1ce9bdc11f84",
+            "ref: main # 2833d30c492d9c40869d9bfac30e1ce9bdc11f84");
     }
 
     [Fact]
@@ -223,7 +223,7 @@ internal static partial class WorkflowContractValidator
             new Dictionary<string, string>(StringComparer.Ordinal)
             {
                 ["repository"] = "MALIEV-Co-Ltd/Legacy.Maliev.ServiceDefaults",
-                ["ref"] = "bcab875a7f703d1d9c2d535479e93653720eb62d",
+                ["ref"] = "2833d30c492d9c40869d9bfac30e1ce9bdc11f84",
                 ["path"] = ".dependencies/Legacy.Maliev.ServiceDefaults",
                 ["persist-credentials"] = "false",
             });
@@ -233,7 +233,7 @@ internal static partial class WorkflowContractValidator
             new Dictionary<string, string>(StringComparer.Ordinal)
             {
                 ["repository"] = "MALIEV-Co-Ltd/Legacy.Maliev.CompatibilityContracts",
-                ["ref"] = "95c62eb6209411f5aada443b315447a2f76ca0cd",
+                ["ref"] = "78e48ffc4ee000df0510cba5e7c7a3c4c4d539d7",
                 ["path"] = ".dependencies/Legacy.Maliev.CompatibilityContracts",
                 ["persist-credentials"] = "false",
             });
