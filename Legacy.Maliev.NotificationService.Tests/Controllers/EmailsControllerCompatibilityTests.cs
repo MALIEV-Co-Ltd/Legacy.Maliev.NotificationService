@@ -1,8 +1,12 @@
+using System.Reflection;
 using System.Net;
 using System.Text;
+using Legacy.Maliev.NotificationService.Api.Authorization;
 using Legacy.Maliev.NotificationService.Api.Controllers;
 using Legacy.Maliev.NotificationService.Application.Interfaces;
 using Legacy.Maliev.NotificationService.Domain;
+using Maliev.Aspire.ServiceDefaults.Authorization;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
@@ -11,6 +15,15 @@ namespace Legacy.Maliev.NotificationService.Tests.Controllers;
 
 public sealed class EmailsControllerCompatibilityTests
 {
+    [Fact]
+    public void LegacyControllerRequiresAuthenticationAndSendPermission()
+    {
+        var controller = typeof(EmailsController);
+        Assert.NotEmpty(controller.GetCustomAttributes<AuthorizeAttribute>());
+        var permission = Assert.Single(controller.GetCustomAttributes<RequirePermissionAttribute>());
+        Assert.Equal(NotificationPermissions.Send, permission.Permission);
+    }
+
     [Fact]
     public async Task SendInfoEmailAsync_PreservesLegacyRouteChannelAndQueryContract()
     {

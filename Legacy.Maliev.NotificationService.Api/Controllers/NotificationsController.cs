@@ -2,6 +2,7 @@ using Legacy.Maliev.NotificationService.Api.Authorization;
 using Legacy.Maliev.NotificationService.Api.Models;
 using Legacy.Maliev.NotificationService.Application.Interfaces;
 using Legacy.Maliev.NotificationService.Domain;
+using Asp.Versioning;
 using Maliev.Aspire.ServiceDefaults.Authorization;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -10,7 +11,8 @@ namespace Legacy.Maliev.NotificationService.Api.Controllers;
 
 /// <summary>Modern JSON API for authenticated transactional email delivery.</summary>
 [ApiController]
-[Route("notifications/v1/email")]
+[ApiVersion("1.0")]
+[Route("notifications/v{version:apiVersion}/email")]
 [Authorize]
 public sealed class NotificationsController(INotificationService notificationService) : ControllerBase
 {

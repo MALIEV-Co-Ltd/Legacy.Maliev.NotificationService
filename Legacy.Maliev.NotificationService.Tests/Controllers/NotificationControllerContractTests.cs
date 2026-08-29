@@ -1,6 +1,7 @@
 using System.Net;
 using System.Reflection;
 using System.ComponentModel.DataAnnotations;
+using Asp.Versioning;
 using Legacy.Maliev.NotificationService.Api.Authorization;
 using Legacy.Maliev.NotificationService.Api.Controllers;
 using Legacy.Maliev.NotificationService.Api.Models;
@@ -19,7 +20,8 @@ public sealed class NotificationControllerContractTests
     public void Controller_RequiresAuthenticationAndExplicitSendPermission()
     {
         var controller = typeof(NotificationsController);
-        Assert.Equal("notifications/v1/email", controller.GetCustomAttribute<RouteAttribute>()?.Template);
+        Assert.Equal("notifications/v{version:apiVersion}/email", controller.GetCustomAttribute<RouteAttribute>()?.Template);
+        Assert.Equal("1.0", controller.GetCustomAttribute<ApiVersionAttribute>()?.Versions.Single().ToString());
         Assert.NotNull(controller.GetCustomAttribute<AuthorizeAttribute>());
         var action = controller.GetMethod(nameof(NotificationsController.SendEmailAsync))!;
         var permission = Assert.Single(action.GetCustomAttributes<RequirePermissionAttribute>());
