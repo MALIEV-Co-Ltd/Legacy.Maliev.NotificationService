@@ -1,7 +1,11 @@
 version: 2
 updates:
   - package-ecosystem: nuget
-    directory: /
+    # Scan only graphs that restore without the unpublished shared package.
+    directories:
+      - /Legacy.Maliev.NotificationService.Application
+      - /Legacy.Maliev.NotificationService.Data
+      - /Legacy.Maliev.NotificationService.Domain
     schedule:
       interval: weekly
     open-pull-requests-limit: 10
