@@ -29,8 +29,8 @@ public sealed class WorkflowContractTests
     public void BuildAndTest_RejectsCommentedDependencySha()
     {
         AssertMutationRejected(
-            "ref: 9c4ac9d44a08bcd0aa2088348790ab863814669c",
-            "ref: main # 9c4ac9d44a08bcd0aa2088348790ab863814669c");
+            "ref: d22f0e6f95254b10cf4fe891c8dce5df7c419f3f",
+            "ref: main # d22f0e6f95254b10cf4fe891c8dce5df7c419f3f");
     }
 
     [Fact]
@@ -39,6 +39,26 @@ public sealed class WorkflowContractTests
         Assert.Contains("Legacy.Maliev.ServiceDefaults", ApiProject, StringComparison.Ordinal);
         Assert.DoesNotContain("Maliev.Aspire\\Maliev.Aspire.ServiceDefaults", ApiProject, StringComparison.Ordinal);
         Assert.DoesNotContain("Include=\"Maliev.Aspire.ServiceDefaults\"", ApiProject, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public void Source5ac_UsesVerifiedSharedLoggingInCiAndSelfContainedImageBuild()
+    {
+        const string defaultsSha = "d22f0e6f95254b10cf4fe891c8dce5df7c419f3f";
+        const string compatibilitySha = "78e48ffc4ee000df0510cba5e7c7a3c4c4d539d7";
+        var program = File.ReadAllText(FindRepositoryFile("Legacy.Maliev.NotificationService.Api", "Program.cs"));
+        var dockerfile = File.ReadAllText(FindRepositoryFile("Legacy.Maliev.NotificationService.Api", "Dockerfile"));
+
+        Assert.Contains($"ref: {defaultsSha}", Workflow, StringComparison.Ordinal);
+        Assert.Contains($"checkout {defaultsSha}", dockerfile, StringComparison.Ordinal);
+        Assert.Contains($"checkout {compatibilitySha}", dockerfile, StringComparison.Ordinal);
+        Assert.Contains("-p:MalievWorkspaceRoot=/dependencies", dockerfile, StringComparison.Ordinal);
+        Assert.DoesNotContain("COPY .dependencies/", dockerfile, StringComparison.Ordinal);
+        Assert.Contains("builder.AddServiceDefaults()", program, StringComparison.Ordinal);
+        Assert.Contains("app.UseStandardMiddleware()", program, StringComparison.Ordinal);
+        Assert.DoesNotContain("NativeLogging", program, StringComparison.Ordinal);
+        Assert.DoesNotContain("LoggerService", program, StringComparison.Ordinal);
+        Assert.DoesNotContain("NativeLogging", ApiProject, StringComparison.Ordinal);
     }
 
     [Fact]
@@ -223,7 +243,7 @@ internal static partial class WorkflowContractValidator
             new Dictionary<string, string>(StringComparer.Ordinal)
             {
                 ["repository"] = "MALIEV-Co-Ltd/Legacy.Maliev.ServiceDefaults",
-                ["ref"] = "9c4ac9d44a08bcd0aa2088348790ab863814669c",
+                ["ref"] = "d22f0e6f95254b10cf4fe891c8dce5df7c419f3f",
                 ["path"] = ".dependencies/Legacy.Maliev.ServiceDefaults",
                 ["persist-credentials"] = "false",
             });
