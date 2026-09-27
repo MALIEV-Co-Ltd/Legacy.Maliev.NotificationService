@@ -6,6 +6,7 @@ using Legacy.Maliev.NotificationService.Data;
 using Legacy.Maliev.NotificationService.Domain;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
+using Microsoft.Extensions.Options;
 using Microsoft.Extensions.Time.Testing;
 
 namespace Legacy.Maliev.NotificationService.Tests.Data;
@@ -114,6 +115,25 @@ public sealed class DevelopmentRecordingNotificationProviderTests
         var response = await client.GetAsync("/notifications/development/recorded", CancellationToken.None);
 
         Assert.Equal(expectedStatus, response.StatusCode);
+    }
+
+    [Fact]
+    public void ProductionStartup_RejectsMissingProtectedBrevoApiKey()
+    {
+        using var rsa = RSA.Create(2048);
+        using var factory = new WebApplicationFactory<Program>().WithWebHostBuilder(builder =>
+        {
+            builder.UseEnvironment("Production");
+            builder.UseSetting("Notifications:UseDevelopmentRecordingProvider", "false");
+            builder.UseSetting("Jwt:PublicKey", Convert.ToBase64String(
+                Encoding.UTF8.GetBytes(rsa.ExportSubjectPublicKeyInfoPem())));
+            builder.UseSetting("Brevo:ApiKey", string.Empty);
+        });
+
+        var error = Assert.Throws<OptionsValidationException>(() => factory.CreateClient());
+
+        Assert.Contains(error.Failures, failure =>
+            failure.Contains(nameof(BrevoNotificationOptions.ApiKey), StringComparison.Ordinal));
     }
 
     private static string FindRepositoryRoot()
