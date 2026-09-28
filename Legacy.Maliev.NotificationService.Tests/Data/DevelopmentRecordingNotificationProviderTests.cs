@@ -117,8 +117,10 @@ public sealed class DevelopmentRecordingNotificationProviderTests
         Assert.Equal(expectedStatus, response.StatusCode);
     }
 
-    [Fact]
-    public void ProductionStartup_RejectsMissingProtectedBrevoApiKey()
+    [Theory]
+    [InlineData("")]
+    [InlineData("   ")]
+    public void ProductionStartup_RejectsMissingProtectedBrevoApiKey(string apiKey)
     {
         using var rsa = RSA.Create(2048);
         using var factory = new WebApplicationFactory<Program>().WithWebHostBuilder(builder =>
@@ -127,13 +129,31 @@ public sealed class DevelopmentRecordingNotificationProviderTests
             builder.UseSetting("Notifications:UseDevelopmentRecordingProvider", "false");
             builder.UseSetting("Jwt:PublicKey", Convert.ToBase64String(
                 Encoding.UTF8.GetBytes(rsa.ExportSubjectPublicKeyInfoPem())));
-            builder.UseSetting("Brevo:ApiKey", string.Empty);
+            builder.UseSetting("Brevo:ApiKey", apiKey);
         });
 
         var error = Assert.Throws<OptionsValidationException>(() => factory.CreateClient());
 
         Assert.Contains(error.Failures, failure =>
             failure.Contains(nameof(BrevoNotificationOptions.ApiKey), StringComparison.Ordinal));
+    }
+
+    [Fact]
+    public void ProductionStartup_AcceptsExternallySuppliedBrevoApiKey()
+    {
+        using var rsa = RSA.Create(2048);
+        using var factory = new WebApplicationFactory<Program>().WithWebHostBuilder(builder =>
+        {
+            builder.UseEnvironment("Production");
+            builder.UseSetting("Notifications:UseDevelopmentRecordingProvider", "false");
+            builder.UseSetting("Jwt:PublicKey", Convert.ToBase64String(
+                Encoding.UTF8.GetBytes(rsa.ExportSubjectPublicKeyInfoPem())));
+            builder.UseSetting("Brevo:ApiKey", "fixture-external-brevo-key");
+        });
+
+        using var client = factory.CreateClient();
+
+        Assert.NotNull(client);
     }
 
     private static string FindRepositoryRoot()
