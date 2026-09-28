@@ -22,7 +22,7 @@ jobs:
     permissions:
       contents: read
       id-token: write
-    uses: MALIEV-Co-Ltd/Legacy.Maliev.Workflows/.github/workflows/publish-image.yml@6017816fa67f369d785ed30794f002cfd6299af7
+    uses: MALIEV-Co-Ltd/Legacy.Maliev.Workflows/.github/workflows/publish-image.yml@73dd7304ffe85ec504389fd7664cc39070b9f148
     with:
       image: ${{ vars.LEGACY_ARTIFACT_REGISTRY }}/legacy-maliev-notification-service
       dockerfile: Legacy.Maliev.NotificationService.Api/Dockerfile
