@@ -29,8 +29,8 @@ public sealed class WorkflowContractTests
     public void BuildAndTest_RejectsCommentedDependencySha()
     {
         AssertMutationRejected(
-            "ref: d22f0e6f95254b10cf4fe891c8dce5df7c419f3f",
-            "ref: main # d22f0e6f95254b10cf4fe891c8dce5df7c419f3f");
+            "ref: 5c5f9479313710fa576f83d3b396442997a2fcf4",
+            "ref: main # 5c5f9479313710fa576f83d3b396442997a2fcf4");
     }
 
     [Fact]
@@ -44,7 +44,7 @@ public sealed class WorkflowContractTests
     [Fact]
     public void Source5ac_UsesVerifiedSharedLoggingInCiAndSelfContainedImageBuild()
     {
-        const string defaultsSha = "d22f0e6f95254b10cf4fe891c8dce5df7c419f3f";
+        const string defaultsSha = "5c5f9479313710fa576f83d3b396442997a2fcf4";
         const string compatibilitySha = "78e48ffc4ee000df0510cba5e7c7a3c4c4d539d7";
         var program = File.ReadAllText(FindRepositoryFile("Legacy.Maliev.NotificationService.Api", "Program.cs"));
         var dockerfile = File.ReadAllText(FindRepositoryFile("Legacy.Maliev.NotificationService.Api", "Dockerfile"));
@@ -243,7 +243,7 @@ internal static partial class WorkflowContractValidator
             new Dictionary<string, string>(StringComparer.Ordinal)
             {
                 ["repository"] = "MALIEV-Co-Ltd/Legacy.Maliev.ServiceDefaults",
-                ["ref"] = "d22f0e6f95254b10cf4fe891c8dce5df7c419f3f",
+                ["ref"] = "5c5f9479313710fa576f83d3b396442997a2fcf4",
                 ["path"] = ".dependencies/Legacy.Maliev.ServiceDefaults",
                 ["persist-credentials"] = "false",
             });
