@@ -49,6 +49,36 @@ public sealed class BrevoNotificationTransportTests
         Assert.Contains("\"headers\":{\"idempotencyKey\":\"stable-idempotency-key\"}", handler.Body, StringComparison.Ordinal);
     }
 
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public async Task SendAsync_WhenCcAndBccAreAbsentOrEmpty_OmitsBothFields(bool useEmptyLists)
+    {
+        var handler = new RecordingHandler(new HttpResponseMessage(HttpStatusCode.Created)
+        {
+            Content = new StringContent("{\"messageId\":\"provider-id\"}", Encoding.UTF8, "application/json"),
+        });
+        var transport = CreateTransport(handler);
+
+        await transport.SendAsync(
+            new BrevoTransportRequest(
+                EmailChannel.Info,
+                new BrevoSenderOptions { Address = "info@example.com", DisplayName = "Info" },
+                new NotificationSendRequest
+                {
+                    To = "customer@example.com",
+                    Subject = "Subject",
+                    Body = "Body",
+                    Cc = useEmptyLists ? [] : null,
+                    Bcc = useEmptyLists ? [] : null,
+                },
+                "stable-idempotency-key"),
+            CancellationToken.None);
+
+        Assert.DoesNotContain("\"cc\"", handler.Body, StringComparison.Ordinal);
+        Assert.DoesNotContain("\"bcc\"", handler.Body, StringComparison.Ordinal);
+    }
+
     [Fact]
     public async Task SendAsync_WhenBrevoReturnsFailure_ExposesOnlyStatusAndRetryDelay()
     {

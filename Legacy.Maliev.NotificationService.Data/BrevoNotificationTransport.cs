@@ -69,10 +69,11 @@ public sealed class BrevoNotificationTransport(
 
     private static object[]? MapRecipients(IReadOnlyList<string>? recipients)
     {
-        return recipients?
+        var mapped = recipients?
             .Where(value => !string.IsNullOrWhiteSpace(value))
             .Select(value => (object)new { email = value })
             .ToArray();
+        return mapped is { Length: > 0 } ? mapped : null;
     }
 
     private TimeSpan? GetRetryAfter(HttpResponseMessage response)
