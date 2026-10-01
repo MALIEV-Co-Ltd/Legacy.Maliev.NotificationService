@@ -1,4 +1,5 @@
 using System.Text.Json.Serialization;
+using Legacy.Maliev.NotificationService.Api;
 using Legacy.Maliev.NotificationService.Application.Interfaces;
 using Legacy.Maliev.NotificationService.Application.Services;
 using Legacy.Maliev.NotificationService.Data;
@@ -42,8 +43,10 @@ else
 builder.Services.AddControllers().AddJsonOptions(options =>
     options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull);
 builder.Services.AddScoped<INotificationService, NotificationApplicationService>();
+var deliveryIntentsEnabled = builder.AddDeliveryIntents();
 
 var app = builder.Build();
+if (deliveryIntentsEnabled) await app.RequireDeliveryIntentReadinessAsync();
 
 app.UseStandardMiddleware();
 app.UseCors();
