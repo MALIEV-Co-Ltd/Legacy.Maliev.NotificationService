@@ -18,6 +18,14 @@ public sealed class EmailsController(INotificationService notificationService) :
     public const long SizeLimit = 200L * 1024L * 1024L;
 
     /// <summary>Sends an informational email.</summary>
+    /// <param name="to">The recipient's email address.</param>
+    /// <param name="subject">The email subject.</param>
+    /// <param name="body">The email body.</param>
+    /// <param name="replyTo">The reply-to email address.</param>
+    /// <param name="cc">List of CC recipients.</param>
+    /// <param name="bcc">List of BCC recipients.</param>
+    /// <param name="files">Optional list of files to attach.</param>
+    /// <param name="cancellationToken">Request cancellation.</param>
     [HttpPost("info")]
     public Task<ActionResult> SendInfoEmailAsync(
         [FromQuery] string? to,
@@ -33,6 +41,14 @@ public sealed class EmailsController(INotificationService notificationService) :
     }
 
     /// <summary>Sends a manufacturing-related email.</summary>
+    /// <param name="to">The recipient's email address.</param>
+    /// <param name="subject">The email subject.</param>
+    /// <param name="body">The email body.</param>
+    /// <param name="replyTo">The reply-to email address.</param>
+    /// <param name="cc">List of CC recipients.</param>
+    /// <param name="bcc">List of BCC recipients.</param>
+    /// <param name="files">Optional list of files to attach.</param>
+    /// <param name="cancellationToken">Request cancellation.</param>
     [HttpPost("manufacturing")]
     public Task<ActionResult> SendManufacturingEmailAsync(
         [FromQuery] string? to,
@@ -48,6 +64,14 @@ public sealed class EmailsController(INotificationService notificationService) :
     }
 
     /// <summary>Sends a no-reply email.</summary>
+    /// <param name="to">The recipient's email address.</param>
+    /// <param name="subject">The email subject.</param>
+    /// <param name="body">The email body.</param>
+    /// <param name="replyTo">The reply-to email address.</param>
+    /// <param name="cc">List of CC recipients.</param>
+    /// <param name="bcc">List of BCC recipients.</param>
+    /// <param name="files">Optional list of files to attach.</param>
+    /// <param name="cancellationToken">Request cancellation.</param>
     [HttpPost("noreply")]
     public Task<ActionResult> SendNoReplyEmailAsync(
         [FromQuery] string? to,
@@ -63,6 +87,14 @@ public sealed class EmailsController(INotificationService notificationService) :
     }
 
     /// <summary>Sends a support email.</summary>
+    /// <param name="to">The recipient's email address.</param>
+    /// <param name="subject">The email subject.</param>
+    /// <param name="body">The email body.</param>
+    /// <param name="replyTo">The reply-to email address.</param>
+    /// <param name="cc">List of CC recipients.</param>
+    /// <param name="bcc">List of BCC recipients.</param>
+    /// <param name="files">Optional list of files to attach.</param>
+    /// <param name="cancellationToken">Request cancellation.</param>
     [HttpPost("support")]
     public Task<ActionResult> SendSupportEmailAsync(
         [FromQuery] string? to,
@@ -78,6 +110,13 @@ public sealed class EmailsController(INotificationService notificationService) :
     }
 
     /// <summary>Sends an informational email with a plain text body.</summary>
+    /// <param name="to">The recipient's email address.</param>
+    /// <param name="subject">The email subject.</param>
+    /// <param name="replyTo">The reply-to email address.</param>
+    /// <param name="cc">List of CC recipients.</param>
+    /// <param name="bcc">List of BCC recipients.</param>
+    /// <param name="files">Optional list of files to attach.</param>
+    /// <param name="cancellationToken">Request cancellation.</param>
     [HttpPost("info-plaintext")]
     public async Task<ActionResult> SendInfoEmailPlainTextAsync(
         [FromQuery] string? to,
@@ -93,6 +132,13 @@ public sealed class EmailsController(INotificationService notificationService) :
     }
 
     /// <summary>Sends a manufacturing-related email with a plain text body.</summary>
+    /// <param name="to">The recipient's email address.</param>
+    /// <param name="subject">The email subject.</param>
+    /// <param name="replyTo">The reply-to email address.</param>
+    /// <param name="cc">List of CC recipients.</param>
+    /// <param name="bcc">List of BCC recipients.</param>
+    /// <param name="files">Optional list of files to attach.</param>
+    /// <param name="cancellationToken">Request cancellation.</param>
     [HttpPost("manufacturing-plaintext")]
     public async Task<ActionResult> SendManufacturingEmailPlainTextAsync(
         [FromQuery] string? to,
@@ -108,6 +154,13 @@ public sealed class EmailsController(INotificationService notificationService) :
     }
 
     /// <summary>Sends a no-reply email with a plain text body.</summary>
+    /// <param name="to">The recipient's email address.</param>
+    /// <param name="subject">The email subject.</param>
+    /// <param name="replyTo">The reply-to email address.</param>
+    /// <param name="cc">List of CC recipients.</param>
+    /// <param name="bcc">List of BCC recipients.</param>
+    /// <param name="files">Optional list of files to attach.</param>
+    /// <param name="cancellationToken">Request cancellation.</param>
     [HttpPost("noreply-plaintext")]
     public async Task<ActionResult> SendNoReplyEmailPlainTextAsync(
         [FromQuery] string? to,
@@ -123,6 +176,13 @@ public sealed class EmailsController(INotificationService notificationService) :
     }
 
     /// <summary>Sends a support email with a plain text body.</summary>
+    /// <param name="to">The recipient's email address.</param>
+    /// <param name="subject">The email subject.</param>
+    /// <param name="replyTo">The reply-to email address.</param>
+    /// <param name="cc">List of CC recipients.</param>
+    /// <param name="bcc">List of BCC recipients.</param>
+    /// <param name="files">Optional list of files to attach.</param>
+    /// <param name="cancellationToken">Request cancellation.</param>
     [HttpPost("support-plaintext")]
     public async Task<ActionResult> SendSupportEmailPlainTextAsync(
         [FromQuery] string? to,
