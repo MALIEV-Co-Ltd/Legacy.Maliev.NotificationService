@@ -164,6 +164,43 @@ public sealed class LegacyEmailHttpAcceptanceTests
         Assert.Empty(factory.Payloads);
     }
 
+    [Theory]
+    [InlineData("to", "nonempty")]
+    [InlineData("subject", "nonempty")]
+    [InlineData("body", "")]
+    public async Task MissingRequiredPlaintextValue_ReturnsFieldErrorWithoutProviderRequest(string missing, string body)
+    {
+        await using var factory = new LegacyEmailFactory();
+        using var client = factory.Client();
+        using var content = new StringContent(body, Encoding.UTF8, "text/plain");
+        using var response = await client.PostAsync(Query("info-plaintext", missing: missing), content);
+
+        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+        var errors = await response.Content.ReadFromJsonAsync<JsonElement>();
+        Assert.True(errors.TryGetProperty(missing, out _), errors.ToString());
+        Assert.Empty(factory.Payloads);
+    }
+
+    [Fact]
+    public async Task MultipleAttachments_PreserveOrderAndExactBinaryBytes()
+    {
+        await using var factory = new LegacyEmailFactory();
+        using var client = factory.Client();
+        using var form = new MultipartFormDataContent();
+        form.Add(new ByteArrayContent([0, 1, 2, 255]), "files", "first.bin");
+        form.Add(new ByteArrayContent([255, 0, 128]), "files", "second.bin");
+        using var response = await client.PostAsync(Query("support", "synthetic"), form);
+
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        var payload = Assert.Single(factory.Payloads);
+        var attachments = payload.GetProperty("attachment").EnumerateArray().ToArray();
+        Assert.Equal(2, attachments.Length);
+        Assert.Equal("first.bin", attachments[0].GetProperty("name").GetString());
+        Assert.Equal("AAEC/w==", attachments[0].GetProperty("content").GetString());
+        Assert.Equal("second.bin", attachments[1].GetProperty("name").GetString());
+        Assert.Equal("/wCA", attachments[1].GetProperty("content").GetString());
+    }
+
     private static string Query(string route, string? body = null, string? missing = null)
     {
         var values = new List<KeyValuePair<string, string>>
