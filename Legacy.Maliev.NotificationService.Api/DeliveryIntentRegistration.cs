@@ -31,7 +31,9 @@ internal static class DeliveryIntentRegistration
         builder.Services.AddScoped<DeliveryIntentAdmissionService>();
         builder.Services.AddScoped<DeliveryIntentExecutionService>();
         builder.Services.AddHttpClient<IDeliveryIntentSubmission, BrevoDeliveryIntentSubmission>(BrevoDeliveryIntentSubmission.ClientName, client =>
-        { client.BaseAddress = new Uri("https://api.brevo.com/v3/"); client.Timeout = TimeSpan.FromSeconds(65); })
+        {
+            client.BaseAddress = new Uri("https://api.brevo.com/v3/"); client.Timeout = TimeSpan.FromSeconds(65);
+        })
             .RedactLoggedHeaders(["api-key", "Authorization"])
             // This fixed-origin provider client must have no shared retry/delegating policy.
             .ConfigureAdditionalHttpMessageHandlers((handlers, _) => handlers.Clear())
