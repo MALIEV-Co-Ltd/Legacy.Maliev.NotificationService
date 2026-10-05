@@ -34,7 +34,7 @@ public sealed class WorkflowContractTests
     }
 
     [Theory]
-    [InlineData("ref: 4e755bef631009e3339215c79b36e53f7c0420a6", "ref: main")]
+    [InlineData("ref: c22e94a8202964a85ee69b96d5fe62cdc1fafe55", "ref: main")]
     [InlineData("repository: MALIEV-Co-Ltd/Legacy.Maliev.AccountingService", "repository: MALIEV-Co-Ltd/Legacy.Maliev.OrderService")]
     [InlineData("path: .dependencies/Legacy.Maliev.AccountingService", "path: .dependencies/other-accounting")]
     public void BuildAndTest_RejectsChangedJoinedConsumer(string original, string replacement) => AssertMutationRejected(original, replacement);
@@ -313,7 +313,7 @@ internal static partial class WorkflowContractValidator
             new Dictionary<string, string>(StringComparer.Ordinal)
             {
                 ["repository"] = "MALIEV-Co-Ltd/Legacy.Maliev.AccountingService",
-                ["ref"] = "4e755bef631009e3339215c79b36e53f7c0420a6",
+                ["ref"] = "c22e94a8202964a85ee69b96d5fe62cdc1fafe55",
                 ["path"] = ".dependencies/Legacy.Maliev.AccountingService",
                 ["persist-credentials"] = "false",
             });
