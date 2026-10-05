@@ -103,7 +103,7 @@ public sealed class NotificationDeliveryIntentBoundaryTests(DeliveryIntentPostgr
         }
     }
 
-    private sealed class NotificationFactory(bool loseFirstResponse = false) : WebApplicationFactory<Program>
+    private sealed class NotificationFactory(bool loseFirstResponse = false) : WebApplicationFactory<NotificationProgram>
     {
         private readonly RSA signingKey = RSA.Create(2048);
 

@@ -423,7 +423,7 @@ public sealed class NotificationIntentV2HttpTests(DeliveryIntentPostgresFixture 
     }
 }
 
-public sealed class IntentV2Factory : WebApplicationFactory<Program>
+public sealed class IntentV2Factory : WebApplicationFactory<NotificationProgram>
 {
     public const string IntentId = "fcdac787-947f-43fc-8022-f7be910b77e3";
     public const string WorkflowId = "d66d56b7-3c19-46e5-b2df-cb9077463521";

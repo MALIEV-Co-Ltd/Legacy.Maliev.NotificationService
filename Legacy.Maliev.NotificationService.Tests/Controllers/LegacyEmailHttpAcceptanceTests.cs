@@ -214,7 +214,7 @@ public sealed class LegacyEmailHttpAcceptanceTests
             .Select(item => item.Key + "=" + Uri.EscapeDataString(item.Value)));
     }
 
-    private sealed class LegacyEmailFactory : WebApplicationFactory<Program>
+    private sealed class LegacyEmailFactory : WebApplicationFactory<NotificationProgram>
     {
         private const string Issuer = "https://email-fixture.invalid";
         private const string Audience = "email-fixture";
