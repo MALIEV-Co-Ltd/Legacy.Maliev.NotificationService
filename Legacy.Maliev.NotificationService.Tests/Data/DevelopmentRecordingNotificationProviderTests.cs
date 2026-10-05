@@ -101,7 +101,7 @@ public sealed class DevelopmentRecordingNotificationProviderTests
         HttpStatusCode expectedStatus)
     {
         using var rsa = RSA.Create(2048);
-        await using var factory = new WebApplicationFactory<Program>().WithWebHostBuilder(builder =>
+        await using var factory = new WebApplicationFactory<NotificationProgram>().WithWebHostBuilder(builder =>
         {
             builder.UseEnvironment(environment);
             builder.UseSetting("Notifications:UseDevelopmentRecordingProvider", "true");
@@ -123,7 +123,7 @@ public sealed class DevelopmentRecordingNotificationProviderTests
     public void ProductionStartup_RejectsMissingProtectedBrevoApiKey(string apiKey)
     {
         using var rsa = RSA.Create(2048);
-        using var factory = new WebApplicationFactory<Program>().WithWebHostBuilder(builder =>
+        using var factory = new WebApplicationFactory<NotificationProgram>().WithWebHostBuilder(builder =>
         {
             builder.UseEnvironment("Production");
             builder.UseSetting("Notifications:UseDevelopmentRecordingProvider", "false");
@@ -142,7 +142,7 @@ public sealed class DevelopmentRecordingNotificationProviderTests
     public void ProductionStartup_AcceptsExternallySuppliedBrevoApiKey()
     {
         using var rsa = RSA.Create(2048);
-        using var factory = new WebApplicationFactory<Program>().WithWebHostBuilder(builder =>
+        using var factory = new WebApplicationFactory<NotificationProgram>().WithWebHostBuilder(builder =>
         {
             builder.UseEnvironment("Production");
             builder.UseSetting("Notifications:UseDevelopmentRecordingProvider", "false");
