@@ -38,7 +38,7 @@ jobs:
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
           repository: MALIEV-Co-Ltd/Legacy.Maliev.AccountingService
-          ref: 94376b1367173ce60eb083ebafa09d66b500a987
+          ref: 4e755bef631009e3339215c79b36e53f7c0420a6
           path: .dependencies/Legacy.Maliev.AccountingService
           persist-credentials: false
       - name: Validate .NET solution
