@@ -228,7 +228,8 @@ public sealed class LegacyEmailHttpAcceptanceTests
         using var body = LegacyBody(route, "ข้อความ synthetic");
         using var response = await client.PostAsync(Query(route, route.EndsWith("-plaintext", StringComparison.Ordinal) ? null : "ข้อความ synthetic"), body);
         Assert.Equal(expected, (int)response.StatusCode);
-        Assert.Empty(await response.Content.ReadAsStringAsync());
+        if (expected == 200) Assert.Empty(await response.Content.ReadAsStringAsync());
+        else await AssertOpaqueClientProblemAsync(response, expected);
         Assert.Single(factory.Payloads);
     }
 
@@ -250,7 +251,7 @@ public sealed class LegacyEmailHttpAcceptanceTests
         using var body = LegacyBody(route, "body");
         using var response = await client.PostAsync(query, body);
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
-        Assert.Empty(await response.Content.ReadAsStringAsync());
+        await AssertOpaqueClientProblemAsync(response, 400);
         Assert.Empty(factory.Payloads);
     }
 
@@ -340,6 +341,17 @@ public sealed class LegacyEmailHttpAcceptanceTests
             try { using var completed = await send.WaitAsync(TimeSpan.FromSeconds(10)); }
             catch { /* Cleanup must not replace the original assertion failure. */ }
         }
+    }
+
+    private static async Task AssertOpaqueClientProblemAsync(HttpResponseMessage response, int status)
+    {
+        var text = await response.Content.ReadAsStringAsync();
+        using var json = JsonDocument.Parse(text);
+        Assert.Equal(status, json.RootElement.GetProperty("status").GetInt32());
+        Assert.Equal(status == 400 ? "Bad Request" : "Bad Gateway", json.RootElement.GetProperty("title").GetString());
+        Assert.True(!json.RootElement.TryGetProperty("detail", out var detail) || detail.ValueKind == JsonValueKind.Null);
+        foreach (var sensitive in new[] { "not-an-address", "recipient@example.invalid", "malformed-provider-synthetic", "provider-rejection-synthetic", "synthetic-email-fixture-only" })
+            Assert.DoesNotContain(sensitive, text, StringComparison.Ordinal);
     }
 
     private static HttpContent LegacyBody(string route, string body)
