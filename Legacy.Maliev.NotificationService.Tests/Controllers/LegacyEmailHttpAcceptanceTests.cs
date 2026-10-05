@@ -272,8 +272,9 @@ public sealed class LegacyEmailHttpAcceptanceTests
         Assert.False(payload.TryGetProperty("replyTo", out _));
         Assert.False(payload.TryGetProperty("bcc", out _));
         Assert.False(payload.TryGetProperty("attachment", out _));
-        Assert.Equal(["cc2@example.invalid", "cc1@example.invalid"],
-            payload.GetProperty("cc").EnumerateArray().Select(value => value.GetProperty("email").GetString()).ToArray());
+        Assert.Collection(payload.GetProperty("cc").EnumerateArray(),
+            value => Assert.Equal("cc2@example.invalid", value.GetProperty("email").GetString()),
+            value => Assert.Equal("cc1@example.invalid", value.GetProperty("email").GetString()));
     }
 
     [Theory]
