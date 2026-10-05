@@ -33,6 +33,17 @@ public sealed class WorkflowContractTests
             "ref: main # 7edcd961024868513fd5f373cab3dcb261197f77");
     }
 
+    [Theory]
+    [InlineData("ref: 94376b1367173ce60eb083ebafa09d66b500a987", "ref: main")]
+    [InlineData("repository: MALIEV-Co-Ltd/Legacy.Maliev.AccountingService", "repository: MALIEV-Co-Ltd/Legacy.Maliev.OrderService")]
+    [InlineData("path: .dependencies/Legacy.Maliev.AccountingService", "path: .dependencies/other-accounting")]
+    public void BuildAndTest_RejectsChangedJoinedConsumer(string original, string replacement) => AssertMutationRejected(original, replacement);
+
+    [Theory]
+    [InlineData("VSTestCollect: XPlat Code Coverage", "VSTestCollect: disabled")]
+    [InlineData("if: always()", "if: success()")]
+    public void BuildAndTest_RejectsMissingRawEvidence(string original, string replacement) => AssertMutationRejected(original, replacement);
+
     [Fact]
     public void ApiProject_UsesOnlyLegacyServiceDefaults()
     {
@@ -225,10 +236,49 @@ internal static partial class WorkflowContractValidator
         RejectDuplicatedValidationActionsAndCommands(jobs);
 
         var steps = RequireSequence(validateJob, "steps");
-        if (steps.Children.Count != 4)
+        if (steps.Children.Count != 7)
         {
-            throw new InvalidOperationException("Validate job must contain exactly four caller-owned steps.");
+            throw new InvalidOperationException("Validate job must contain four checkout steps, validation and two evidence steps.");
         }
+
+        var environment = RequireMapping(validateJob, "env");
+        if (environment.Children.Count != 4)
+        {
+            throw new InvalidOperationException("Validate environment must contain only dependency root and evidence properties.");
+        }
+
+        RequireScalarValue(environment, "MalievWorkspaceRoot", "${{ github.workspace }}/.dependencies");
+        RequireScalarValue(environment, "VSTestCollect", "XPlat Code Coverage");
+        RequireScalarValue(environment, "VSTestLogger", "trx");
+        RequireScalarValue(environment, "VSTestResultsDirectory", "${{ github.workspace }}/runner-results");
+
+        var gate = RequireMapping(steps.Children[5], "coverage gate");
+        if (gate.Children.Count != 2)
+        {
+            throw new InvalidOperationException("Coverage gate must contain only name and run.");
+        }
+
+        RequireScalarValue(gate, "name", "Gate owned production coverage");
+        RequireScalarValue(gate, "run", "python3 scripts/verify-runner-coverage.py runner-results");
+        var evidence = RequireMapping(steps.Children[6], "evidence upload");
+        if (evidence.Children.Count != 4)
+        {
+            throw new InvalidOperationException("Evidence upload must contain exactly name, if, uses and with.");
+        }
+
+        RequireScalarValue(evidence, "name", "Preserve validation evidence");
+        RequireScalarValue(evidence, "if", "always()");
+        RequireScalarValue(evidence, "uses", "actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02");
+        var evidenceInputs = RequireMapping(evidence, "with");
+        if (evidenceInputs.Children.Count != 4)
+        {
+            throw new InvalidOperationException("Evidence upload must have exactly four bounded inputs.");
+        }
+
+        RequireScalarValue(evidenceInputs, "name", "notification-validation-${{ github.sha }}");
+        RequireScalarValue(evidenceInputs, "path", "runner-results");
+        RequireScalarValue(evidenceInputs, "if-no-files-found", "warn");
+        RequireScalarValue(evidenceInputs, "retention-days", "7");
 
         ValidateStep(
             steps.Children[0],
@@ -259,6 +309,16 @@ internal static partial class WorkflowContractValidator
             });
         ValidateStep(
             steps.Children[3],
+            CheckoutAction,
+            new Dictionary<string, string>(StringComparer.Ordinal)
+            {
+                ["repository"] = "MALIEV-Co-Ltd/Legacy.Maliev.AccountingService",
+                ["ref"] = "94376b1367173ce60eb083ebafa09d66b500a987",
+                ["path"] = ".dependencies/Legacy.Maliev.AccountingService",
+                ["persist-credentials"] = "false",
+            });
+        ValidateStep(
+            steps.Children[4],
             SharedValidationAction,
             new Dictionary<string, string>(StringComparer.Ordinal)
             {

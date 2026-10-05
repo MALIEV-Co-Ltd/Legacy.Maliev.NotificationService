@@ -10,12 +10,12 @@
 
   <ItemGroup>
     <PackageReference Include="coverlet.collector" Version="6.0.4" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="10.0.3" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="10.0.12" />
     <PackageReference Include="Microsoft.Extensions.TimeProvider.Testing" Version="10.1.0" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.14.1" />
     <PackageReference Include="Moq" Version="4.20.72" />
     <PackageReference Include="SSH.NET" Version="2026.0.0" />
-    <PackageReference Include="Testcontainers.PostgreSql" Version="4.10.0" />
+    <PackageReference Include="Testcontainers.PostgreSql" Version="4.14.0" />
     <PackageReference Include="xunit" Version="2.9.3" />
     <PackageReference Include="xunit.runner.visualstudio" Version="3.1.4" />
     <PackageReference Include="YamlDotNet" Version="16.3.0" />
@@ -26,7 +26,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Legacy.Maliev.NotificationService.Api\Legacy.Maliev.NotificationService.Api.csproj" />
+    <ProjectReference Include="..\Legacy.Maliev.NotificationService.Api\Legacy.Maliev.NotificationService.Api.csproj" Aliases="global,NotificationApi" />
+    <ProjectReference Include="$(MalievWorkspaceRoot)\Legacy.Maliev.AccountingService\Legacy.Maliev.AccountingService.Api\Legacy.Maliev.AccountingService.Api.csproj" Aliases="global,AccountingApi" />
+    <ProjectReference Include="$(MalievWorkspaceRoot)\Legacy.Maliev.AccountingService\Legacy.Maliev.AccountingService.Tests\Legacy.Maliev.AccountingService.Tests.csproj" />
     <ProjectReference Include="..\Legacy.Maliev.NotificationService.Application\Legacy.Maliev.NotificationService.Application.csproj" />
     <ProjectReference Include="..\Legacy.Maliev.NotificationService.Data\Legacy.Maliev.NotificationService.Data.csproj" />
     <ProjectReference Include="..\Legacy.Maliev.NotificationService.Domain\Legacy.Maliev.NotificationService.Domain.csproj" />

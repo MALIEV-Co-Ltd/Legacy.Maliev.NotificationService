@@ -12,6 +12,9 @@ jobs:
     runs-on: ubuntu-latest
     env:
       MalievWorkspaceRoot: ${{ github.workspace }}/.dependencies
+      VSTestCollect: XPlat Code Coverage
+      VSTestLogger: trx
+      VSTestResultsDirectory: ${{ github.workspace }}/runner-results
     steps:
       - name: Check out NotificationService
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
@@ -31,8 +34,25 @@ jobs:
           ref: 78e48ffc4ee000df0510cba5e7c7a3c4c4d539d7
           path: .dependencies/Legacy.Maliev.CompatibilityContracts
           persist-credentials: false
+      - name: Check out the actual Accounting consumer fixture
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          repository: MALIEV-Co-Ltd/Legacy.Maliev.AccountingService
+          ref: 94376b1367173ce60eb083ebafa09d66b500a987
+          path: .dependencies/Legacy.Maliev.AccountingService
+          persist-credentials: false
       - name: Validate .NET solution
         uses: MALIEV-Co-Ltd/Legacy.Maliev.Workflows/actions/dotnet-validate@73dd7304ffe85ec504389fd7664cc39070b9f148
         with:
           solution: Legacy.Maliev.NotificationService.slnx
           use-local-maliev-dependencies: 'true'
+      - name: Gate owned production coverage
+        run: python3 scripts/verify-runner-coverage.py runner-results
+      - name: Preserve validation evidence
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: notification-validation-${{ github.sha }}
+          path: runner-results
+          if-no-files-found: warn
+          retention-days: 7

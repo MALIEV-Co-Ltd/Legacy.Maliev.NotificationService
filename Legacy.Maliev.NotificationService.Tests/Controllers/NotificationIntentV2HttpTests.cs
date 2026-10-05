@@ -438,6 +438,11 @@ public sealed class IntentV2Factory : WebApplicationFactory<Program>
     private readonly bool controlledProvider;
     private readonly bool controlledAuthorities;
     public IntentContextFactory Database { get; }
+    public string ExpectedIntentId { get; set; } = IntentId;
+    public string ExpectedResourceId { get; set; } = "42";
+    public string ExpectedBody { get; set; } = "synthetic invoice";
+    public string JwtIssuer { get; set; } = Issuer;
+    public JsonElement? ProviderPayload { get; private set; }
     public bool LoseProviderAcknowledgment { get; set; }
     public string IamMode { get; set; } = "allow";
     public List<string> IamOperations { get; } = [];
@@ -485,7 +490,7 @@ public sealed class IntentV2Factory : WebApplicationFactory<Program>
         if (identity == "duplicate-kind") claims.Add(new("identity_kind", "employee"));
         if (identity == "duplicate-sub") claims.Add(new("sub", "service:other"));
         var now = DateTime.UtcNow;
-        var token = new JwtSecurityToken(Issuer, Audience, claims, now.AddMinutes(-1), now.AddMinutes(5),
+        var token = new JwtSecurityToken(JwtIssuer, Audience, claims, now.AddMinutes(-1), now.AddMinutes(5),
             new SigningCredentials(new RsaSecurityKey(signingKey), SecurityAlgorithms.RsaSha256));
         client.DefaultRequestHeaders.Authorization = new("Bearer", new JwtSecurityTokenHandler().WriteToken(token));
         return client;
@@ -506,7 +511,7 @@ public sealed class IntentV2Factory : WebApplicationFactory<Program>
     {
         builder.UseEnvironment(HostEnvironment);
         builder.UseSetting("Jwt:PublicKey", Convert.ToBase64String(Encoding.UTF8.GetBytes(signingKey.ExportSubjectPublicKeyInfoPem())));
-        builder.UseSetting("Jwt:Issuer", Issuer);
+        builder.UseSetting("Jwt:Issuer", JwtIssuer);
         builder.UseSetting("Jwt:Audience", Audience);
         builder.UseSetting("Notifications:DeliveryIntentsEnabled", enabled.ToString());
         builder.UseSetting("ConnectionStrings:NotificationDeliveryIntentDbContext", connection);
@@ -570,7 +575,7 @@ public sealed class IntentV2Factory : WebApplicationFactory<Program>
             return new(HttpStatusCode.OK) { Content = JsonContent.Create(new { allowed = true }) };
         }
         Assert.Equal(LiveCredential, Assert.Single(request.Headers.GetValues("X-Maliev-IAM-Live-Check-Key")));
-        Assert.Equal("legacy-notification/invoice/42", body.GetProperty("resourcePath").GetString());
+        Assert.Equal("legacy-notification/invoice/" + ExpectedResourceId, body.GetProperty("resourcePath").GetString());
         Assert.True(body.GetProperty("bypassCache").GetBoolean());
         Assert.Contains(permission, new[] { "legacy.notifications.intent.admit", "legacy.notifications.intent.execute", "legacy.notifications.intent.read" });
         IamOperations.Add(permission.Split('.').Last());
@@ -598,8 +603,9 @@ public sealed class IntentV2Factory : WebApplicationFactory<Program>
         Assert.Equal(HttpMethod.Post, request.Method);
         Assert.Equal("https://api.brevo.com/v3/smtp/email", request.RequestUri!.AbsoluteUri);
         var body = await request.Content!.ReadFromJsonAsync<JsonElement>(token);
-        Assert.Equal(IntentId, body.GetProperty("headers").GetProperty("idempotencyKey").GetString());
-        Assert.Equal("synthetic invoice", body.GetProperty("htmlContent").GetString());
+        Assert.Equal(ExpectedIntentId, body.GetProperty("headers").GetProperty("idempotencyKey").GetString());
+        Assert.Equal(ExpectedBody, body.GetProperty("htmlContent").GetString());
+        ProviderPayload = body.Clone();
         Interlocked.Increment(ref providerCalls);
         if (BlockProvider)
         {
