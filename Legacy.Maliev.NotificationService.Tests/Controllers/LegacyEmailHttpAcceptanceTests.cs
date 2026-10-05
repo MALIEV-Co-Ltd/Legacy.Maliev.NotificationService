@@ -201,6 +201,167 @@ public sealed class LegacyEmailHttpAcceptanceTests
         Assert.Equal("/wCA", attachments[1].GetProperty("content").GetString());
     }
 
+    public static IEnumerable<object[]> ProviderAcknowledgmentCases()
+    {
+        foreach (var route in new[] { "info", "support-plaintext" })
+            foreach (var (json, providerStatus, expected) in new[]
+            {
+                ("{}", 201, 400), ("null", 201, 400), ("{\"messageId\":null}", 201, 400),
+                ("{\"messageId\":\"\"}", 201, 200), ("{\"messageId\":\" \"}", 201, 200),
+                ("{\"messageId\":7}", 201, 502), ("{malformed-provider-synthetic", 201, 502),
+                ("provider-rejection-synthetic", 401, 502),
+            })
+                yield return [route, json, providerStatus, expected];
+    }
+
+    [Theory]
+    [MemberData(nameof(ProviderAcknowledgmentCases))]
+    public async Task ActualProviderAcknowledgment_PreservesSourceNullRuleAndOpaqueFailureBoundary(
+        string route, string json, int providerStatus, int expected)
+    {
+        await using var factory = new LegacyEmailFactory
+        {
+            ProviderReply = (_, _) => Task.FromResult(new HttpResponseMessage((HttpStatusCode)providerStatus)
+            { Content = new StringContent(json, Encoding.UTF8, "application/json") }),
+        };
+        using var client = factory.Client();
+        using var body = LegacyBody(route, "ข้อความ synthetic");
+        using var response = await client.PostAsync(Query(route, route.EndsWith("-plaintext", StringComparison.Ordinal) ? null : "ข้อความ synthetic"), body);
+        Assert.Equal(expected, (int)response.StatusCode);
+        if (expected == 200) Assert.Empty(await response.Content.ReadAsStringAsync());
+        else await AssertOpaqueClientProblemAsync(response, expected);
+        Assert.Single(factory.Payloads);
+    }
+
+    [Theory]
+    [InlineData("info", "to")]
+    [InlineData("info", "replyTo")]
+    [InlineData("info", "cc")]
+    [InlineData("info", "bcc")]
+    [InlineData("support-plaintext", "to")]
+    [InlineData("support-plaintext", "replyTo")]
+    [InlineData("support-plaintext", "cc")]
+    [InlineData("support-plaintext", "bcc")]
+    public async Task ActualRecipientValidation_RejectsMalformedAddressBeforeTransport(string route, string field)
+    {
+        await using var factory = new LegacyEmailFactory();
+        using var client = factory.Client();
+        var query = Query(route, route.EndsWith("-plaintext", StringComparison.Ordinal) ? null : "body", missing: field)
+            + "&" + field + "=not-an-address";
+        using var body = LegacyBody(route, "body");
+        using var response = await client.PostAsync(query, body);
+        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+        await AssertOpaqueClientProblemAsync(response, 400);
+        Assert.Empty(factory.Payloads);
+    }
+
+    [Theory]
+    [InlineData("info")]
+    [InlineData("manufacturing")]
+    [InlineData("noreply")]
+    [InlineData("support")]
+    public async Task ActualOptionalRecipients_OmitsBlankFieldsAndPreservesNonblankOrder(string route)
+    {
+        await using var factory = new LegacyEmailFactory();
+        using var client = factory.Client();
+        var query = "/Emails/" + route + "?to=recipient@example.invalid&subject=synthetic&body=body&replyTo=%20"
+            + "&cc=&cc=cc2@example.invalid&cc=%20&cc=cc1@example.invalid&bcc=&bcc=%20";
+        using var body = LegacyBody(route, "body");
+        using var response = await client.PostAsync(query, body);
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        var payload = Assert.Single(factory.Payloads);
+        Assert.False(payload.TryGetProperty("replyTo", out _));
+        Assert.False(payload.TryGetProperty("bcc", out _));
+        Assert.False(payload.TryGetProperty("attachment", out _));
+        Assert.Collection(payload.GetProperty("cc").EnumerateArray(),
+            value => Assert.Equal("cc2@example.invalid", value.GetProperty("email").GetString()),
+            value => Assert.Equal("cc1@example.invalid", value.GetProperty("email").GetString()));
+    }
+
+    [Theory]
+    [InlineData("info")]
+    [InlineData("support-plaintext")]
+    public async Task ActualTransientProviderRetries_KeepOneWireIdempotencyKeyAndUnchangedPayload(string route)
+    {
+        var attempts = 0;
+        await using var factory = new LegacyEmailFactory
+        {
+            MaxRetryAttempts = 2,
+            ProviderReply = (_, _) => Task.FromResult(++attempts switch
+            {
+                1 => new HttpResponseMessage(HttpStatusCode.TooManyRequests),
+                2 => new HttpResponseMessage(HttpStatusCode.ServiceUnavailable),
+                _ => new HttpResponseMessage(HttpStatusCode.Created) { Content = JsonContent.Create(new { messageId = "recovered-synthetic" }) },
+            }),
+        };
+        using var client = factory.Client();
+        using var body = LegacyBody(route, "ข้อความ synthetic");
+        using var response = await client.PostAsync(Query(route, route.EndsWith("-plaintext", StringComparison.Ordinal) ? null : "ข้อความ synthetic"), body);
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        Assert.Equal(3, attempts);
+        Assert.Equal(3, factory.Payloads.Count);
+        var key = factory.Payloads[0].GetProperty("headers").GetProperty("idempotencyKey").GetString();
+        Assert.True(Guid.TryParse(key, out _));
+        Assert.All(factory.Payloads, payload => Assert.Equal(factory.Payloads[0].GetRawText(), payload.GetRawText()));
+    }
+
+    [Theory]
+    [InlineData("info")]
+    [InlineData("support-plaintext")]
+    public async Task ActualCallerAbort_PropagatesToProviderAndDoesNotStartRetry(string route)
+    {
+        var entered = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+        var canceled = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+        await using var factory = new LegacyEmailFactory
+        {
+            MaxRetryAttempts = 2,
+            ProviderReply = async (_, token) =>
+            {
+                entered.TrySetResult();
+                try { await Task.Delay(Timeout.InfiniteTimeSpan, token); }
+                catch (OperationCanceledException) when (token.IsCancellationRequested) { canceled.TrySetResult(); throw; }
+                throw new InvalidOperationException("Provider wait must be canceled.");
+            },
+        };
+        using var client = factory.Client();
+        using var cancellation = new CancellationTokenSource();
+        using var body = LegacyBody(route, "body");
+        var send = client.PostAsync(Query(route, route.EndsWith("-plaintext", StringComparison.Ordinal) ? null : "body"), body, cancellation.Token);
+        try
+        {
+            await entered.Task.WaitAsync(TimeSpan.FromSeconds(10));
+            cancellation.Cancel();
+            await Assert.ThrowsAnyAsync<OperationCanceledException>(() => send);
+            await canceled.Task.WaitAsync(TimeSpan.FromSeconds(10));
+            Assert.Single(factory.Payloads);
+        }
+        finally
+        {
+            cancellation.Cancel();
+            try { using var completed = await send.WaitAsync(TimeSpan.FromSeconds(10)); }
+            catch { /* Cleanup must not replace the original assertion failure. */ }
+        }
+    }
+
+    private static async Task AssertOpaqueClientProblemAsync(HttpResponseMessage response, int status)
+    {
+        var text = await response.Content.ReadAsStringAsync();
+        using var json = JsonDocument.Parse(text);
+        Assert.Equal(status, json.RootElement.GetProperty("status").GetInt32());
+        Assert.Equal(status == 400 ? "Bad Request" : "Bad Gateway", json.RootElement.GetProperty("title").GetString());
+        Assert.True(!json.RootElement.TryGetProperty("detail", out var detail) || detail.ValueKind == JsonValueKind.Null);
+        foreach (var sensitive in new[] { "not-an-address", "recipient@example.invalid", "malformed-provider-synthetic", "provider-rejection-synthetic", "synthetic-email-fixture-only" })
+            Assert.DoesNotContain(sensitive, text, StringComparison.Ordinal);
+    }
+
+    private static HttpContent LegacyBody(string route, string body)
+    {
+        if (route.EndsWith("-plaintext", StringComparison.Ordinal)) return new StringContent(body, Encoding.UTF8, "text/plain");
+        var form = new MultipartFormDataContent();
+        form.Add(new StringContent("synthetic"), "fixture");
+        return form;
+    }
+
     private static string Query(string route, string? body = null, string? missing = null)
     {
         var values = new List<KeyValuePair<string, string>>
@@ -223,6 +384,8 @@ public sealed class LegacyEmailHttpAcceptanceTests
         public bool AllowPermission { get; init; } = true;
         public string HostEnvironment { get; init; } = "Production";
         public bool ControlledProvider { get; init; } = true;
+        public int MaxRetryAttempts { get; init; }
+        public Func<HttpRequestMessage, CancellationToken, Task<HttpResponseMessage>>? ProviderReply { get; init; }
         public PrimaryHandlerObserver PrimaryHandlers { get; } = new();
 
         public HttpClient Client()
@@ -254,7 +417,8 @@ public sealed class LegacyEmailHttpAcceptanceTests
                 var values = new Dictionary<string, string?>
                 {
                     ["Brevo:ApiKey"] = "synthetic-email-fixture-only",
-                    ["Brevo:MaxRetryAttempts"] = "0",
+                    ["Brevo:MaxRetryAttempts"] = MaxRetryAttempts.ToString(System.Globalization.CultureInfo.InvariantCulture),
+                    ["Brevo:RetryDelayMilliseconds"] = "0",
                     ["Notifications:DeliveryIntentsEnabled"] = "false",
                 };
                 foreach (var channel in new[] { "Info", "Manufacturing", "NoReply", "Support" })
@@ -272,6 +436,7 @@ public sealed class LegacyEmailHttpAcceptanceTests
                     Assert.Equal("https://api.brevo.com/v3/smtp/email", request.RequestUri!.AbsoluteUri);
                     Assert.Equal("synthetic-email-fixture-only", Assert.Single(request.Headers.GetValues("api-key")));
                     Payloads.Add(await request.Content!.ReadFromJsonAsync<JsonElement>(token));
+                    if (ProviderReply is not null) return await ProviderReply(request, token);
                     return new(HttpStatusCode.Created) { Content = JsonContent.Create(new { messageId = "controlled-email-1" }) };
                 }));
             });
