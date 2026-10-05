@@ -8,6 +8,7 @@ using Legacy.Maliev.NotificationService.Tests.Data;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Http.Resilience;
 using IntentFixture = Legacy.Maliev.AccountingService.Tests.InvoiceNotificationIntentAcceptanceTests.IntentFixture;
 
 namespace Legacy.Maliev.NotificationService.Tests.Controllers;
@@ -121,17 +122,26 @@ public sealed class AccountingNotificationJoinedHttpTests(DeliveryIntentPostgres
     public async Task DisabledProducerOrWrongSignedService_NeverFallsBackOrReissuesAdmission(bool producerEnabled, string actor)
     {
         await using var joined = await JoinedBoundary.CreateAsync(postgres, producerEnabled: producerEnabled, actor: actor);
+        var resilience = new HttpStandardResilienceOptions();
+        LegacyHttpResilienceExtensions.ConfigureLegacyStandardResilience(resilience);
+        // The actual registered policy retries safe GETs on the disabled
+        // producer's 503. It never retries admission PUT or execution POST.
+        var readAttempts = producerEnabled ? 1 : resilience.Retry.MaxRetryAttempts + 1;
         using var created = await joined.CreateAsync();
         await UncertainAsync(created);
+        Assert.Equal(new[] { "PUT" }.Concat(Enumerable.Repeat("GET", readAttempts)), joined.Methods);
         var financial = joined.Accounting.DownstreamCalls - joined.Accounting.NotificationCalls;
         using var repeat = await joined.CreateAsync();
         await UncertainAsync(repeat);
         Assert.Equal(financial, joined.Accounting.DownstreamCalls - joined.Accounting.NotificationCalls);
-        Assert.Equal(new[] { "PUT", "GET", "GET" }, joined.Methods);
+        Assert.Equal(new[] { "PUT" }.Concat(Enumerable.Repeat("GET", readAttempts * 2)), joined.Methods);
         Assert.Equal(0, joined.Producer.ProviderCalls);
         Assert.Equal(0, joined.Producer.LegacyProviderCalls);
         await using var database = joined.Accounting.Database();
-        Assert.Equal("AdmissionIssued", (await database.InvoiceNotificationCorrelations.AsNoTracking().SingleAsync()).Phase);
+        var retained = await database.InvoiceNotificationCorrelations.AsNoTracking().SingleAsync();
+        Assert.Equal("AdmissionIssued", retained.Phase);
+        Assert.Equal(joined.Accounting.Operation, retained.WorkflowOperationId);
+        joined.AssertOnlyIntentPath(retained.IntentId);
         Assert.Equal("NeedsReconciliation", (await database.InvoiceCreationAdmissions.AsNoTracking().SingleAsync()).State);
         Assert.Single(await database.Invoices.AsNoTracking().ToListAsync());
         Assert.Single(await database.Files.AsNoTracking().ToListAsync());
@@ -195,6 +205,9 @@ public sealed class AccountingNotificationJoinedHttpTests(DeliveryIntentPostgres
         }
 
         public Task<HttpResponseMessage> CreateAsync() => Accounting.CreateAsync(delegation: Accounting.Delegation());
+
+        public void AssertOnlyIntentPath(Guid intentId) => Assert.All(loss.Requests,
+            request => Assert.Equal("/notifications/v2/delivery-intents/" + intentId.ToString("D"), request.Path));
 
         private async Task<HttpResponseMessage> ForwardAsync(HttpRequestMessage request, CancellationToken token)
         {
