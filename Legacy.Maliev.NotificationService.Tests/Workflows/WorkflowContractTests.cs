@@ -51,6 +51,13 @@ public sealed class WorkflowContractTests
     [InlineData("if: always()", "if: success()")]
     public void BuildAndTest_RejectsMissingRawEvidence(string original, string replacement) => AssertMutationRejected(original, replacement);
 
+    [Theory]
+    [InlineData("timeout-minutes: 6", "timeout-minutes: 60")]
+    [InlineData("python3 scripts/preload-postgres-image.py", "python3 scripts/preload-postgres-image.py --image postgres:latest")]
+    [InlineData("python3 -m unittest discover -s scripts -p test_preload_postgres_image.py -v", "echo skipped preload controls")]
+    [InlineData("timeout-minutes: 6", "continue-on-error: true\n        timeout-minutes: 6")]
+    public void BuildAndTest_RejectsChangedOrNonblockingImagePreload(string original, string replacement) => AssertMutationRejected(original, replacement);
+
     [Fact]
     public void ApiProject_UsesOnlyLegacyServiceDefaults()
     {
@@ -243,9 +250,9 @@ internal static partial class WorkflowContractValidator
         RejectDuplicatedValidationActionsAndCommands(jobs);
 
         var steps = RequireSequence(validateJob, "steps");
-        if (steps.Children.Count != 9)
+        if (steps.Children.Count != 10)
         {
-            throw new InvalidOperationException("Validate job must contain five checkout steps, exact consumer verification, validation and two evidence steps.");
+            throw new InvalidOperationException("Validate job must contain five checkouts, consumer verification, bounded image preload, validation and two evidence steps.");
         }
 
         var environment = RequireMapping(validateJob, "env");
@@ -259,7 +266,7 @@ internal static partial class WorkflowContractValidator
         RequireScalarValue(environment, "VSTestLogger", "trx");
         RequireScalarValue(environment, "VSTestResultsDirectory", "${{ github.workspace }}/runner-results");
 
-        var gate = RequireMapping(steps.Children[7], "coverage gate");
+        var gate = RequireMapping(steps.Children[8], "coverage gate");
         if (gate.Children.Count != 2)
         {
             throw new InvalidOperationException("Coverage gate must contain only name and run.");
@@ -267,7 +274,7 @@ internal static partial class WorkflowContractValidator
 
         RequireScalarValue(gate, "name", "Gate owned production coverage");
         RequireScalarValue(gate, "run", "python3 scripts/verify-runner-coverage.py runner-results");
-        var evidence = RequireMapping(steps.Children[8], "evidence upload");
+        var evidence = RequireMapping(steps.Children[9], "evidence upload");
         if (evidence.Children.Count != 4)
         {
             throw new InvalidOperationException("Evidence upload must contain exactly name, if, uses and with.");
@@ -339,8 +346,14 @@ internal static partial class WorkflowContractValidator
             throw new InvalidOperationException("Consumer verification must contain only name and run.");
         RequireScalarValue(consumerVerification, "name", "Verify exact BFF consumer before compilation");
         RequireScalarValue(consumerVerification, "run", "python3 scripts/verify-order-notification-consumer.py .dependencies/Legacy.Maliev.Intranet");
+        var preload = RequireMapping(steps.Children[6], "image preload");
+        if (preload.Children.Count != 3)
+            throw new InvalidOperationException("Image preload must contain only name, bounded timeout and exact run.");
+        RequireScalarValue(preload, "name", "Preload unchanged PostgreSQL test image");
+        RequireScalarValue(preload, "timeout-minutes", "6");
+        RequireScalarValue(preload, "run", "python3 -m unittest discover -s scripts -p test_preload_postgres_image.py -v\npython3 scripts/preload-postgres-image.py\n");
         ValidateStep(
-            steps.Children[6],
+            steps.Children[7],
             SharedValidationAction,
             new Dictionary<string, string>(StringComparer.Ordinal)
             {
