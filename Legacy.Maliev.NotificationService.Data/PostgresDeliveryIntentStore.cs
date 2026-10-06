@@ -24,10 +24,19 @@ public sealed class PostgresDeliveryIntentStore(IDbContextFactory<DeliveryIntent
                 INSERT INTO public."NotificationDeliveryIntent"
                 ("Issuer", "ServiceSubject", "IntentId", "Purpose", "ResourceType", "ResourceId", "WorkflowOperationId", "Channel", "BindingVersion", "KeyId", "Binding", "State", "Version", "AdmittedAt", "UpdatedAt")
                 VALUES ({identity.Issuer}, {identity.ServiceSubject}, {identity.IntentId}, {identity.Purpose}, {identity.ResourceType}, {identity.ResourceId}, {identity.WorkflowOperationId}, {identity.Channel.ToString()}, {NotificationIntentBinding.BindingVersion}, {keyId}, {binding}, 'Admitted', 1, {now}, {now})
-                ON CONFLICT ("Issuer", "ServiceSubject", "IntentId") DO NOTHING
+                ON CONFLICT DO NOTHING
                 """, cancellationToken);
-            var existing = await LockedAsync(database, identity, cancellationToken)
-                ?? throw new DeliveryIntentUnavailableException();
+            var existing = await LockedAsync(database, identity, cancellationToken);
+            if (existing is null)
+            {
+                var knownBusinessEffect = await database.Set<DeliveryIntentRow>().AsNoTracking().AnyAsync(value =>
+                    value.Issuer == identity.Issuer && value.ServiceSubject == identity.ServiceSubject &&
+                    value.Purpose == identity.Purpose && value.ResourceType == identity.ResourceType &&
+                    value.ResourceId == identity.ResourceId && value.WorkflowOperationId == identity.WorkflowOperationId,
+                    cancellationToken);
+                if (knownBusinessEffect) throw new DeliveryIntentConflictException();
+                throw new DeliveryIntentUnavailableException();
+            }
             if (existing.Identity != identity || existing.KeyId != keyId ||
                 existing.BindingVersion != NotificationIntentBinding.BindingVersion ||
                 !NotificationIntentBinding.BindingEquals(existing.Binding, binding)) throw new DeliveryIntentConflictException();
