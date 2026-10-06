@@ -185,12 +185,15 @@ public sealed class DeliveryIntentStorePostgresTests(DeliveryIntentPostgresFixtu
     [Fact]
     public async Task ConcurrentFreshContexts_AdmitOneAndFenceOne_UnknownCannotResend()
     {
-        var factory = await fixture.FactoryAsync();
+        var overlap = new AdmissionOverlap();
+        var factory = await fixture.FactoryAsync(overlap);
+        using var caller = new CancellationTokenSource(TimeSpan.FromSeconds(30));
         var first = new PostgresDeliveryIntentStore(factory, TimeProvider.System, Bindings());
         var second = new PostgresDeliveryIntentStore(factory, TimeProvider.System, Bindings());
         var identity = Identity();
-        var admissions = await Task.WhenAll(first.AdmitAsync(identity, "key-a", new string('a', 64), default),
-            second.AdmitAsync(identity, "key-a", new string('a', 64), default));
+        var admissions = await Task.WhenAll(first.AdmitAsync(identity, "key-a", new string('a', 64), caller.Token),
+            second.AdmitAsync(identity, "key-a", new string('a', 64), caller.Token));
+        Assert.Equal(2, overlap.Arrivals);
         Assert.Equal(admissions[0], admissions[1]);
         var fences = await Task.WhenAll(first.TryFenceAsync(admissions[0], default), second.TryFenceAsync(admissions[1], default));
         var fence = Assert.Single(fences, value => value is not null)!;
@@ -199,6 +202,41 @@ public sealed class DeliveryIntentStorePostgresTests(DeliveryIntentPostgresFixtu
         Assert.Equal(DeliveryIntentState.OutcomeUnknown, unknown!.State);
         Assert.Null(await second.TryFenceAsync(unknown, default));
         Assert.Null(await second.TryFenceAsync(admissions[0], default));
+    }
+
+    [Fact]
+    public async Task UnexpectedUniqueIndex_RefusesAdmissionWithoutInventingBusinessConflict()
+    {
+        var factory = await fixture.FactoryAsync();
+        var store = new PostgresDeliveryIntentStore(factory, TimeProvider.System, Bindings());
+        var original = Identity();
+        var winner = await store.AdmitAsync(original, "key-a", new string('a', 64), default);
+        await using var database = await factory.CreateDbContextAsync();
+        await database.Database.ExecuteSqlRawAsync("CREATE UNIQUE INDEX \"UnexpectedAdmissionAuthority\" ON public.\"NotificationDeliveryIntent\" (\"Issuer\")");
+        var unrelated = Identity();
+        await Assert.ThrowsAsync<DeliveryIntentUnavailableException>(() =>
+            store.AdmitAsync(unrelated, "key-a", new string('a', 64), default));
+        Assert.Null(await store.ReadAsync(unrelated.Issuer, unrelated.ServiceSubject, unrelated.IntentId, default));
+        Assert.Equal(winner, await store.ReadAsync(original.Issuer, original.ServiceSubject, original.IntentId, default));
+        Assert.Equal(1, await database.Database.SqlQueryRaw<long>("SELECT count(*) AS \"Value\" FROM public.\"NotificationDeliveryIntent\"").SingleAsync());
+    }
+
+    private sealed class AdmissionOverlap : DbCommandInterceptor
+    {
+        private readonly TaskCompletionSource ready = new(TaskCreationOptions.RunContinuationsAsynchronously);
+        private int arrivals;
+        public int Arrivals => Volatile.Read(ref arrivals);
+
+        public override async ValueTask<InterceptionResult<int>> NonQueryExecutingAsync(DbCommand command,
+            CommandEventData eventData, InterceptionResult<int> result, CancellationToken cancellationToken = default)
+        {
+            if (command.CommandText.Contains("INSERT INTO public.\"NotificationDeliveryIntent\"", StringComparison.Ordinal))
+            {
+                if (Interlocked.Increment(ref arrivals) == 2) ready.TrySetResult();
+                await ready.Task.WaitAsync(TimeSpan.FromSeconds(15), cancellationToken);
+            }
+            return result;
+        }
     }
 
     [Fact]
