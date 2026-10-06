@@ -1,6 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 using Legacy.Maliev.NotificationService.Api;
+using Legacy.Maliev.NotificationService.Api.Http;
 using Legacy.Maliev.NotificationService.Application.Interfaces;
 using Legacy.Maliev.NotificationService.Application.Services;
 using Legacy.Maliev.NotificationService.Data;
@@ -18,6 +19,7 @@ builder.AddDefaultApiVersioning();
 builder.AddStandardCors();
 builder.AddJwtAuthentication();
 builder.AddStandardMiddleware(options => options.EnableRequestLogging = true);
+builder.AddNotificationHostTransportPolicy();
 builder.AddStandardOpenApi(
     title: "Legacy MALIEV Notification Service API",
     description: "Temporary .NET 10 compatibility service preserving the legacy email notification API contract.");
@@ -60,7 +62,9 @@ var deliveryIntentsEnabled = builder.AddDeliveryIntents();
 var app = builder.Build();
 if (deliveryIntentsEnabled) await app.RequireDeliveryIntentReadinessAsync();
 
+app.UseNotificationHostTransportBoundary();
 app.UseStandardMiddleware();
+app.UseNotificationHostTransportPolicy();
 app.UseCors();
 app.UseAuthentication();
 app.UseAuthorization();
