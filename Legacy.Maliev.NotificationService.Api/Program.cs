@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 using Legacy.Maliev.NotificationService.Api;
 using Legacy.Maliev.NotificationService.Application.Interfaces;
@@ -40,6 +41,9 @@ else
         .Bind(builder.Configuration.GetSection(BrevoNotificationOptions.SectionName))
         .ValidateDataAnnotations()
         .Validate(options => HasAllSenders(options.Senders), "Brevo senders must include Info, Manufacturing, NoReply and Support.")
+        .Validate(options => options.Senders is not null && options.Senders.Values.All(sender =>
+            sender is not null && Validator.TryValidateObject(sender, new ValidationContext(sender), null, validateAllProperties: true)),
+            "Brevo sender identities must have valid addresses and display names.")
         .ValidateOnStart();
     builder.Services.AddSingleton(TimeProvider.System);
     builder.Services.AddHttpClient<IBrevoNotificationTransport, BrevoNotificationTransport>(client =>
@@ -74,9 +78,9 @@ if (useDevelopmentRecordingProvider)
 
 await app.RunAsync();
 
-static bool HasAllSenders(IReadOnlyDictionary<EmailChannel, BrevoSenderOptions> senders)
+static bool HasAllSenders(IReadOnlyDictionary<EmailChannel, BrevoSenderOptions>? senders)
 {
-    return senders.ContainsKey(EmailChannel.Info) &&
+    return senders is not null && senders.ContainsKey(EmailChannel.Info) &&
         senders.ContainsKey(EmailChannel.Manufacturing) &&
         senders.ContainsKey(EmailChannel.NoReply) &&
         senders.ContainsKey(EmailChannel.Support);
