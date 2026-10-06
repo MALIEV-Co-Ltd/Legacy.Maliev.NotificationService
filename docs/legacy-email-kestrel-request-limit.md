@@ -17,7 +17,14 @@ bodies; preserve32MiB multipart bytes; and reject declared-over-cap multipart
 before provider invocation. The collection runs without parallel large-body tests.
 No live provider send, ingress capacity, deployment or source whole closure is
 claimed. Native Release/full expected220 and raw four-assembly floors remain
-required; this draft has not run native tests.
+required before acceptance.
+
+Initial native3f3977b built with zero warnings/errors and passed216/220.
+The host-options case passed, but all four HTTP cases used the default factory
+client address localhost:80, producing connection-refused errors before request
+admission. The fixture now reads the actual running IServerAddressesFeature
+address and verifies a loopback dynamic port; all original request assertions
+remain. This correction has not yet run natively.
 
 The75-assignment remaining source readback is off-repository. Source resources,
 private configuration and history were not copied. Historical absent XML/Startup

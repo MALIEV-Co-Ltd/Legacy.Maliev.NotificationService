@@ -8,6 +8,7 @@ using System.Text.Json;
 using Legacy.Maliev.NotificationService.Data;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Hosting.Server;
+using Microsoft.AspNetCore.Hosting.Server.Features;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.Extensions.Configuration;
@@ -109,6 +110,12 @@ public sealed class LegacyEmailKestrelLimitHttpTests
         {
             UseKestrel(0);
             var client = CreateClient(new WebApplicationFactoryClientOptions { AllowAutoRedirect = false });
+            var server = Services.GetRequiredService<IServer>();
+            var addresses = server.Features.Get<IServerAddressesFeature>();
+            Assert.NotNull(addresses);
+            client.BaseAddress = new Uri(Assert.Single(addresses.Addresses));
+            Assert.True(client.BaseAddress.IsLoopback);
+            Assert.NotEqual(80, client.BaseAddress.Port);
             client.Timeout = TimeSpan.FromMinutes(2);
             var now = DateTime.UtcNow;
             var token = new JwtSecurityToken("https://email-kestrel.invalid", "email-kestrel",
