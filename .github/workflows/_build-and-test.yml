@@ -50,6 +50,11 @@ jobs:
           persist-credentials: false
       - name: Verify exact BFF consumer before compilation
         run: python3 scripts/verify-order-notification-consumer.py .dependencies/Legacy.Maliev.Intranet
+      - name: Preload unchanged PostgreSQL test image
+        timeout-minutes: 6
+        run: |
+          python3 -m unittest discover -s scripts -p test_preload_postgres_image.py -v
+          python3 scripts/preload-postgres-image.py
       - name: Validate .NET solution
         uses: MALIEV-Co-Ltd/Legacy.Maliev.Workflows/actions/dotnet-validate@73dd7304ffe85ec504389fd7664cc39070b9f148
         with:
