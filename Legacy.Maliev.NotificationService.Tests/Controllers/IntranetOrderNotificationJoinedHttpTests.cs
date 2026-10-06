@@ -209,9 +209,11 @@ public sealed class IntranetOrderNotificationJoinedHttpTests
                         Payloads.Add(payload);
                         if (ProviderReply is not null) return await ProviderReply(token);
                         return new HttpResponseMessage(ProviderStatus)
-                        { Content = ProviderStatus == HttpStatusCode.Created
-                            ? JsonContent.Create(new { messageId = "joined-provider-ack" })
-                            : new StringContent("provider-private-only") };
+                        {
+                            Content = ProviderStatus == HttpStatusCode.Created
+                                ? JsonContent.Create(new { messageId = "joined-provider-ack" })
+                                : new StringContent("provider-private-only")
+                        };
                     }));
             });
         }
