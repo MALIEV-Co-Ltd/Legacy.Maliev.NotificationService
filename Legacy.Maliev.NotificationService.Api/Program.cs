@@ -8,6 +8,10 @@ using Maliev.Aspire.ServiceDefaults;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Preserve the source host's total request-body limit independently of attachment aggregation.
+builder.WebHost.ConfigureKestrel(options =>
+    options.Limits.MaxRequestBodySize = Legacy.Maliev.NotificationService.Api.Controllers.EmailsController.SizeLimit);
+
 builder.AddServiceDefaults();
 builder.AddDefaultApiVersioning();
 builder.AddStandardCors();
