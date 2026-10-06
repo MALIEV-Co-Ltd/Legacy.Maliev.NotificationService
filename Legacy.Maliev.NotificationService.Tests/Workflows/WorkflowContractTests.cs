@@ -40,6 +40,13 @@ public sealed class WorkflowContractTests
     public void BuildAndTest_RejectsChangedJoinedConsumer(string original, string replacement) => AssertMutationRejected(original, replacement);
 
     [Theory]
+    [InlineData("ref: cda7e5f6817e9462f058eaf6638da58c27e75024", "ref: main")]
+    [InlineData("repository: MALIEV-Co-Ltd/Legacy.Maliev.Intranet", "repository: MALIEV-Co-Ltd/Legacy.Maliev.OrderService")]
+    [InlineData("path: .dependencies/Legacy.Maliev.Intranet", "path: .dependencies/other-intranet")]
+    [InlineData("python3 scripts/verify-order-notification-consumer.py .dependencies/Legacy.Maliev.Intranet", "echo skipped consumer verification")]
+    public void BuildAndTest_RejectsChangedCurrentBffConsumerOrMissingPrecompileGuard(string original, string replacement) => AssertMutationRejected(original, replacement);
+
+    [Theory]
     [InlineData("VSTestCollect: XPlat Code Coverage", "VSTestCollect: disabled")]
     [InlineData("if: always()", "if: success()")]
     public void BuildAndTest_RejectsMissingRawEvidence(string original, string replacement) => AssertMutationRejected(original, replacement);
@@ -236,9 +243,9 @@ internal static partial class WorkflowContractValidator
         RejectDuplicatedValidationActionsAndCommands(jobs);
 
         var steps = RequireSequence(validateJob, "steps");
-        if (steps.Children.Count != 7)
+        if (steps.Children.Count != 9)
         {
-            throw new InvalidOperationException("Validate job must contain four checkout steps, validation and two evidence steps.");
+            throw new InvalidOperationException("Validate job must contain five checkout steps, exact consumer verification, validation and two evidence steps.");
         }
 
         var environment = RequireMapping(validateJob, "env");
@@ -252,7 +259,7 @@ internal static partial class WorkflowContractValidator
         RequireScalarValue(environment, "VSTestLogger", "trx");
         RequireScalarValue(environment, "VSTestResultsDirectory", "${{ github.workspace }}/runner-results");
 
-        var gate = RequireMapping(steps.Children[5], "coverage gate");
+        var gate = RequireMapping(steps.Children[7], "coverage gate");
         if (gate.Children.Count != 2)
         {
             throw new InvalidOperationException("Coverage gate must contain only name and run.");
@@ -260,7 +267,7 @@ internal static partial class WorkflowContractValidator
 
         RequireScalarValue(gate, "name", "Gate owned production coverage");
         RequireScalarValue(gate, "run", "python3 scripts/verify-runner-coverage.py runner-results");
-        var evidence = RequireMapping(steps.Children[6], "evidence upload");
+        var evidence = RequireMapping(steps.Children[8], "evidence upload");
         if (evidence.Children.Count != 4)
         {
             throw new InvalidOperationException("Evidence upload must contain exactly name, if, uses and with.");
@@ -319,6 +326,21 @@ internal static partial class WorkflowContractValidator
             });
         ValidateStep(
             steps.Children[4],
+            CheckoutAction,
+            new Dictionary<string, string>(StringComparer.Ordinal)
+            {
+                ["repository"] = "MALIEV-Co-Ltd/Legacy.Maliev.Intranet",
+                ["ref"] = "cda7e5f6817e9462f058eaf6638da58c27e75024",
+                ["path"] = ".dependencies/Legacy.Maliev.Intranet",
+                ["persist-credentials"] = "false",
+            });
+        var consumerVerification = RequireMapping(steps.Children[5], "consumer verification");
+        if (consumerVerification.Children.Count != 2)
+            throw new InvalidOperationException("Consumer verification must contain only name and run.");
+        RequireScalarValue(consumerVerification, "name", "Verify exact BFF consumer before compilation");
+        RequireScalarValue(consumerVerification, "run", "python3 scripts/verify-order-notification-consumer.py .dependencies/Legacy.Maliev.Intranet");
+        ValidateStep(
+            steps.Children[6],
             SharedValidationAction,
             new Dictionary<string, string>(StringComparer.Ordinal)
             {
