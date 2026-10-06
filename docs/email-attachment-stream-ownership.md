@@ -1,0 +1,7 @@
+# Legacy email attachment stream ownership
+
+The final private Email controller owns each opened attachment stream in a finally block. The compatibility adapter copies attachments into owned byte payloads and disposes each source stream before calling the notification service. Provider acknowledgments and failures therefore cannot keep uploaded source streams open. A later attachment copy failure or request cancellation must also release every stream already opened and avoid provider invocation.
+
+Four deterministic controller-boundary cases freeze this behavior: provider success and failure with two ordered binary attachments, second-copy failure after a successful first copy, and cancellation at first-copy entry with a pre-cancelled token. These tests use the actual EmailsController and a strict controlled application service; they do not send email, start a test host or activate persistent delivery intents. Existing HTTP/provider/native evidence remains separately required.
+
+The historical 574-line duplicate controller and 140-line intermediate refactor are superseded by the frozen 235-line final controller. Its required fields, combined attachment limit, empty-file error, eight routes, raw plaintext body and bare provider status mapping remain preserved by the current implementation and accepted existing tests. This slice adds failure-lifetime regression coverage without changing production or closing whole-source commits.
