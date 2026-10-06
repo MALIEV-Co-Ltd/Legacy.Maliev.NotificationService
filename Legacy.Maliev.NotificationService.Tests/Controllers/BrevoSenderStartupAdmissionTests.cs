@@ -17,6 +17,19 @@ public sealed class BrevoSenderStartupAdmissionTests
     private const string IdentityFailure = "Brevo sender identities must have valid addresses and display names.";
 
     [Theory]
+    [InlineData(null)]
+    [InlineData("")]
+    [InlineData("   ")]
+    public async Task NormalProductionHost_RejectsMissingOrBlankProviderKeyBeforeServing(string? apiKey)
+    {
+        await using var factory = new StartupFactory(apiKey: apiKey);
+        var error = Assert.Throws<OptionsValidationException>(() => factory.CreateClient());
+        var failure = Assert.Single(error.Failures);
+        Assert.Contains(nameof(BrevoNotificationOptions.ApiKey), failure, StringComparison.Ordinal);
+        Assert.Equal(0, factory.ProviderCalls);
+    }
+
+    [Theory]
     [InlineData("Info", "Address", "")]
     [InlineData("Info", "Address", "PRIVATE-SENDER-FIXTURE")]
     [InlineData("Info", "DisplayName", "  ")]
@@ -69,7 +82,8 @@ public sealed class BrevoSenderStartupAdmissionTests
         Assert.Equal(0, factory.ProviderCalls);
     }
 
-    private sealed class StartupFactory(string? channel = null, string? field = null, string? value = null, string? mode = null)
+    private sealed class StartupFactory(string? channel = null, string? field = null, string? value = null, string? mode = null,
+        string? apiKey = "synthetic-sender-startup-only")
         : WebApplicationFactory<NotificationProgram>
     {
         private readonly RSA signingKey = RSA.Create(2048);
@@ -86,7 +100,7 @@ public sealed class BrevoSenderStartupAdmissionTests
             {
                 var values = new Dictionary<string, string?>
                 {
-                    ["Brevo:ApiKey"] = "synthetic-sender-startup-only",
+                    ["Brevo:ApiKey"] = apiKey,
                     ["Notifications:DeliveryIntentsEnabled"] = "false",
                 };
                 foreach (var name in Enum.GetNames<EmailChannel>())
