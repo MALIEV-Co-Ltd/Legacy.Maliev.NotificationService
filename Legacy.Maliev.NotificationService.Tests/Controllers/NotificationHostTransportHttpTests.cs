@@ -6,6 +6,7 @@ using System.Text;
 using Legacy.Maliev.NotificationService.Data;
 using Legacy.Maliev.NotificationService.Domain;
 using Legacy.Maliev.NotificationService.Api.Authorization;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpOverrides;
