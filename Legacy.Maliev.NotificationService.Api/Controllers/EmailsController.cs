@@ -15,7 +15,7 @@ namespace Legacy.Maliev.NotificationService.Api.Controllers;
 public sealed class EmailsController(INotificationService notificationService) : ControllerBase
 {
     /// <summary>Legacy combined attachment size limit, preserved from UploadService.Common.FileUpload.</summary>
-    public const long SizeLimit = 200L * 1024L * 1024L;
+    public const long SizeLimit = 100L * 1024L * 1024L;
 
     /// <summary>Sends an informational email.</summary>
     /// <param name="to">The recipient's email address.</param>
