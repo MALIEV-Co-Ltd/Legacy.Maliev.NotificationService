@@ -1,0 +1,56 @@
+name: Canonical Service source projection
+
+on:
+  pull_request:
+    branches: [main, develop, staging]
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: canonical-service-projection-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  canonical-service-projection:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    env:
+      CANONICAL_SERVICE_PRODUCER: ${{ github.workspace }}/.dependencies/Legacy.Maliev.Workflows
+    steps:
+      - name: Check out exact consumer candidate
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
+      - name: Check out accepted immutable gate
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          repository: MALIEV-Co-Ltd/Legacy.Maliev.Workflows
+          ref: 54781e6ec281de06a7409cfedf1f171a3cb01600
+          path: .dependencies/Legacy.Maliev.Workflows
+          persist-credentials: false
+      - name: Check out immutable read-only GitOps source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          repository: MALIEV-Co-Ltd/maliev-gitops
+          ref: c9cf2ed4cd7501e989baf6b9af5bf08c87d78893
+          path: .dependencies/maliev-gitops
+          persist-credentials: false
+      - name: Prepare isolated hash-pinned YAML reader
+        run: |-
+          python3.12 -m venv "$RUNNER_TEMP/canonical-service-venv"
+          "$RUNNER_TEMP/canonical-service-venv/bin/python" -m pip install --disable-pip-version-check --no-cache-dir --only-binary=:all: --require-hashes -r /dev/stdin <<'REQUIREMENTS'
+          PyYAML==6.0.3 --hash=sha256:ba1cc08a7ccde2d2ec775841541641e4548226580ab850948cbfda66a1befcdc
+          REQUIREMENTS
+      - name: Compile consumer modules before tests
+        run: |-
+          "$RUNNER_TEMP/canonical-service-venv/bin/python" -B -W error -c "from pathlib import Path; [compile(Path(name).read_bytes(), name, 'exec') for name in ('scripts/verify-canonical-service-projection.py', 'scripts/test_canonical_service_projection.py')]"
+      - name: Test render admission and refusal boundaries
+        run: |-
+          "$RUNNER_TEMP/canonical-service-venv/bin/python" -B -W error -m unittest discover -s scripts -p test_canonical_service_projection.py -v
+      - name: Render committed source and verify dormant projection
+        run: |-
+          "$RUNNER_TEMP/canonical-service-venv/bin/python" -B -W error scripts/verify-canonical-service-projection.py --gitops .dependencies/maliev-gitops --producer .dependencies/Legacy.Maliev.Workflows
