@@ -90,6 +90,55 @@ public sealed class EmailAttachmentOwnershipTests
             It.IsAny<NotificationSendRequest>(), It.IsAny<CancellationToken>()), Times.Never);
     }
 
+    [Fact]
+    public async Task CancellationAfterPartialLaterCopy_ClosesOpenedStreamsAndNeverOpensNextAttachment()
+    {
+        using var cancellation = new CancellationTokenSource(TimeSpan.FromSeconds(30));
+        var copyStarted = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+        byte[] secondBytes = [2, 3];
+        var copiedBytes = 0;
+        using var first = new OwnedStream([0, 1]);
+        using var second = new OwnedStream(secondBytes, copy: async (destination, token) =>
+        {
+            await destination.WriteAsync(secondBytes.AsMemory(0, 1), token);
+            copiedBytes++;
+            copyStarted.SetResult();
+            await Task.Delay(Timeout.InfiniteTimeSpan, token).WaitAsync(TimeSpan.FromSeconds(10));
+        });
+        using var third = new OwnedStream([4]);
+        var files = new List<IFormFile>
+        {
+            File(first, "first.bin"), File(second, "second.bin"), File(third, "third.bin"),
+        };
+        var service = new Mock<INotificationService>(MockBehavior.Strict);
+        var controller = new EmailsController(service.Object);
+        var sending = SendAsync(controller, files, cancellation.Token);
+        try
+        {
+            await copyStarted.Task.WaitAsync(TimeSpan.FromSeconds(5));
+            Assert.Equal(1, copiedBytes);
+            Assert.Equal(1, first.DisposalCount);
+            Assert.Equal(0, second.DisposalCount);
+            cancellation.Cancel();
+
+            var observed = await Assert.ThrowsAnyAsync<OperationCanceledException>(() => sending);
+
+            Assert.Equal(cancellation.Token, observed.CancellationToken);
+            Assert.Equal(1, first.DisposalCount);
+            Assert.Equal(1, second.DisposalCount);
+            Assert.Equal(0, third.DisposalCount);
+            Mock.Get(files[2]).Verify(value => value.OpenReadStream(), Times.Never);
+            service.Verify(value => value.SendAsync(It.IsAny<EmailChannel>(),
+                It.IsAny<NotificationSendRequest>(), It.IsAny<CancellationToken>()), Times.Never);
+        }
+        finally
+        {
+            cancellation.Cancel();
+            try { await sending; }
+            catch (OperationCanceledException) { }
+        }
+    }
+
     private static Task<ActionResult> SendAsync(EmailsController controller, List<IFormFile> files,
         CancellationToken cancellationToken = default) => controller.SendInfoEmailAsync(
         "recipient@example.invalid", "synthetic subject", "synthetic body", null, null, null,
@@ -105,12 +154,14 @@ public sealed class EmailAttachmentOwnershipTests
         return file.Object;
     }
 
-    private sealed class OwnedStream(byte[] bytes, bool failCopy = false) : MemoryStream(bytes, writable: false)
+    private sealed class OwnedStream(byte[] bytes, bool failCopy = false,
+        Func<Stream, CancellationToken, Task>? copy = null) : MemoryStream(bytes, writable: false)
     {
         public int DisposalCount { get; private set; }
 
         public override Task CopyToAsync(Stream destination, int bufferSize, CancellationToken cancellationToken)
         {
+            if (copy is not null) return copy(destination, cancellationToken);
             if (failCopy) return Task.FromException(new IOException("synthetic attachment copy failure"));
             return base.CopyToAsync(destination, bufferSize, cancellationToken);
         }
