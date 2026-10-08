@@ -12,6 +12,14 @@ public sealed class WorkflowContractTests
         FindRepositoryFile("Legacy.Maliev.NotificationService.Api", "Legacy.Maliev.NotificationService.Api.csproj"));
 
     [Fact]
+    public void BuildAndTest_RejectsPreviousUploadArtifactPin()
+    {
+        var previousPin = Workflow.Replace("actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a", "actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02", StringComparison.Ordinal);
+        Assert.NotEqual(Workflow, previousPin);
+        Assert.Throws<InvalidOperationException>(() => WorkflowContractValidator.Validate(previousPin));
+    }
+
+    [Fact]
     public void BuildAndTest_SatisfiesStructuralContract()
     {
         WorkflowContractValidator.Validate(Workflow);
@@ -282,7 +290,7 @@ internal static partial class WorkflowContractValidator
 
         RequireScalarValue(evidence, "name", "Preserve validation evidence");
         RequireScalarValue(evidence, "if", "always()");
-        RequireScalarValue(evidence, "uses", "actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02");
+        RequireScalarValue(evidence, "uses", "actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a");
         var evidenceInputs = RequireMapping(evidence, "with");
         if (evidenceInputs.Children.Count != 4)
         {
