@@ -15,6 +15,11 @@ public sealed class WorkflowContractTests
     public void BuildAndTest_SatisfiesStructuralContract()
     {
         WorkflowContractValidator.Validate(Workflow);
+        AssertMutationRejected("timeout-minutes: 45", "timeout-minutes: 450");
+        AssertMutationRejected("fetch-depth: 0", "fetch-depth: 1");
+        AssertMutationRejected("timeout-minutes: 20", "timeout-minutes: 200");
+        AssertMutationRejected("python3 -B scripts/prove_attachment_name.py runner-results", "echo skipped causal proof");
+        AssertMutationRejected("python3 -B -m unittest discover -s scripts -p test_prove_attachment_name.py", "echo skipped causal controls");
     }
 
     [Fact]
@@ -247,12 +252,13 @@ internal static partial class WorkflowContractValidator
         }
 
         RequireScalarValue(validateJob, "name", "validate");
+        RequireScalarValue(validateJob, "timeout-minutes", "45");
         RejectDuplicatedValidationActionsAndCommands(jobs);
 
         var steps = RequireSequence(validateJob, "steps");
-        if (steps.Children.Count != 10)
+        if (steps.Children.Count != 11)
         {
-            throw new InvalidOperationException("Validate job must contain five checkouts, consumer verification, bounded image preload, validation and two evidence steps.");
+            throw new InvalidOperationException("Validate job must contain five checkouts, consumer verification, bounded image preload, validation, bounded causal proof and two evidence steps.");
         }
 
         var environment = RequireMapping(validateJob, "env");
@@ -266,7 +272,16 @@ internal static partial class WorkflowContractValidator
         RequireScalarValue(environment, "VSTestLogger", "trx");
         RequireScalarValue(environment, "VSTestResultsDirectory", "${{ github.workspace }}/runner-results");
 
-        var gate = RequireMapping(steps.Children[8], "coverage gate");
+        var causal = RequireMapping(steps.Children[8], "causal proof");
+        if (causal.Children.Count != 3)
+        {
+            throw new InvalidOperationException("Causal proof must contain only name, bounded timeout and exact run.");
+        }
+
+        RequireScalarValue(causal, "name", "Prove legacy attachment filename correction causally");
+        RequireScalarValue(causal, "timeout-minutes", "20");
+        RequireScalarValue(causal, "run", "python3 -B -m unittest discover -s scripts -p test_prove_attachment_name.py\npython3 -B scripts/prove_attachment_name.py runner-results");
+        var gate = RequireMapping(steps.Children[9], "coverage gate");
         if (gate.Children.Count != 2)
         {
             throw new InvalidOperationException("Coverage gate must contain only name and run.");
@@ -274,7 +289,7 @@ internal static partial class WorkflowContractValidator
 
         RequireScalarValue(gate, "name", "Gate owned production coverage");
         RequireScalarValue(gate, "run", "python3 scripts/verify-runner-coverage.py runner-results");
-        var evidence = RequireMapping(steps.Children[9], "evidence upload");
+        var evidence = RequireMapping(steps.Children[10], "evidence upload");
         if (evidence.Children.Count != 4)
         {
             throw new InvalidOperationException("Evidence upload must contain exactly name, if, uses and with.");
@@ -299,6 +314,7 @@ internal static partial class WorkflowContractValidator
             CheckoutAction,
             new Dictionary<string, string>(StringComparer.Ordinal)
             {
+                ["fetch-depth"] = "0",
                 ["persist-credentials"] = "false",
             });
         ValidateStep(
