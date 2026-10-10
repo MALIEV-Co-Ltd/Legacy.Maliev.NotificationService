@@ -93,9 +93,11 @@ jobs:
                  'notification':workspace,
                  'defaults':workspace/'.joined/Legacy.Maliev.ServiceDefaults',
                  'contracts':workspace/'.joined/Legacy.Maliev.CompatibilityContracts'}
-          heads={name:os.environ[key] for name,key in
-                 [('auth','AUTH_HEAD'),('intranet','INTRANET_HEAD'),('notification','NOTIFICATION_HEAD'),
-                  ('defaults','DEFAULTS_HEAD'),('contracts','CONTRACTS_HEAD')]}
+          heads={'auth':os.environ['AUTH_HEAD'],
+                 'intranet':os.environ['INTRANET_HEAD'],
+                 'notification':os.environ['NOTIFICATION_HEAD'],
+                 'defaults':os.environ['DEFAULTS_HEAD'],
+                 'contracts':os.environ['CONTRACTS_HEAD']}
           result={'sources':verify_sources(roots,heads),'admission':admit()}
           (workspace/'joined-preflight.json').write_text(json.dumps(result,indent=2))
           PY

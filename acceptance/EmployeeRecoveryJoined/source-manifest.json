@@ -54,7 +54,7 @@
     },
     {
       "path": "notification62-hosted.yml",
-      "sha256": "e5e9ca674425d9cfafa9981c7994d3104691c91e1e4c91c774db9670ba573482"
+      "sha256": "ff0102a46b138f1f6f3e24535cb7167b73b2415b61840bd35fdd5b1d712f0d39"
     },
     {
       "path": "RecoveryJoinFixture.cs",
@@ -121,8 +121,8 @@
       "tree": "f3193fde7b95b30e277f72396d15ca01a1a6cc83"
     }
   },
-  "version": "V5 verified-host-disposal gate; dependent resource preservation on failure/timeout",
-  "supersedesSourceManifestSha256": "ec6601bd8ac6bef134347315b05d85ce9b46a73393ffcfcf556a1c41d007d6ac",
+  "version": "V6 explicit immutable-head environment dictionary; no tuple classification ambiguity",
+  "supersedesSourceManifestSha256": "f147c844546c8832ce3538d5c019f0b9c4f8600881ac7db93c0a2457338b5410",
   "dispatchHold": "Root hold pending producer gates; Auth175 supplementary profile reports946P1F/947, diagnosis owner active; no joined acceptance inferred",
   "authoredPoolCleanupRegressionCases": 1,
   "nativeExecutedPoolCleanupRegressionCases": null,
