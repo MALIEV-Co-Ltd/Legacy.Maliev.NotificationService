@@ -28,6 +28,7 @@ public sealed class NotificationApplicationService(
 
         try
         {
+            cancellationToken.ThrowIfCancellationRequested();
             return await provider.SendAsync(channel, request, cancellationToken);
         }
         catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)

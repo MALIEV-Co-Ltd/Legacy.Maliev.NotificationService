@@ -35,11 +35,13 @@ public sealed class BrevoNotificationTransport(
                 : new { email = notification.ReplyTo },
             cc = MapRecipients(notification.Cc),
             bcc = MapRecipients(notification.Bcc),
-            attachment = notification.Attachments?.Select(attachment => new
-            {
-                content = Convert.ToBase64String(attachment.Content),
-                name = attachment.FileName,
-            }),
+            attachment = notification.Attachments is { Count: > 0 } attachments
+                ? attachments.Select(attachment => new
+                {
+                    content = Convert.ToBase64String(attachment.Content),
+                    name = attachment.FileName,
+                })
+                : null,
             headers = new Dictionary<string, string>
             {
                 ["idempotencyKey"] = request.IdempotencyKey,

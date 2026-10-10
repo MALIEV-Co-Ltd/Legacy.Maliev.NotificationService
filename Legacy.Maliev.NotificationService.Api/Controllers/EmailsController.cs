@@ -261,7 +261,8 @@ public sealed class EmailsController(INotificationService notificationService) :
 
     private async Task<string> ReadPlainTextBodyAsync(CancellationToken cancellationToken)
     {
-        using var reader = new StreamReader(this.Request.Body);
+        using var reader = new StreamReader(this.Request.Body, System.Text.Encoding.UTF8,
+            detectEncodingFromByteOrderMarks: true, bufferSize: 1024, leaveOpen: true);
         return await reader.ReadToEndAsync(cancellationToken);
     }
 
