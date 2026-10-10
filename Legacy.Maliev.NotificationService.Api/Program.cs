@@ -8,79 +8,87 @@ using Legacy.Maliev.NotificationService.Data;
 using Legacy.Maliev.NotificationService.Domain;
 using Maliev.Aspire.ServiceDefaults;
 
-var builder = WebApplication.CreateBuilder(args);
-
-// Preserve the source host's total request-body limit independently of attachment aggregation.
-builder.WebHost.ConfigureKestrel(options =>
-    options.Limits.MaxRequestBodySize = Legacy.Maliev.NotificationService.Api.Controllers.EmailsController.SizeLimit);
-
-builder.AddServiceDefaults();
-builder.AddDefaultApiVersioning();
-builder.AddStandardCors();
-builder.AddJwtAuthentication();
-builder.AddStandardMiddleware(options => options.EnableRequestLogging = true);
-builder.AddNotificationHostTransportPolicy();
-builder.AddStandardOpenApi(
-    title: "Legacy MALIEV Notification Service API",
-    description: "Temporary .NET 10 compatibility service preserving the legacy email notification API contract.");
-// Literal registrations let the API compilation attach its generated XML documentation transformers.
-builder.Services.AddOpenApi("v1");
-builder.Services.AddOpenApi("v2");
-
-var useDevelopmentRecordingProvider = builder.Environment.IsDevelopment()
-    && builder.Configuration.GetValue<bool>("Notifications:UseDevelopmentRecordingProvider");
-
-if (useDevelopmentRecordingProvider)
+try
 {
-    builder.Services.AddSingleton<DevelopmentRecordingNotificationProvider>();
-    builder.Services.AddSingleton<INotificationProvider>(services =>
-        services.GetRequiredService<DevelopmentRecordingNotificationProvider>());
+    var builder = WebApplication.CreateBuilder(args);
+
+    // Preserve the source host's total request-body limit independently of attachment aggregation.
+    builder.WebHost.ConfigureKestrel(options =>
+        options.Limits.MaxRequestBodySize = Legacy.Maliev.NotificationService.Api.Controllers.EmailsController.SizeLimit);
+
+    builder.AddServiceDefaults();
+    builder.AddDefaultApiVersioning();
+    builder.AddStandardCors();
+    builder.AddJwtAuthentication();
+    builder.AddStandardMiddleware(options => options.EnableRequestLogging = true);
+    builder.AddNotificationHostTransportPolicy();
+    builder.AddStandardOpenApi(
+        title: "Legacy MALIEV Notification Service API",
+        description: "Temporary .NET 10 compatibility service preserving the legacy email notification API contract.");
+    // Literal registrations let the API compilation attach its generated XML documentation transformers.
+    builder.Services.AddOpenApi("v1");
+    builder.Services.AddOpenApi("v2");
+
+    var useDevelopmentRecordingProvider = builder.Environment.IsDevelopment()
+        && builder.Configuration.GetValue<bool>("Notifications:UseDevelopmentRecordingProvider");
+
+    if (useDevelopmentRecordingProvider)
+    {
+        builder.Services.AddSingleton<DevelopmentRecordingNotificationProvider>();
+        builder.Services.AddSingleton<INotificationProvider>(services =>
+            services.GetRequiredService<DevelopmentRecordingNotificationProvider>());
+    }
+    else
+    {
+        builder.Services
+            .AddOptions<BrevoNotificationOptions>()
+            .Bind(builder.Configuration.GetSection(BrevoNotificationOptions.SectionName))
+            .ValidateDataAnnotations()
+            .Validate(options => HasAllSenders(options.Senders), "Brevo senders must include Info, Manufacturing, NoReply and Support.")
+            .Validate(options => options.Senders is not null && options.Senders.Values.All(sender =>
+                sender is not null && Validator.TryValidateObject(sender, new ValidationContext(sender), null, validateAllProperties: true)),
+                "Brevo sender identities must have valid addresses and display names.")
+            .ValidateOnStart();
+        builder.Services.AddSingleton(TimeProvider.System);
+        builder.Services.AddHttpClient<IBrevoNotificationTransport, BrevoNotificationTransport>(client =>
+            client.BaseAddress = new Uri("https://api.brevo.com/v3/"))
+            .ConfigurePrimaryHttpMessageHandler(() => new SocketsHttpHandler { AllowAutoRedirect = false });
+        builder.Services.AddScoped<INotificationProvider, BrevoNotificationProvider>();
+    }
+
+    builder.Services.AddControllers().AddJsonOptions(options =>
+        options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull);
+    builder.Services.AddScoped<INotificationService, NotificationApplicationService>();
+    var deliveryIntentsEnabled = builder.AddDeliveryIntents();
+
+    await using var app = builder.Build();
+    if (deliveryIntentsEnabled) await app.RequireDeliveryIntentReadinessAsync();
+
+    app.UseNotificationHostTransportBoundary();
+    app.UseStandardMiddleware();
+    app.UseNotificationHostTransportPolicy();
+    app.UseCors();
+    app.UseAuthentication();
+    app.UseAuthorization();
+    app.MapDefaultEndpoints("emails");
+    app.MapControllers();
+    app.MapApiDocumentation(servicePrefix: "emails");
+    if (useDevelopmentRecordingProvider)
+    {
+        app.MapGet(
+                "/notifications/development/recorded",
+                (DevelopmentRecordingNotificationProvider provider) => Results.Ok(provider.Snapshot()))
+            .AllowAnonymous()
+            .ExcludeFromDescription();
+    }
+
+    await app.RunAsync();
 }
-else
+catch (Exception exception) when (System.Reflection.Assembly.GetEntryAssembly() == typeof(Program).Assembly)
 {
-    builder.Services
-        .AddOptions<BrevoNotificationOptions>()
-        .Bind(builder.Configuration.GetSection(BrevoNotificationOptions.SectionName))
-        .ValidateDataAnnotations()
-        .Validate(options => HasAllSenders(options.Senders), "Brevo senders must include Info, Manufacturing, NoReply and Support.")
-        .Validate(options => options.Senders is not null && options.Senders.Values.All(sender =>
-            sender is not null && Validator.TryValidateObject(sender, new ValidationContext(sender), null, validateAllProperties: true)),
-            "Brevo sender identities must have valid addresses and display names.")
-        .ValidateOnStart();
-    builder.Services.AddSingleton(TimeProvider.System);
-    builder.Services.AddHttpClient<IBrevoNotificationTransport, BrevoNotificationTransport>(client =>
-        client.BaseAddress = new Uri("https://api.brevo.com/v3/"))
-        .ConfigurePrimaryHttpMessageHandler(() => new SocketsHttpHandler { AllowAutoRedirect = false });
-    builder.Services.AddScoped<INotificationProvider, BrevoNotificationProvider>();
+    // Standalone entry points own process failure reporting; embedded hosts own their exceptions.
+    Maliev.Aspire.ServiceDefaults.Diagnostics.PrivateStartupBoundary.ReportFailure(exception);
 }
-
-builder.Services.AddControllers().AddJsonOptions(options =>
-    options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull);
-builder.Services.AddScoped<INotificationService, NotificationApplicationService>();
-var deliveryIntentsEnabled = builder.AddDeliveryIntents();
-
-var app = builder.Build();
-if (deliveryIntentsEnabled) await app.RequireDeliveryIntentReadinessAsync();
-
-app.UseNotificationHostTransportBoundary();
-app.UseStandardMiddleware();
-app.UseNotificationHostTransportPolicy();
-app.UseCors();
-app.UseAuthentication();
-app.UseAuthorization();
-app.MapDefaultEndpoints("emails");
-app.MapControllers();
-app.MapApiDocumentation(servicePrefix: "emails");
-if (useDevelopmentRecordingProvider)
-{
-    app.MapGet(
-            "/notifications/development/recorded",
-            (DevelopmentRecordingNotificationProvider provider) => Results.Ok(provider.Snapshot()))
-        .AllowAnonymous()
-        .ExcludeFromDescription();
-}
-
-await app.RunAsync();
 
 static bool HasAllSenders(IReadOnlyDictionary<EmailChannel, BrevoSenderOptions>? senders)
 {
