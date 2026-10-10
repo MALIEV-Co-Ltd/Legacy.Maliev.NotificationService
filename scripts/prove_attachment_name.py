@@ -10,6 +10,7 @@ import re
 import shutil
 import subprocess
 import sys
+import time
 import xml.etree.ElementTree as ET
 
 CLASS = "Legacy.Maliev.NotificationService.Tests.Controllers.LegacyEncodedAttachmentNameHttpTests"
@@ -122,6 +123,43 @@ def build_ok(log):
             and not re.search(r"\b(?:warning|error) [A-Z]+\d+", text, re.I), "Build not zero-warning/error")
 
 
+def wait_group_absent(group_id, probe=None, now=time.monotonic, pause=time.sleep, observations=None):
+    if probe is None:
+        probe = os.killpg
+    started = now()
+    deadline = started + 15
+    while True:
+        observed = {"elapsedSeconds": now() - started, "signal": 0, "groupId": group_id}
+        if observations is not None:
+            observations.append(observed)
+        try:
+            probe(group_id, 0)
+        except ProcessLookupError:
+            observed["state"] = "absent"
+            return True
+        except BaseException as exception:
+            observed["state"] = "error"
+            observed["errorType"] = type(exception).__name__
+            raise
+        observed["state"] = "present"
+        if now() >= deadline:
+            return False
+        pause(0.1)
+
+
+def record_group_exit(record, receipt, commands, probe=None, now=time.monotonic, pause=time.sleep):
+    record["groupObservationStartedUtc"] = datetime.now(timezone.utc).isoformat()
+    record["groupObservations"] = []
+    try:
+        record["ownedTimeoutGroupAbsent"] = wait_group_absent(
+            record["pid"], probe, now, pause, record["groupObservations"])
+        require(record["ownedTimeoutGroupAbsent"], "Owned command group did not exit; do not start another worker")
+    finally:
+        record["groupObservationEndedUtc"] = datetime.now(timezone.utc).isoformat()
+        record["endedUtc"] = datetime.now(timezone.utc).isoformat()
+        receipt.write_text(json.dumps(commands, indent=2) + "\n")
+
+
 def main():
     require(sys.platform == "linux" and os.environ.get("GITHUB_ACTIONS") == "true", "Hosted ordinary runner only; no local SDK custody")
     root = Path(sys.argv[1]).resolve()
@@ -161,18 +199,11 @@ def main():
                 record["executable"] = os.readlink(f"/proc/{process.pid}/exe")
                 record["returnCode"] = process.wait()
                 record["exitVerified"] = process.poll() is not None
-                try:
-                    os.killpg(process.pid, 0)
-                    record["ownedTimeoutGroupAbsent"] = False
-                except ProcessLookupError:
-                    record["ownedTimeoutGroupAbsent"] = True
-        record["endedUtc"] = datetime.now(timezone.utc).isoformat()
-        (output / "command-custody.json").write_text(json.dumps(commands, indent=2) + "\n")
-        require(record["ownedTimeoutGroupAbsent"], "Owned command group did not exit; do not start another worker")
+                record_group_exit(record, output / "command-custody.json", commands)
         return record["returnCode"]
 
     build = ["build", "Legacy.Maliev.NotificationService.slnx", "--configuration", "Release", "--no-restore", "--disable-build-servers",
-             "-p:UseLocalMalievDependencies=true", "-p:GITHUB_ACTIONS=false", "-warnaserror"]
+             "-p:UseLocalMalievDependencies=true", "-p:GITHUB_ACTIONS=false", "-p:UseSharedCompilation=false", "-nodeReuse:false", "-warnaserror"]
     tests = ["test", "Legacy.Maliev.NotificationService.Tests/Legacy.Maliev.NotificationService.Tests.csproj", "--configuration", "Release",
              "--no-build", "--no-restore", "--disable-build-servers", "-p:UseLocalMalievDependencies=true", "-p:GITHUB_ACTIONS=false", "-p:VSTestCollect="]
     error = None

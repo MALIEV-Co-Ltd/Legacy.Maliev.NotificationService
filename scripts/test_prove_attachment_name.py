@@ -5,12 +5,55 @@ from pathlib import Path
 import tempfile
 import unittest
 import xml.etree.ElementTree as ET
-from prove_attachment_name import CHANNELS, CLASS, FORMATS, LEGACY, MODERN, build_ok, verify_focus, verify_full
+from prove_attachment_name import CHANNELS, CLASS, FORMATS, LEGACY, MODERN, build_ok, verify_focus, verify_full, wait_group_absent, record_group_exit
 
 N = "{http://microsoft.com/schemas/VisualStudio/TeamTest/2010}"
 
 
 class AttachmentNameProofTests(unittest.TestCase):
+    def test_group_exit_wait_is_bounded_and_never_terminates(self):
+        clock = [0.0]
+        calls = []
+        def pause(seconds):
+            clock[0] += seconds
+        def delayed(group, signal):
+            calls.append((group, signal))
+            if clock[0] >= 0.2:
+                raise ProcessLookupError
+        self.assertTrue(wait_group_absent(42, delayed, lambda: clock[0], pause))
+        self.assertTrue(all(call == (42, 0) for call in calls))
+        clock[0] = 0.0
+        self.assertFalse(wait_group_absent(42, lambda group, signal: None, lambda: clock[0], pause))
+        self.assertLess(clock[0], 15.2)
+
+    def test_group_permission_error_is_fail_closed_with_receipt(self):
+        def denied(group, signal):
+            raise PermissionError("synthetic")
+        record = {"pid": 42, "kernelStartTicks": "123", "executable": "/usr/bin/timeout"}
+        next_worker = []
+        with tempfile.TemporaryDirectory() as directory:
+            receipt = Path(directory) / "receipt.json"
+            with self.assertRaises(PermissionError):
+                record_group_exit(record, receipt, [record], denied)
+                next_worker.append(True)
+            self.assertEqual([], next_worker)
+            self.assertEqual("PermissionError", record["groupObservations"][0]["errorType"])
+            self.assertIn('"groupObservationEndedUtc"', receipt.read_text())
+            self.assertNotIn('"ownedTimeoutGroupAbsent": true', receipt.read_text())
+
+    def test_permanent_group_failure_retains_timed_receipt(self):
+        clock = [0.0]
+        def pause(seconds):
+            clock[0] += seconds
+        record = {"pid": 42}
+        with tempfile.TemporaryDirectory() as directory:
+            receipt = Path(directory) / "receipt.json"
+            with self.assertRaises(ValueError):
+                record_group_exit(record, receipt, [record], lambda group, signal: None, lambda: clock[0], pause)
+            self.assertFalse(record["ownedTimeoutGroupAbsent"])
+            self.assertTrue(receipt.exists())
+            self.assertLess(clock[0], 15.2)
+
     def fixture(self, baseline=False):
         root = ET.Element(N + "TestRun")
         definitions = ET.SubElement(root, N + "TestDefinitions")
