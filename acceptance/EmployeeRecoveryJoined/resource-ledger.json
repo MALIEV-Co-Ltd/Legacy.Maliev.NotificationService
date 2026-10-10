@@ -1,0 +1,11 @@
+{
+  "owner": "01a1009d-1c8e-7821-a1f2-fded3ac6928d",
+  "purpose": "Notification62 source-only genuine joined bootstrap implementation",
+  "helpersStarted": [],
+  "sdkContainerBrowserAllocations": [],
+  "existingJobs": "Existing Python/tool processes preserved; no ownership assumed",
+  "hostedOwnershipImplementation": "RecoveryJoinFixture.cs and run_hosted_join.py",
+  "localValidation": "Lightweight Python source/supervisor checks and scoped installed Gitleaks only; separate command custody receipt retained",
+  "cleanup": "No task-owned server, container, SDK worker or browser remains",
+  "persistentData": "Source packet and required review evidence only"
+}

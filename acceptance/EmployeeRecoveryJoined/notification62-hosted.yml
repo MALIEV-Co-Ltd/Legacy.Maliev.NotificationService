@@ -1,0 +1,131 @@
+name: Genuine employee recovery join
+
+on:
+  workflow_dispatch:
+    inputs:
+      auth_head:
+        description: Reviewed published Auth recovery commit (40 hex SHA)
+        required: true
+        default: 52b480e48948ac0fda5af971f00cc3a74585f243
+      intranet_head:
+        description: Reviewed published BFF recovery commit (40 hex SHA)
+        required: true
+        default: a54055de51e5adf25779c9ca303c1c2d06f5fbab
+      notification_head:
+        description: Reviewed Notification commit including this acceptance slice (40 hex SHA)
+        required: true
+
+permissions:
+  contents: read
+
+concurrency:
+  group: notification62-genuine-join
+  cancel-in-progress: false
+
+jobs:
+  joined:
+    runs-on: ubuntu-latest
+    timeout-minutes: 55
+    env:
+      AUTH_HEAD: ${{ inputs.auth_head }}
+      INTRANET_HEAD: ${{ inputs.intranet_head }}
+      NOTIFICATION_HEAD: ${{ inputs.notification_head }}
+      DEFAULTS_HEAD: 4517cf16f5f1159318e184969732d46eae4a8308
+      CONTRACTS_HEAD: 78e48ffc4ee000df0510cba5e7c7a3c4c4d539d7
+      N62_REQUIRED_MEM_KIB: '8388608'
+    steps:
+      - name: Require explicit immutable caller heads
+        run: |
+          python3 -B - <<'PY'
+          import os,re
+          for key in ('AUTH_HEAD','INTRANET_HEAD','NOTIFICATION_HEAD'):
+              if not re.fullmatch('[0-9a-f]{40}',os.environ[key]):
+                  raise SystemExit('Explicit reviewed immutable SHA required: '+key)
+          PY
+      - name: Checkout exact Notification candidate
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          ref: ${{ inputs.notification_head }}
+          persist-credentials: false
+      - name: Checkout exact Auth candidate
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          repository: MALIEV-Co-Ltd/Legacy.Maliev.AuthService
+          ref: ${{ inputs.auth_head }}
+          path: .joined/Legacy.Maliev.AuthService
+          persist-credentials: false
+      - name: Checkout exact BFF candidate
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          repository: MALIEV-Co-Ltd/Legacy.Maliev.Intranet
+          ref: ${{ inputs.intranet_head }}
+          path: .joined/Legacy.Maliev.Intranet
+          persist-credentials: false
+      - name: Checkout exact shared host dependency
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          repository: MALIEV-Co-Ltd/Legacy.Maliev.ServiceDefaults
+          ref: 4517cf16f5f1159318e184969732d46eae4a8308
+          path: .joined/Legacy.Maliev.ServiceDefaults
+          persist-credentials: false
+      - name: Checkout exact compatibility contracts
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          repository: MALIEV-Co-Ltd/Legacy.Maliev.CompatibilityContracts
+          ref: 78e48ffc4ee000df0510cba5e7c7a3c4c4d539d7
+          path: .joined/Legacy.Maliev.CompatibilityContracts
+          persist-credentials: false
+      - name: Verify source seal and supervisor safety tests
+        working-directory: acceptance/EmployeeRecoveryJoined
+        run: |
+          python3 -B verify_packet.py
+          python3 -B -m unittest test_run_hosted_join.py -v
+      - name: Verify exact sources and resource admission before SDK setup
+        working-directory: acceptance/EmployeeRecoveryJoined
+        run: |
+          python3 -B - <<'PY'
+          import os,json
+          from pathlib import Path
+          from run_hosted_join import verify_sources,admit
+          workspace=Path(os.environ['GITHUB_WORKSPACE'])
+          roots={'auth':workspace/'.joined/Legacy.Maliev.AuthService',
+                 'intranet':workspace/'.joined/Legacy.Maliev.Intranet',
+                 'notification':workspace,
+                 'defaults':workspace/'.joined/Legacy.Maliev.ServiceDefaults',
+                 'contracts':workspace/'.joined/Legacy.Maliev.CompatibilityContracts'}
+          heads={'auth':os.environ['AUTH_HEAD'],
+                 'intranet':os.environ['INTRANET_HEAD'],
+                 'notification':os.environ['NOTIFICATION_HEAD'],
+                 'defaults':os.environ['DEFAULTS_HEAD'],
+                 'contracts':os.environ['CONTRACTS_HEAD']}
+          result={'sources':verify_sources(roots,heads),'admission':admit()}
+          (workspace/'joined-preflight.json').write_text(json.dumps(result,indent=2))
+          PY
+      - name: Setup ordinary SDK for this hosted job
+        uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68
+        with:
+          dotnet-version: 10.0.x
+      - name: Build and execute the genuine join
+        working-directory: acceptance/EmployeeRecoveryJoined
+        run: |
+          python3 -B run_hosted_join.py --execute \
+            --auth-root "$GITHUB_WORKSPACE/.joined/Legacy.Maliev.AuthService" --auth-head "$AUTH_HEAD" \
+            --intranet-root "$GITHUB_WORKSPACE/.joined/Legacy.Maliev.Intranet" --intranet-head "$INTRANET_HEAD" \
+            --notification-root "$GITHUB_WORKSPACE" --notification-head "$NOTIFICATION_HEAD" \
+            --defaults-root "$GITHUB_WORKSPACE/.joined/Legacy.Maliev.ServiceDefaults" --defaults-head "$DEFAULTS_HEAD" \
+            --contracts-root "$GITHUB_WORKSPACE/.joined/Legacy.Maliev.CompatibilityContracts" --contracts-head "$CONTRACTS_HEAD" \
+            --output "$GITHUB_WORKSPACE/joined-results"
+      - name: Verify final owned-resource absence
+        if: always()
+        working-directory: acceptance/EmployeeRecoveryJoined
+        run: python3 -B run_hosted_join.py --cleanup-only "$GITHUB_WORKSPACE/joined-results"
+      - name: Preserve source and native receipts
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: notification62-joined-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            joined-results
+            joined-preflight.json
+          if-no-files-found: warn
+          retention-days: 7

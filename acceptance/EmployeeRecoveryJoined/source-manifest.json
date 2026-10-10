@@ -1,0 +1,133 @@
+{
+  "classification": "SOURCE_BOOTSTRAP_IMPLEMENTED_NOT_NATIVE_VALIDATED_NOT_PUBLISHED",
+  "owner": "01a1009d-1c8e-7821-a1f2-fded3ac6928d",
+  "producerManifestSha256": "990cda3a2c3d6c2b41fd0e01572c3c53d9b166aaafa8a2c2e7f9a99d5a351f42",
+  "sourceBindings": 36,
+  "producerPins": "12/12 PASS",
+  "authoredJoinedCases": 8,
+  "nativeExecutedJoinedCases": null,
+  "bootstrap": "Actual Auth/BFF/Notification Programs implemented; only external Brevo controlled; real CSRF, service login, RS256, worker and disposable PostgreSQL/Redis",
+  "hostedWorkflow": "Implemented source only; exact published producer heads and Root review required",
+  "validation": {
+    "supervisorTests": "14 passed",
+    "pythonAst": "PASS",
+    "projectXml": "PASS",
+    "workflowYaml": "PASS",
+    "boundSourceHashes": "36/36 source hashes pinned; actual host pool regression NOT RUN",
+    "initialGitleaks": "FAIL manifest public commit metadata; retained",
+    "finalGitleaks": "PASS scoped source; exact final seal qualification recorded separately",
+    "nativeBuildTestsFormatCoverageAudit": "NOT RUN source-only scope",
+    "publishedProducerBindings": "28/28 PASS, Auth15/BFF13, including six producer postimages",
+    "gitIndexRawCommit": "PASS V5 all15 packet files inclmanifest + installed workflow16/16",
+    "actualHostPoolRegression": "1 authored NOT RUN; 8 joined cases unchanged; runtime pool/socket absence NOT QUALIFIED",
+    "hostDisposalOrderRegressions": "3 authored NOT RUN: fault, timeout/late completion, successful ordering"
+  },
+  "resources": "No SDK/container/server/browser allocation; CLI exit receipts retained",
+  "files": [
+    {
+      "path": "HostDisposalFailureRegressionTests.cs",
+      "sha256": "0aa14a5c5e6d377597472f51a4a837cc1fe57e12492b038c898823fb6a281c70"
+    },
+    {
+      "path": "HostDisposalGate.cs",
+      "sha256": "cd3127e1de1b4212d633c2d232601ad1e245b8e24818612208d8ebc63310f32e"
+    },
+    {
+      "path": "HOSTED-EXECUTION.md",
+      "sha256": "a6b08f2962ddf53a058ae8626b9390f95a8c1263fff56966884d3961c16f0ddf"
+    },
+    {
+      "path": "HostPoolCleanupRegressionTests.cs",
+      "sha256": "45b1a8396731612f0b8b922f35c846e600486d145d8a22c8561554e9f7189800"
+    },
+    {
+      "path": "JoinedRecovery.Acceptance.sln",
+      "sha256": "f36051ad3413246f56255fdaa1d949f03ca3fce42da3077d23d1d68d9621d23c"
+    },
+    {
+      "path": "JoinedRecovery.AcceptanceTests.csproj",
+      "sha256": "992b262ba02805977166eab3083bba78ffc9abc1e97149d57df60008818bc629"
+    },
+    {
+      "path": "JoinedRecoveryTests.cs",
+      "sha256": "c0c02d31ea1fb24670a9e19953f46a3c5db2f00790c19da80c2955d56fcbdcbb"
+    },
+    {
+      "path": "notification62-hosted.yml",
+      "sha256": "ff0102a46b138f1f6f3e24535cb7167b73b2415b61840bd35fdd5b1d712f0d39"
+    },
+    {
+      "path": "RecoveryJoinFixture.cs",
+      "sha256": "098fb34548cbc095733f452d7fa6f723b1b800c5c5f6b2ca6bfc138689cac642"
+    },
+    {
+      "path": "resource-ledger.json",
+      "sha256": "1e4c3dcab7bb58afcb154335d09e4385ff5e8488ba6b55fc516ad1508d1bae17"
+    },
+    {
+      "path": "run_hosted_join.py",
+      "sha256": "84ea96a821afa5c5d0f20158fc69f1abf9f370dbd4984d5b9bd79bf44e2deafb"
+    },
+    {
+      "path": "source-bindings.json",
+      "sha256": "d73406e659b5eed7788b68c16c640b75f14e7bc4b6f85f8196fe8c88a2896d18"
+    },
+    {
+      "path": "test_run_hosted_join.py",
+      "sha256": "8fa54d424cd4bbd16010f61f27e1ad87ac40b6fc52ee16df9afda1708f54da7e"
+    },
+    {
+      "path": "verify_packet.py",
+      "sha256": "c94443baea808b430b0840e1c45f1287407d1d1dc7d50ee3ddc35c9d4715ec54"
+    }
+  ],
+  "externalEvidence": [
+    {
+      "path": "D:\\codex-temp\\2026-10-03\\legacy-code-files-20261003\\outputs\\notification62-bootstrap-v2-validation.json",
+      "sha256": "5e3e9c4d2c76809a6739a0cc4c6001efd91fb762d1d1f7c483f1503db6eccb9f"
+    },
+    {
+      "path": "D:\\codex-temp\\2026-10-03\\legacy-code-files-20261003\\outputs\\notification62-bootstrap-v2-gitleaks-redacted.json",
+      "sha256": "c3ac8d14fa09c25e4962e6f02ce7d4b37a60c0c1769183f22da940c433d5279c"
+    },
+    {
+      "path": "D:\\codex-temp\\2026-10-03\\legacy-code-files-20261003\\outputs\\notification62-bootstrap-v2-original-bindings.json",
+      "sha256": "57b9fbb46356ed95fd45eb01951bb79a888f8fd8b699e276d86c49a3c5ac8a71"
+    },
+    {
+      "path": "D:\\codex-temp\\2026-10-03\\legacy-code-files-20261003\\outputs\\notification62-bootstrap-v2-manifest-finding-classification.json",
+      "sha256": "1c5cf0f2938fe7edc5fa93bb57f6d301e86dddf57866c9b25590394b7c553670"
+    },
+    {
+      "path": "D:\\codex-temp\\2026-10-03\\legacy-code-files-20261003\\outputs\\notification62-bootstrap-v2-gitleaks-report-custody.json",
+      "sha256": "b39a7fe9302072a0134868326d5bdb4178a3ae055a715db1010b958632bc7ff1"
+    },
+    {
+      "path": "D:\\codex-temp\\2026-10-03\\legacy-code-files-20261003\\outputs\\notification62-bootstrap-v2-gitleaks-final.log",
+      "sha256": "b6a17562474e4ee61a5e4e31e7458895d1c9efcd8e53a5b1cb0c22826830edfc"
+    },
+    {
+      "path": "D:\\codex-temp\\2026-10-03\\legacy-code-files-20261003\\outputs\\notification62-published-producer-binding-v2.json",
+      "sha256": "17ca6f6c2f82bd4861ce73882d5f200d47c5ee586b85459654b74a4b983caf03"
+    }
+  ],
+  "candidateHeads": {
+    "auth": {
+      "head": "52b480e48948ac0fda5af971f00cc3a74585f243",
+      "tree": "a374bf380ef438233e0ef8c4868aeca317af2d2f"
+    },
+    "intranet": {
+      "head": "a54055de51e5adf25779c9ca303c1c2d06f5fbab",
+      "tree": "f3193fde7b95b30e277f72396d15ca01a1a6cc83"
+    }
+  },
+  "version": "V6 explicit immutable-head environment dictionary; no tuple classification ambiguity",
+  "supersedesSourceManifestSha256": "f147c844546c8832ce3538d5c019f0b9c4f8600881ac7db93c0a2457338b5410",
+  "dispatchHold": "Root hold pending producer gates; Auth175 supplementary profile reports946P1F/947, diagnosis owner active; no joined acceptance inferred",
+  "authoredPoolCleanupRegressionCases": 1,
+  "nativeExecutedPoolCleanupRegressionCases": null,
+  "poolCleanup": "Actual host effective identities captured by lifecycle observer before worker StartAsync; fixture/bootstrap identities also retained; no global ClearAllPools or policy changes; backend absence unproven",
+  "authoredHostDisposalRegressionCases": 3,
+  "nativeExecutedHostDisposalRegressionCases": null,
+  "hostFailureCustody": "Preserve pools/containers/runtime-only keys/lease if any actual host disposal fails or times out; poison admission; supervisor final removal requires exact native group absence"
+}
