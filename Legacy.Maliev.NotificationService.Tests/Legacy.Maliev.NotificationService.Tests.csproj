@@ -32,6 +32,7 @@
     <ProjectReference Include="$(MalievWorkspaceRoot)\Legacy.Maliev.Intranet\Legacy.Maliev.Intranet.Contracts\Legacy.Maliev.Intranet.Contracts.csproj" />
     <ProjectReference Include="$(MalievWorkspaceRoot)\Legacy.Maliev.Intranet\Legacy.Maliev.Intranet.Server\Legacy.Maliev.Intranet.Server.csproj" />
     <Compile Include="$(MalievWorkspaceRoot)\Legacy.Maliev.Intranet\Legacy.Maliev.Intranet.Bff\Orders\OrderCreateProxies.cs" Link="ActualConsumers\OrderCreateProxies.cs" />
+    <Compile Include="$(MalievWorkspaceRoot)\Legacy.Maliev.Intranet\Legacy.Maliev.Intranet.Bff\Employees\EmployeeRecoveryProxies.cs" Link="ActualConsumers\EmployeeRecoveryProxies.cs" />
     <ProjectReference Include="..\Legacy.Maliev.NotificationService.Application\Legacy.Maliev.NotificationService.Application.csproj" />
     <ProjectReference Include="..\Legacy.Maliev.NotificationService.Data\Legacy.Maliev.NotificationService.Data.csproj" />
     <ProjectReference Include="..\Legacy.Maliev.NotificationService.Domain\Legacy.Maliev.NotificationService.Domain.csproj" />
