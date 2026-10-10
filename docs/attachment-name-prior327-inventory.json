@@ -1,0 +1,1909 @@
+{
+  "sourceMain": "710229c6d7285460c0d61574a4fea66bd408b0a3",
+  "originalTrxSha256": "07fe078d0bf95a93a2f9f6a2480ac9d930803866a5f2e5c96c1fc36502c97370",
+  "executions": 327,
+  "rows": [
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Application.NotificationApplicationServiceTests",
+      "method": "SendAsync_WhenCallerCancels_PropagatesCancellation",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Application.NotificationApplicationServiceTests.SendAsync_WhenCallerCancels_PropagatesCancellation",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Application.NotificationApplicationServiceTests",
+      "method": "SendAsync_WhenProviderCancelsWithoutCallerCancellation_ReturnsBadGateway",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Application.NotificationApplicationServiceTests.SendAsync_WhenProviderCancelsWithoutCallerCancellation_ReturnsBadGateway",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Application.NotificationApplicationServiceTests",
+      "method": "SendAsync_WhenProviderThrows_DoesNotLogProviderMessageOrCustomerData",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Application.NotificationApplicationServiceTests.SendAsync_WhenProviderThrows_DoesNotLogProviderMessageOrCustomerData",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Application.NotificationApplicationServiceTests",
+      "method": "SendAsync_WhenProviderThrows_ReturnsBadGateway",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Application.NotificationApplicationServiceTests.SendAsync_WhenProviderThrows_ReturnsBadGateway",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Application.NotificationApplicationServiceTests",
+      "method": "SendAsync_WithInvalidRecipient_ReturnsBadRequestAndDoesNotCallProvider",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Application.NotificationApplicationServiceTests.SendAsync_WithInvalidRecipient_ReturnsBadRequestAndDoesNotCallProvider(to: \"\")",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Application.NotificationApplicationServiceTests",
+      "method": "SendAsync_WithInvalidRecipient_ReturnsBadRequestAndDoesNotCallProvider",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Application.NotificationApplicationServiceTests.SendAsync_WithInvalidRecipient_ReturnsBadRequestAndDoesNotCallProvider(to: \"invalid\")",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Application.NotificationApplicationServiceTests",
+      "method": "SendAsync_WithValidRequest_ForwardsToProvider",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Application.NotificationApplicationServiceTests.SendAsync_WithValidRequest_ForwardsToProvider",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Application.NotificationIntentBindingTests",
+      "method": "AttachmentBytesAndMetadata_AreBoundWithoutDelimiterCollisions",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Application.NotificationIntentBindingTests.AttachmentBytesAndMetadata_AreBoundWithoutDelimiterCollisions",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Application.NotificationIntentBindingTests",
+      "method": "CultureAndThaiBytes_AreStable_NotNormalized",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Application.NotificationIntentBindingTests.CultureAndThaiBytes_AreStable_NotNormalized",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Application.NotificationIntentBindingTests",
+      "method": "EveryTupleField_AndRetainedKeyIdentity_AffectsBinding",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Application.NotificationIntentBindingTests.EveryTupleField_AndRetainedKeyIdentity_AffectsBinding",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Application.NotificationIntentBindingTests",
+      "method": "IndependentLiteralFrameAndHmac_ThaiNullArrays_Vector",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Application.NotificationIntentBindingTests.IndependentLiteralFrameAndHmac_ThaiNullArrays_Vector",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Application.NotificationIntentBindingTests",
+      "method": "MissingRetainedKey_IsUnavailable_NotAnEmptyBinding",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Application.NotificationIntentBindingTests.MissingRetainedKey_IsUnavailable_NotAnEmptyBinding",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Application.NotificationIntentBindingTests",
+      "method": "OptionalArrays_NullEmptyAndOrder_AreDistinct",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Application.NotificationIntentBindingTests.OptionalArrays_NullEmptyAndOrder_AreDistinct",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Application.NotificationIntentBindingTests",
+      "method": "UnpairedSurrogate_IsFixedValidationFailure_NotRawParserDetails",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Application.NotificationIntentBindingTests.UnpairedSurrogate_IsFixedValidationFailure_NotRawParserDetails(identityField: False)",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Application.NotificationIntentBindingTests",
+      "method": "UnpairedSurrogate_IsFixedValidationFailure_NotRawParserDetails",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Application.NotificationIntentBindingTests.UnpairedSurrogate_IsFixedValidationFailure_NotRawParserDetails(identityField: True)",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Controllers.AccountingNotificationJoinedHttpTests",
+      "method": "AcceptedProducerReceipt_ReplaysAfterRestartWithoutAnyNotificationOrFinancialRequest",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Controllers.AccountingNotificationJoinedHttpTests.AcceptedProducerReceipt_ReplaysAfterRestartWithoutAnyNotificationOrFinancialRequest",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Controllers.AccountingNotificationJoinedHttpTests",
+      "method": "DisabledProducerOrWrongSignedService_NeverFallsBackOrReissuesAdmission",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Controllers.AccountingNotificationJoinedHttpTests.DisabledProducerOrWrongSignedService_NeverFallsBackOrReissuesAdmission(producerEnabled: False, actor: \"service\")",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Controllers.AccountingNotificationJoinedHttpTests",
+      "method": "DisabledProducerOrWrongSignedService_NeverFallsBackOrReissuesAdmission",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Controllers.AccountingNotificationJoinedHttpTests.DisabledProducerOrWrongSignedService_NeverFallsBackOrReissuesAdmission(producerEnabled: True, actor: \"other-service\")",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Controllers.AccountingNotificationJoinedHttpTests",
+      "method": "ExecutionDenied_AnAdmittedReadNeverRestoresMutationCapability",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Controllers.AccountingNotificationJoinedHttpTests.ExecutionDenied_AnAdmittedReadNeverRestoresMutationCapability",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Controllers.AccountingNotificationJoinedHttpTests",
+      "method": "LostCallerResponse_RealControllerReconcilesByGetOnlyAndTerminalReplayMakesNoRequest",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Controllers.AccountingNotificationJoinedHttpTests.LostCallerResponse_RealControllerReconcilesByGetOnlyAndTerminalReplayMakesNoRequest(failedRead: \"deny\")",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Controllers.AccountingNotificationJoinedHttpTests",
+      "method": "LostCallerResponse_RealControllerReconcilesByGetOnlyAndTerminalReplayMakesNoRequest",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Controllers.AccountingNotificationJoinedHttpTests.LostCallerResponse_RealControllerReconcilesByGetOnlyAndTerminalReplayMakesNoRequest(failedRead: \"unavailable\")",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Controllers.AccountingNotificationJoinedHttpTests",
+      "method": "ProviderAcknowledgmentUnknown_ConsumerCannotResubmitOnReadOnlyRecovery",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Controllers.AccountingNotificationJoinedHttpTests.ProviderAcknowledgmentUnknown_ConsumerCannotResubmitOnReadOnlyRecovery",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Controllers.BrevoSenderStartupAdmissionTests",
+      "method": "NormalProductionHost_AdmitsAllFourValidSendersAndRetainsAuthentication",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Controllers.BrevoSenderStartupAdmissionTests.NormalProductionHost_AdmitsAllFourValidSendersAndRetainsAuthentication",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Controllers.BrevoSenderStartupAdmissionTests",
+      "method": "NormalProductionHost_RejectsIncompleteSenderConfigurationWithoutUnhandledNull",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Controllers.BrevoSenderStartupAdmissionTests.NormalProductionHost_RejectsIncompleteSenderConfigurationWithoutUnhandledNull(mode: \"missing-channel\")",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Controllers.BrevoSenderStartupAdmissionTests",
+      "method": "NormalProductionHost_RejectsIncompleteSenderConfigurationWithoutUnhandledNull",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Controllers.BrevoSenderStartupAdmissionTests.NormalProductionHost_RejectsIncompleteSenderConfigurationWithoutUnhandledNull(mode: \"null-dictionary\")",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Controllers.BrevoSenderStartupAdmissionTests",
+      "method": "NormalProductionHost_RejectsIncompleteSenderConfigurationWithoutUnhandledNull",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Controllers.BrevoSenderStartupAdmissionTests.NormalProductionHost_RejectsIncompleteSenderConfigurationWithoutUnhandledNull(mode: \"null-entry\")",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Controllers.BrevoSenderStartupAdmissionTests",
+      "method": "NormalProductionHost_RejectsInvalidConfiguredSenderBeforeServing",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Controllers.BrevoSenderStartupAdmissionTests.NormalProductionHost_RejectsInvalidConfiguredSenderBeforeServing(channel: \"Info\", field: \"Address\", value: \"\")",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Controllers.BrevoSenderStartupAdmissionTests",
+      "method": "NormalProductionHost_RejectsInvalidConfiguredSenderBeforeServing",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Controllers.BrevoSenderStartupAdmissionTests.NormalProductionHost_RejectsInvalidConfiguredSenderBeforeServing(channel: \"Info\", field: \"Address\", value: \"PRIVATE-SENDER-FIXTURE\")",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Controllers.BrevoSenderStartupAdmissionTests",
+      "method": "NormalProductionHost_RejectsInvalidConfiguredSenderBeforeServing",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Controllers.BrevoSenderStartupAdmissionTests.NormalProductionHost_RejectsInvalidConfiguredSenderBeforeServing(channel: \"Info\", field: \"DisplayName\", value: \"  \")",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Controllers.BrevoSenderStartupAdmissionTests",
+      "method": "NormalProductionHost_RejectsInvalidConfiguredSenderBeforeServing",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Controllers.BrevoSenderStartupAdmissionTests.NormalProductionHost_RejectsInvalidConfiguredSenderBeforeServing(channel: \"Manufacturing\", field: \"Address\", value: \"\")",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Controllers.BrevoSenderStartupAdmissionTests",
+      "method": "NormalProductionHost_RejectsInvalidConfiguredSenderBeforeServing",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Controllers.BrevoSenderStartupAdmissionTests.NormalProductionHost_RejectsInvalidConfiguredSenderBeforeServing(channel: \"Manufacturing\", field: \"Address\", value: \"PRIVATE-SENDER-FIXTURE\")",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Controllers.BrevoSenderStartupAdmissionTests",
+      "method": "NormalProductionHost_RejectsInvalidConfiguredSenderBeforeServing",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Controllers.BrevoSenderStartupAdmissionTests.NormalProductionHost_RejectsInvalidConfiguredSenderBeforeServing(channel: \"Manufacturing\", field: \"DisplayName\", value: \"  \")",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Controllers.BrevoSenderStartupAdmissionTests",
+      "method": "NormalProductionHost_RejectsInvalidConfiguredSenderBeforeServing",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Controllers.BrevoSenderStartupAdmissionTests.NormalProductionHost_RejectsInvalidConfiguredSenderBeforeServing(channel: \"NoReply\", field: \"Address\", value: \"\")",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Controllers.BrevoSenderStartupAdmissionTests",
+      "method": "NormalProductionHost_RejectsInvalidConfiguredSenderBeforeServing",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Controllers.BrevoSenderStartupAdmissionTests.NormalProductionHost_RejectsInvalidConfiguredSenderBeforeServing(channel: \"NoReply\", field: \"Address\", value: \"PRIVATE-SENDER-FIXTURE\")",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Controllers.BrevoSenderStartupAdmissionTests",
+      "method": "NormalProductionHost_RejectsInvalidConfiguredSenderBeforeServing",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Controllers.BrevoSenderStartupAdmissionTests.NormalProductionHost_RejectsInvalidConfiguredSenderBeforeServing(channel: \"NoReply\", field: \"DisplayName\", value: \"  \")",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Controllers.BrevoSenderStartupAdmissionTests",
+      "method": "NormalProductionHost_RejectsInvalidConfiguredSenderBeforeServing",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Controllers.BrevoSenderStartupAdmissionTests.NormalProductionHost_RejectsInvalidConfiguredSenderBeforeServing(channel: \"Support\", field: \"Address\", value: \"\")",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Controllers.BrevoSenderStartupAdmissionTests",
+      "method": "NormalProductionHost_RejectsInvalidConfiguredSenderBeforeServing",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Controllers.BrevoSenderStartupAdmissionTests.NormalProductionHost_RejectsInvalidConfiguredSenderBeforeServing(channel: \"Support\", field: \"Address\", value: \"PRIVATE-SENDER-FIXTURE\")",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Controllers.BrevoSenderStartupAdmissionTests",
+      "method": "NormalProductionHost_RejectsInvalidConfiguredSenderBeforeServing",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Controllers.BrevoSenderStartupAdmissionTests.NormalProductionHost_RejectsInvalidConfiguredSenderBeforeServing(channel: \"Support\", field: \"DisplayName\", value: \"  \")",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Controllers.BrevoSenderStartupAdmissionTests",
+      "method": "NormalProductionHost_RejectsMissingOrBlankProviderKeyBeforeServing",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Controllers.BrevoSenderStartupAdmissionTests.NormalProductionHost_RejectsMissingOrBlankProviderKeyBeforeServing(apiKey: \"   \")",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Controllers.BrevoSenderStartupAdmissionTests",
+      "method": "NormalProductionHost_RejectsMissingOrBlankProviderKeyBeforeServing",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Controllers.BrevoSenderStartupAdmissionTests.NormalProductionHost_RejectsMissingOrBlankProviderKeyBeforeServing(apiKey: \"\")",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Controllers.BrevoSenderStartupAdmissionTests",
+      "method": "NormalProductionHost_RejectsMissingOrBlankProviderKeyBeforeServing",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Controllers.BrevoSenderStartupAdmissionTests.NormalProductionHost_RejectsMissingOrBlankProviderKeyBeforeServing(apiKey: null)",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Controllers.CurrentEmptyAttachmentWireHttpTests",
+      "method": "JsonAttachmentPresence_MapsOriginalNoAttachmentDisposition",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Controllers.CurrentEmptyAttachmentWireHttpTests.JsonAttachmentPresence_MapsOriginalNoAttachmentDisposition(channel: \"Info\", presence: \"empty\")",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Controllers.CurrentEmptyAttachmentWireHttpTests",
+      "method": "JsonAttachmentPresence_MapsOriginalNoAttachmentDisposition",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Controllers.CurrentEmptyAttachmentWireHttpTests.JsonAttachmentPresence_MapsOriginalNoAttachmentDisposition(channel: \"Info\", presence: \"null\")",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Controllers.CurrentEmptyAttachmentWireHttpTests",
+      "method": "JsonAttachmentPresence_MapsOriginalNoAttachmentDisposition",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Controllers.CurrentEmptyAttachmentWireHttpTests.JsonAttachmentPresence_MapsOriginalNoAttachmentDisposition(channel: \"Info\", presence: \"omitted\")",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Controllers.CurrentEmptyAttachmentWireHttpTests",
+      "method": "JsonAttachmentPresence_MapsOriginalNoAttachmentDisposition",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Controllers.CurrentEmptyAttachmentWireHttpTests.JsonAttachmentPresence_MapsOriginalNoAttachmentDisposition(channel: \"Info\", presence: \"populated\")",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Controllers.CurrentEmptyAttachmentWireHttpTests",
+      "method": "JsonAttachmentPresence_MapsOriginalNoAttachmentDisposition",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Controllers.CurrentEmptyAttachmentWireHttpTests.JsonAttachmentPresence_MapsOriginalNoAttachmentDisposition(channel: \"Manufacturing\", presence: \"empty\")",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Controllers.CurrentEmptyAttachmentWireHttpTests",
+      "method": "JsonAttachmentPresence_MapsOriginalNoAttachmentDisposition",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Controllers.CurrentEmptyAttachmentWireHttpTests.JsonAttachmentPresence_MapsOriginalNoAttachmentDisposition(channel: \"Manufacturing\", presence: \"null\")",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Controllers.CurrentEmptyAttachmentWireHttpTests",
+      "method": "JsonAttachmentPresence_MapsOriginalNoAttachmentDisposition",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Controllers.CurrentEmptyAttachmentWireHttpTests.JsonAttachmentPresence_MapsOriginalNoAttachmentDisposition(channel: \"Manufacturing\", presence: \"omitted\")",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Controllers.CurrentEmptyAttachmentWireHttpTests",
+      "method": "JsonAttachmentPresence_MapsOriginalNoAttachmentDisposition",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Controllers.CurrentEmptyAttachmentWireHttpTests.JsonAttachmentPresence_MapsOriginalNoAttachmentDisposition(channel: \"Manufacturing\", presence: \"populated\")",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Controllers.CurrentEmptyAttachmentWireHttpTests",
+      "method": "JsonAttachmentPresence_MapsOriginalNoAttachmentDisposition",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Controllers.CurrentEmptyAttachmentWireHttpTests.JsonAttachmentPresence_MapsOriginalNoAttachmentDisposition(channel: \"NoReply\", presence: \"empty\")",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Controllers.CurrentEmptyAttachmentWireHttpTests",
+      "method": "JsonAttachmentPresence_MapsOriginalNoAttachmentDisposition",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Controllers.CurrentEmptyAttachmentWireHttpTests.JsonAttachmentPresence_MapsOriginalNoAttachmentDisposition(channel: \"NoReply\", presence: \"null\")",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Controllers.CurrentEmptyAttachmentWireHttpTests",
+      "method": "JsonAttachmentPresence_MapsOriginalNoAttachmentDisposition",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Controllers.CurrentEmptyAttachmentWireHttpTests.JsonAttachmentPresence_MapsOriginalNoAttachmentDisposition(channel: \"NoReply\", presence: \"omitted\")",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Controllers.CurrentEmptyAttachmentWireHttpTests",
+      "method": "JsonAttachmentPresence_MapsOriginalNoAttachmentDisposition",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Controllers.CurrentEmptyAttachmentWireHttpTests.JsonAttachmentPresence_MapsOriginalNoAttachmentDisposition(channel: \"NoReply\", presence: \"populated\")",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Controllers.CurrentEmptyAttachmentWireHttpTests",
+      "method": "JsonAttachmentPresence_MapsOriginalNoAttachmentDisposition",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Controllers.CurrentEmptyAttachmentWireHttpTests.JsonAttachmentPresence_MapsOriginalNoAttachmentDisposition(channel: \"Support\", presence: \"empty\")",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Controllers.CurrentEmptyAttachmentWireHttpTests",
+      "method": "JsonAttachmentPresence_MapsOriginalNoAttachmentDisposition",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Controllers.CurrentEmptyAttachmentWireHttpTests.JsonAttachmentPresence_MapsOriginalNoAttachmentDisposition(channel: \"Support\", presence: \"null\")",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Controllers.CurrentEmptyAttachmentWireHttpTests",
+      "method": "JsonAttachmentPresence_MapsOriginalNoAttachmentDisposition",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Controllers.CurrentEmptyAttachmentWireHttpTests.JsonAttachmentPresence_MapsOriginalNoAttachmentDisposition(channel: \"Support\", presence: \"omitted\")",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Controllers.CurrentEmptyAttachmentWireHttpTests",
+      "method": "JsonAttachmentPresence_MapsOriginalNoAttachmentDisposition",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Controllers.CurrentEmptyAttachmentWireHttpTests.JsonAttachmentPresence_MapsOriginalNoAttachmentDisposition(channel: \"Support\", presence: \"populated\")",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Controllers.CurrentEmptyAttachmentWireHttpTests",
+      "method": "LegacyNoFiles_StillOmitsAttachmentsAndReturnsBare200",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Controllers.CurrentEmptyAttachmentWireHttpTests.LegacyNoFiles_StillOmitsAttachmentsAndReturnsBare200(channel: \"Info\")",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Controllers.CurrentEmptyAttachmentWireHttpTests",
+      "method": "LegacyNoFiles_StillOmitsAttachmentsAndReturnsBare200",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Controllers.CurrentEmptyAttachmentWireHttpTests.LegacyNoFiles_StillOmitsAttachmentsAndReturnsBare200(channel: \"Manufacturing\")",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Controllers.CurrentEmptyAttachmentWireHttpTests",
+      "method": "LegacyNoFiles_StillOmitsAttachmentsAndReturnsBare200",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Controllers.CurrentEmptyAttachmentWireHttpTests.LegacyNoFiles_StillOmitsAttachmentsAndReturnsBare200(channel: \"NoReply\")",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Controllers.CurrentEmptyAttachmentWireHttpTests",
+      "method": "LegacyNoFiles_StillOmitsAttachmentsAndReturnsBare200",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Controllers.CurrentEmptyAttachmentWireHttpTests.LegacyNoFiles_StillOmitsAttachmentsAndReturnsBare200(channel: \"Support\")",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Controllers.CurrentQuotedMailboxNotificationHttpTests",
+      "method": "ActualRecoveryBffProxy_QuotedRecipientReachesNotificationAndProvider",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Controllers.CurrentQuotedMailboxNotificationHttpTests.ActualRecoveryBffProxy_QuotedRecipientReachesNotificationAndProvider(confirmation: False)",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Controllers.CurrentQuotedMailboxNotificationHttpTests",
+      "method": "ActualRecoveryBffProxy_QuotedRecipientReachesNotificationAndProvider",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Controllers.CurrentQuotedMailboxNotificationHttpTests.ActualRecoveryBffProxy_QuotedRecipientReachesNotificationAndProvider(confirmation: True)",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Controllers.CurrentQuotedMailboxNotificationHttpTests",
+      "method": "InvalidOrNormalizedMailbox_RejectsOpaqueBeforeProvider",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Controllers.CurrentQuotedMailboxNotificationHttpTests.InvalidOrNormalizedMailbox_RejectsOpaqueBeforeProvider(field: \"replyTo\", value: \" recipient@example.invalid \")",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Controllers.CurrentQuotedMailboxNotificationHttpTests",
+      "method": "InvalidOrNormalizedMailbox_RejectsOpaqueBeforeProvider",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Controllers.CurrentQuotedMailboxNotificationHttpTests.InvalidOrNormalizedMailbox_RejectsOpaqueBeforeProvider(field: \"replyTo\", value: \"Display <recipient@example.invalid>\")",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Controllers.CurrentQuotedMailboxNotificationHttpTests",
+      "method": "InvalidOrNormalizedMailbox_RejectsOpaqueBeforeProvider",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Controllers.CurrentQuotedMailboxNotificationHttpTests.InvalidOrNormalizedMailbox_RejectsOpaqueBeforeProvider(field: \"replyTo\", value: \"not-a-mailbox\")",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Controllers.CurrentQuotedMailboxNotificationHttpTests",
+      "method": "InvalidOrNormalizedMailbox_RejectsOpaqueBeforeProvider",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Controllers.CurrentQuotedMailboxNotificationHttpTests.InvalidOrNormalizedMailbox_RejectsOpaqueBeforeProvider(field: \"to\", value: \" recipient@example.invalid \")",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Controllers.CurrentQuotedMailboxNotificationHttpTests",
+      "method": "InvalidOrNormalizedMailbox_RejectsOpaqueBeforeProvider",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Controllers.CurrentQuotedMailboxNotificationHttpTests.InvalidOrNormalizedMailbox_RejectsOpaqueBeforeProvider(field: \"to\", value: \"Display <recipient@example.invalid>\")",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Controllers.CurrentQuotedMailboxNotificationHttpTests",
+      "method": "InvalidOrNormalizedMailbox_RejectsOpaqueBeforeProvider",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Controllers.CurrentQuotedMailboxNotificationHttpTests.InvalidOrNormalizedMailbox_RejectsOpaqueBeforeProvider(field: \"to\", value: \"not-a-mailbox\")",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Controllers.CurrentQuotedMailboxNotificationHttpTests",
+      "method": "MissingRequiredRecipient_Remains400WithoutProvider",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Controllers.CurrentQuotedMailboxNotificationHttpTests.MissingRequiredRecipient_Remains400WithoutProvider",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Controllers.CurrentQuotedMailboxNotificationHttpTests",
+      "method": "QuotedLocalPartWithEmbeddedAt_ReachesProviderUnchanged",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Controllers.CurrentQuotedMailboxNotificationHttpTests.QuotedLocalPartWithEmbeddedAt_ReachesProviderUnchanged(channel: \"Info\", field: \"replyTo\")",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Controllers.CurrentQuotedMailboxNotificationHttpTests",
+      "method": "QuotedLocalPartWithEmbeddedAt_ReachesProviderUnchanged",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Controllers.CurrentQuotedMailboxNotificationHttpTests.QuotedLocalPartWithEmbeddedAt_ReachesProviderUnchanged(channel: \"Info\", field: \"to\")",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Controllers.CurrentQuotedMailboxNotificationHttpTests",
+      "method": "QuotedLocalPartWithEmbeddedAt_ReachesProviderUnchanged",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Controllers.CurrentQuotedMailboxNotificationHttpTests.QuotedLocalPartWithEmbeddedAt_ReachesProviderUnchanged(channel: \"Manufacturing\", field: \"replyTo\")",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Controllers.CurrentQuotedMailboxNotificationHttpTests",
+      "method": "QuotedLocalPartWithEmbeddedAt_ReachesProviderUnchanged",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Controllers.CurrentQuotedMailboxNotificationHttpTests.QuotedLocalPartWithEmbeddedAt_ReachesProviderUnchanged(channel: \"Manufacturing\", field: \"to\")",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Controllers.CurrentQuotedMailboxNotificationHttpTests",
+      "method": "QuotedLocalPartWithEmbeddedAt_ReachesProviderUnchanged",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Controllers.CurrentQuotedMailboxNotificationHttpTests.QuotedLocalPartWithEmbeddedAt_ReachesProviderUnchanged(channel: \"NoReply\", field: \"replyTo\")",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Controllers.CurrentQuotedMailboxNotificationHttpTests",
+      "method": "QuotedLocalPartWithEmbeddedAt_ReachesProviderUnchanged",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Controllers.CurrentQuotedMailboxNotificationHttpTests.QuotedLocalPartWithEmbeddedAt_ReachesProviderUnchanged(channel: \"NoReply\", field: \"to\")",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Controllers.CurrentQuotedMailboxNotificationHttpTests",
+      "method": "QuotedLocalPartWithEmbeddedAt_ReachesProviderUnchanged",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Controllers.CurrentQuotedMailboxNotificationHttpTests.QuotedLocalPartWithEmbeddedAt_ReachesProviderUnchanged(channel: \"Support\", field: \"replyTo\")",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Controllers.CurrentQuotedMailboxNotificationHttpTests",
+      "method": "QuotedLocalPartWithEmbeddedAt_ReachesProviderUnchanged",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Controllers.CurrentQuotedMailboxNotificationHttpTests.QuotedLocalPartWithEmbeddedAt_ReachesProviderUnchanged(channel: \"Support\", field: \"to\")",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Controllers.CurrentQuotedMailboxNotificationHttpTests",
+      "method": "QuotedMailbox_StillRequiresValidSignatureAndSendPermission",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Controllers.CurrentQuotedMailboxNotificationHttpTests.QuotedMailbox_StillRequiresValidSignatureAndSendPermission(identity: \"anonymous\", expected: Unauthorized)",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Controllers.CurrentQuotedMailboxNotificationHttpTests",
+      "method": "QuotedMailbox_StillRequiresValidSignatureAndSendPermission",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Controllers.CurrentQuotedMailboxNotificationHttpTests.QuotedMailbox_StillRequiresValidSignatureAndSendPermission(identity: \"denied\", expected: Forbidden)",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Controllers.CurrentQuotedMailboxNotificationHttpTests",
+      "method": "QuotedMailbox_StillRequiresValidSignatureAndSendPermission",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Controllers.CurrentQuotedMailboxNotificationHttpTests.QuotedMailbox_StillRequiresValidSignatureAndSendPermission(identity: \"wrong-key\", expected: Unauthorized)",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Controllers.EmailAttachmentOwnershipTests",
+      "method": "CancellationAfterPartialLaterCopy_ClosesOpenedStreamsAndNeverOpensNextAttachment",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Controllers.EmailAttachmentOwnershipTests.CancellationAfterPartialLaterCopy_ClosesOpenedStreamsAndNeverOpensNextAttachment",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Controllers.EmailAttachmentOwnershipTests",
+      "method": "CancelledCopy_ClosesOpenedStreamWithoutCallingProvider",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Controllers.EmailAttachmentOwnershipTests.CancelledCopy_ClosesOpenedStreamWithoutCallingProvider",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Controllers.EmailAttachmentOwnershipTests",
+      "method": "CopiedStreams_AreClosedBeforeProviderSuccessOrFailure",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Controllers.EmailAttachmentOwnershipTests.CopiedStreams_AreClosedBeforeProviderSuccessOrFailure(providerFailure: False)",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Controllers.EmailAttachmentOwnershipTests",
+      "method": "CopiedStreams_AreClosedBeforeProviderSuccessOrFailure",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Controllers.EmailAttachmentOwnershipTests.CopiedStreams_AreClosedBeforeProviderSuccessOrFailure(providerFailure: True)",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Controllers.EmailAttachmentOwnershipTests",
+      "method": "LaterCopyFailure_ClosesBothOpenedStreamsWithoutCallingProvider",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Controllers.EmailAttachmentOwnershipTests.LaterCopyFailure_ClosesBothOpenedStreamsWithoutCallingProvider",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Controllers.EmailFailureBoundaryTests",
+      "method": "EmailCorrelationScope_UsesFallbackRouteAndValidatedIdWithoutLiteralRecipient",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Controllers.EmailFailureBoundaryTests.EmailCorrelationScope_UsesFallbackRouteAndValidatedIdWithoutLiteralRecipient",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Controllers.EmailFailureBoundaryTests",
+      "method": "UnhandledEmailFailure_EmitsIncidentWithoutRecipientOrExceptionDetails",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Controllers.EmailFailureBoundaryTests.UnhandledEmailFailure_EmitsIncidentWithoutRecipientOrExceptionDetails",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Controllers.EmailRequestBodyOwnershipTests",
+      "method": "PlaintextReadFailure_PreservesFrameworkBodyAndNeverCallsProvider",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Controllers.EmailRequestBodyOwnershipTests.PlaintextReadFailure_PreservesFrameworkBodyAndNeverCallsProvider",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Controllers.EmailRequestBodyOwnershipTests",
+      "method": "PlaintextReader_LeavesFrameworkBodyOpenBeforeProviderAndOnProviderFailure",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Controllers.EmailRequestBodyOwnershipTests.PlaintextReader_LeavesFrameworkBodyOpenBeforeProviderAndOnProviderFailure(providerFailure: False)",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Controllers.EmailRequestBodyOwnershipTests",
+      "method": "PlaintextReader_LeavesFrameworkBodyOpenBeforeProviderAndOnProviderFailure",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Controllers.EmailRequestBodyOwnershipTests.PlaintextReader_LeavesFrameworkBodyOpenBeforeProviderAndOnProviderFailure(providerFailure: True)",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Controllers.EmailsControllerCompatibilityTests",
+      "method": "LegacyControllerRequiresAuthenticationAndSendPermission",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Controllers.EmailsControllerCompatibilityTests.LegacyControllerRequiresAuthenticationAndSendPermission",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Controllers.EmailsControllerCompatibilityTests",
+      "method": "SendInfoEmailAsync_CopiesAttachmentsBeforeProviderCall",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Controllers.EmailsControllerCompatibilityTests.SendInfoEmailAsync_CopiesAttachmentsBeforeProviderCall",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Controllers.EmailsControllerCompatibilityTests",
+      "method": "SendInfoEmailAsync_PreservesLegacyRouteChannelAndQueryContract",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Controllers.EmailsControllerCompatibilityTests.SendInfoEmailAsync_PreservesLegacyRouteChannelAndQueryContract",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Controllers.EmailsControllerCompatibilityTests",
+      "method": "SendManufacturingEmailAsync_RejectsCombinedAttachmentsOverLegacyLimit",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Controllers.EmailsControllerCompatibilityTests.SendManufacturingEmailAsync_RejectsCombinedAttachmentsOverLegacyLimit",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Controllers.EmailsControllerCompatibilityTests",
+      "method": "SendNoReplyEmailAsync_ReturnsLegacyModelStateErrors",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Controllers.EmailsControllerCompatibilityTests.SendNoReplyEmailAsync_ReturnsLegacyModelStateErrors",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Controllers.EmailsControllerCompatibilityTests",
+      "method": "SendSupportEmailPlainTextAsync_ReadsRawBody",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Controllers.EmailsControllerCompatibilityTests.SendSupportEmailPlainTextAsync_ReadsRawBody",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Controllers.IntranetOrderNotificationJoinedHttpTests",
+      "method": "CurrentConsumer_CallerAbortReachesProviderWithoutAnotherSubmission",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Controllers.IntranetOrderNotificationJoinedHttpTests.CurrentConsumer_CallerAbortReachesProviderWithoutAnotherSubmission",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Controllers.IntranetOrderNotificationJoinedHttpTests",
+      "method": "CurrentConsumer_InvalidRecipientIsRejectedWithoutProviderSubmission",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Controllers.IntranetOrderNotificationJoinedHttpTests.CurrentConsumer_InvalidRecipientIsRejectedWithoutProviderSubmission",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Controllers.IntranetOrderNotificationJoinedHttpTests",
+      "method": "CurrentConsumer_PermissionRejectionInvalidatesCachedTokenBeforeAnotherAttempt",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Controllers.IntranetOrderNotificationJoinedHttpTests.CurrentConsumer_PermissionRejectionInvalidatesCachedTokenBeforeAnotherAttempt",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Controllers.IntranetOrderNotificationJoinedHttpTests",
+      "method": "CurrentConsumer_ProviderRejectionRemainsOpaqueAndDoesNotResubmit",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Controllers.IntranetOrderNotificationJoinedHttpTests.CurrentConsumer_ProviderRejectionRemainsOpaqueAndDoesNotResubmit",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Controllers.IntranetOrderNotificationJoinedHttpTests",
+      "method": "CurrentConsumer_UsesCachedServiceIdentityAndPreservesProviderWireAndJsonAcknowledgment",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Controllers.IntranetOrderNotificationJoinedHttpTests.CurrentConsumer_UsesCachedServiceIdentityAndPreservesProviderWireAndJsonAcknowledgment",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Controllers.LegacyEmailAttachmentLimitHttpTests",
+      "method": "MultipartPlaintext_DoesNotReinterpretFormFieldsAsRawBody",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Controllers.LegacyEmailAttachmentLimitHttpTests.MultipartPlaintext_DoesNotReinterpretFormFieldsAsRawBody",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Controllers.LegacyEmailAttachmentLimitHttpTests",
+      "method": "RawUtf8Plaintext_RetainsBodyAndAcknowledgmentWithoutAttachments",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Controllers.LegacyEmailAttachmentLimitHttpTests.RawUtf8Plaintext_RetainsBodyAndAcknowledgmentWithoutAttachments(mediaType: \"text/html\")",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Controllers.LegacyEmailAttachmentLimitHttpTests",
+      "method": "RawUtf8Plaintext_RetainsBodyAndAcknowledgmentWithoutAttachments",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Controllers.LegacyEmailAttachmentLimitHttpTests.RawUtf8Plaintext_RetainsBodyAndAcknowledgmentWithoutAttachments(mediaType: \"text/plain\")",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Controllers.LegacyEmailAttachmentLimitHttpTests",
+      "method": "StreamedMultipart_AggregateBoundaryRejectsBeforeProviderOrPreservesExactBytes",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Controllers.LegacyEmailAttachmentLimitHttpTests.StreamedMultipart_AggregateBoundaryRejectsBeforeProviderOrPreservesExactBytes(delta: -1)",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Controllers.LegacyEmailAttachmentLimitHttpTests",
+      "method": "StreamedMultipart_AggregateBoundaryRejectsBeforeProviderOrPreservesExactBytes",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Controllers.LegacyEmailAttachmentLimitHttpTests.StreamedMultipart_AggregateBoundaryRejectsBeforeProviderOrPreservesExactBytes(delta: 0)",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Controllers.LegacyEmailAttachmentLimitHttpTests",
+      "method": "StreamedMultipart_AggregateBoundaryRejectsBeforeProviderOrPreservesExactBytes",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Controllers.LegacyEmailAttachmentLimitHttpTests.StreamedMultipart_AggregateBoundaryRejectsBeforeProviderOrPreservesExactBytes(delta: 1)",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Controllers.LegacyEmailHttpAcceptanceTests",
+      "method": "ActualCallerAbort_PropagatesToProviderAndDoesNotStartRetry",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Controllers.LegacyEmailHttpAcceptanceTests.ActualCallerAbort_PropagatesToProviderAndDoesNotStartRetry(route: \"info\")",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Controllers.LegacyEmailHttpAcceptanceTests",
+      "method": "ActualCallerAbort_PropagatesToProviderAndDoesNotStartRetry",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Controllers.LegacyEmailHttpAcceptanceTests.ActualCallerAbort_PropagatesToProviderAndDoesNotStartRetry(route: \"support-plaintext\")",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Controllers.LegacyEmailHttpAcceptanceTests",
+      "method": "ActualOptionalRecipients_OmitsBlankFieldsAndPreservesNonblankOrder",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Controllers.LegacyEmailHttpAcceptanceTests.ActualOptionalRecipients_OmitsBlankFieldsAndPreservesNonblankOrder(route: \"info\")",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Controllers.LegacyEmailHttpAcceptanceTests",
+      "method": "ActualOptionalRecipients_OmitsBlankFieldsAndPreservesNonblankOrder",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Controllers.LegacyEmailHttpAcceptanceTests.ActualOptionalRecipients_OmitsBlankFieldsAndPreservesNonblankOrder(route: \"manufacturing\")",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Controllers.LegacyEmailHttpAcceptanceTests",
+      "method": "ActualOptionalRecipients_OmitsBlankFieldsAndPreservesNonblankOrder",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Controllers.LegacyEmailHttpAcceptanceTests.ActualOptionalRecipients_OmitsBlankFieldsAndPreservesNonblankOrder(route: \"noreply\")",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Controllers.LegacyEmailHttpAcceptanceTests",
+      "method": "ActualOptionalRecipients_OmitsBlankFieldsAndPreservesNonblankOrder",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Controllers.LegacyEmailHttpAcceptanceTests.ActualOptionalRecipients_OmitsBlankFieldsAndPreservesNonblankOrder(route: \"support\")",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Controllers.LegacyEmailHttpAcceptanceTests",
+      "method": "ActualProviderAcknowledgment_PreservesSourceNullRuleAndOpaqueFailureBoundary",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Controllers.LegacyEmailHttpAcceptanceTests.ActualProviderAcknowledgment_PreservesSourceNullRuleAndOpaqueFailureBoundary(route: \"info\", json: \"null\", providerStatus: 201, expected: 400)",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Controllers.LegacyEmailHttpAcceptanceTests",
+      "method": "ActualProviderAcknowledgment_PreservesSourceNullRuleAndOpaqueFailureBoundary",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Controllers.LegacyEmailHttpAcceptanceTests.ActualProviderAcknowledgment_PreservesSourceNullRuleAndOpaqueFailureBoundary(route: \"info\", json: \"provider-rejection-synthetic\", providerStatus: 401, expected: 502)",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Controllers.LegacyEmailHttpAcceptanceTests",
+      "method": "ActualProviderAcknowledgment_PreservesSourceNullRuleAndOpaqueFailureBoundary",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Controllers.LegacyEmailHttpAcceptanceTests.ActualProviderAcknowledgment_PreservesSourceNullRuleAndOpaqueFailureBoundary(route: \"info\", json: \"{\\\"messageId\\\":7}\", providerStatus: 201, expected: 502)",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Controllers.LegacyEmailHttpAcceptanceTests",
+      "method": "ActualProviderAcknowledgment_PreservesSourceNullRuleAndOpaqueFailureBoundary",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Controllers.LegacyEmailHttpAcceptanceTests.ActualProviderAcknowledgment_PreservesSourceNullRuleAndOpaqueFailureBoundary(route: \"info\", json: \"{\\\"messageId\\\":\\\" \\\"}\", providerStatus: 201, expected: 200)",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Controllers.LegacyEmailHttpAcceptanceTests",
+      "method": "ActualProviderAcknowledgment_PreservesSourceNullRuleAndOpaqueFailureBoundary",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Controllers.LegacyEmailHttpAcceptanceTests.ActualProviderAcknowledgment_PreservesSourceNullRuleAndOpaqueFailureBoundary(route: \"info\", json: \"{\\\"messageId\\\":\\\"\\\"}\", providerStatus: 201, expected: 200)",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Controllers.LegacyEmailHttpAcceptanceTests",
+      "method": "ActualProviderAcknowledgment_PreservesSourceNullRuleAndOpaqueFailureBoundary",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Controllers.LegacyEmailHttpAcceptanceTests.ActualProviderAcknowledgment_PreservesSourceNullRuleAndOpaqueFailureBoundary(route: \"info\", json: \"{\\\"messageId\\\":null}\", providerStatus: 201, expected: 400)",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Controllers.LegacyEmailHttpAcceptanceTests",
+      "method": "ActualProviderAcknowledgment_PreservesSourceNullRuleAndOpaqueFailureBoundary",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Controllers.LegacyEmailHttpAcceptanceTests.ActualProviderAcknowledgment_PreservesSourceNullRuleAndOpaqueFailureBoundary(route: \"info\", json: \"{malformed-provider-synthetic\", providerStatus: 201, expected: 502)",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Controllers.LegacyEmailHttpAcceptanceTests",
+      "method": "ActualProviderAcknowledgment_PreservesSourceNullRuleAndOpaqueFailureBoundary",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Controllers.LegacyEmailHttpAcceptanceTests.ActualProviderAcknowledgment_PreservesSourceNullRuleAndOpaqueFailureBoundary(route: \"info\", json: \"{}\", providerStatus: 201, expected: 400)",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Controllers.LegacyEmailHttpAcceptanceTests",
+      "method": "ActualProviderAcknowledgment_PreservesSourceNullRuleAndOpaqueFailureBoundary",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Controllers.LegacyEmailHttpAcceptanceTests.ActualProviderAcknowledgment_PreservesSourceNullRuleAndOpaqueFailureBoundary(route: \"support-plaintext\", json: \"null\", providerStatus: 201, expected: 400)",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Controllers.LegacyEmailHttpAcceptanceTests",
+      "method": "ActualProviderAcknowledgment_PreservesSourceNullRuleAndOpaqueFailureBoundary",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Controllers.LegacyEmailHttpAcceptanceTests.ActualProviderAcknowledgment_PreservesSourceNullRuleAndOpaqueFailureBoundary(route: \"support-plaintext\", json: \"provider-rejection-synthetic\", providerStatus: 401, expected: 502)",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Controllers.LegacyEmailHttpAcceptanceTests",
+      "method": "ActualProviderAcknowledgment_PreservesSourceNullRuleAndOpaqueFailureBoundary",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Controllers.LegacyEmailHttpAcceptanceTests.ActualProviderAcknowledgment_PreservesSourceNullRuleAndOpaqueFailureBoundary(route: \"support-plaintext\", json: \"{\\\"messageId\\\":7}\", providerStatus: 201, expected: 502)",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Controllers.LegacyEmailHttpAcceptanceTests",
+      "method": "ActualProviderAcknowledgment_PreservesSourceNullRuleAndOpaqueFailureBoundary",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Controllers.LegacyEmailHttpAcceptanceTests.ActualProviderAcknowledgment_PreservesSourceNullRuleAndOpaqueFailureBoundary(route: \"support-plaintext\", json: \"{\\\"messageId\\\":\\\" \\\"}\", providerStatus: 201, expected: 200)",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Controllers.LegacyEmailHttpAcceptanceTests",
+      "method": "ActualProviderAcknowledgment_PreservesSourceNullRuleAndOpaqueFailureBoundary",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Controllers.LegacyEmailHttpAcceptanceTests.ActualProviderAcknowledgment_PreservesSourceNullRuleAndOpaqueFailureBoundary(route: \"support-plaintext\", json: \"{\\\"messageId\\\":\\\"\\\"}\", providerStatus: 201, expected: 200)",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Controllers.LegacyEmailHttpAcceptanceTests",
+      "method": "ActualProviderAcknowledgment_PreservesSourceNullRuleAndOpaqueFailureBoundary",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Controllers.LegacyEmailHttpAcceptanceTests.ActualProviderAcknowledgment_PreservesSourceNullRuleAndOpaqueFailureBoundary(route: \"support-plaintext\", json: \"{\\\"messageId\\\":null}\", providerStatus: 201, expected: 400)",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Controllers.LegacyEmailHttpAcceptanceTests",
+      "method": "ActualProviderAcknowledgment_PreservesSourceNullRuleAndOpaqueFailureBoundary",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Controllers.LegacyEmailHttpAcceptanceTests.ActualProviderAcknowledgment_PreservesSourceNullRuleAndOpaqueFailureBoundary(route: \"support-plaintext\", json: \"{malformed-provider-synthetic\", providerStatus: 201, expected: 502)",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Controllers.LegacyEmailHttpAcceptanceTests",
+      "method": "ActualProviderAcknowledgment_PreservesSourceNullRuleAndOpaqueFailureBoundary",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Controllers.LegacyEmailHttpAcceptanceTests.ActualProviderAcknowledgment_PreservesSourceNullRuleAndOpaqueFailureBoundary(route: \"support-plaintext\", json: \"{}\", providerStatus: 201, expected: 400)",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Controllers.LegacyEmailHttpAcceptanceTests",
+      "method": "ActualRecipientValidation_RejectsMalformedAddressBeforeTransport",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Controllers.LegacyEmailHttpAcceptanceTests.ActualRecipientValidation_RejectsMalformedAddressBeforeTransport(route: \"info\", field: \"bcc\")",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Controllers.LegacyEmailHttpAcceptanceTests",
+      "method": "ActualRecipientValidation_RejectsMalformedAddressBeforeTransport",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Controllers.LegacyEmailHttpAcceptanceTests.ActualRecipientValidation_RejectsMalformedAddressBeforeTransport(route: \"info\", field: \"cc\")",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Controllers.LegacyEmailHttpAcceptanceTests",
+      "method": "ActualRecipientValidation_RejectsMalformedAddressBeforeTransport",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Controllers.LegacyEmailHttpAcceptanceTests.ActualRecipientValidation_RejectsMalformedAddressBeforeTransport(route: \"info\", field: \"replyTo\")",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Controllers.LegacyEmailHttpAcceptanceTests",
+      "method": "ActualRecipientValidation_RejectsMalformedAddressBeforeTransport",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Controllers.LegacyEmailHttpAcceptanceTests.ActualRecipientValidation_RejectsMalformedAddressBeforeTransport(route: \"info\", field: \"to\")",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Controllers.LegacyEmailHttpAcceptanceTests",
+      "method": "ActualRecipientValidation_RejectsMalformedAddressBeforeTransport",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Controllers.LegacyEmailHttpAcceptanceTests.ActualRecipientValidation_RejectsMalformedAddressBeforeTransport(route: \"support-plaintext\", field: \"bcc\")",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Controllers.LegacyEmailHttpAcceptanceTests",
+      "method": "ActualRecipientValidation_RejectsMalformedAddressBeforeTransport",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Controllers.LegacyEmailHttpAcceptanceTests.ActualRecipientValidation_RejectsMalformedAddressBeforeTransport(route: \"support-plaintext\", field: \"cc\")",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Controllers.LegacyEmailHttpAcceptanceTests",
+      "method": "ActualRecipientValidation_RejectsMalformedAddressBeforeTransport",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Controllers.LegacyEmailHttpAcceptanceTests.ActualRecipientValidation_RejectsMalformedAddressBeforeTransport(route: \"support-plaintext\", field: \"replyTo\")",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Controllers.LegacyEmailHttpAcceptanceTests",
+      "method": "ActualRecipientValidation_RejectsMalformedAddressBeforeTransport",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Controllers.LegacyEmailHttpAcceptanceTests.ActualRecipientValidation_RejectsMalformedAddressBeforeTransport(route: \"support-plaintext\", field: \"to\")",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Controllers.LegacyEmailHttpAcceptanceTests",
+      "method": "ActualTransientProviderRetries_KeepOneWireIdempotencyKeyAndUnchangedPayload",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Controllers.LegacyEmailHttpAcceptanceTests.ActualTransientProviderRetries_KeepOneWireIdempotencyKeyAndUnchangedPayload(route: \"info\")",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Controllers.LegacyEmailHttpAcceptanceTests",
+      "method": "ActualTransientProviderRetries_KeepOneWireIdempotencyKeyAndUnchangedPayload",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Controllers.LegacyEmailHttpAcceptanceTests.ActualTransientProviderRetries_KeepOneWireIdempotencyKeyAndUnchangedPayload(route: \"support-plaintext\")",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Controllers.LegacyEmailHttpAcceptanceTests",
+      "method": "AnonymousOrDeniedPermission_ProducesNoProviderRequest",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Controllers.LegacyEmailHttpAcceptanceTests.AnonymousOrDeniedPermission_ProducesNoProviderRequest(authenticated: False, expected: 401)",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Controllers.LegacyEmailHttpAcceptanceTests",
+      "method": "AnonymousOrDeniedPermission_ProducesNoProviderRequest",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Controllers.LegacyEmailHttpAcceptanceTests.AnonymousOrDeniedPermission_ProducesNoProviderRequest(authenticated: True, expected: 403)",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Controllers.LegacyEmailHttpAcceptanceTests",
+      "method": "EmptyAttachment_IsRejectedBeforeProviderRequest",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Controllers.LegacyEmailHttpAcceptanceTests.EmptyAttachment_IsRejectedBeforeProviderRequest",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Controllers.LegacyEmailHttpAcceptanceTests",
+      "method": "LegacyBrevoPrimaryHandler_DoesNotFollowRedirectsWithRuntimeProviderCredential",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Controllers.LegacyEmailHttpAcceptanceTests.LegacyBrevoPrimaryHandler_DoesNotFollowRedirectsWithRuntimeProviderCredential",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Controllers.LegacyEmailHttpAcceptanceTests",
+      "method": "MissingRequiredPlaintextValue_ReturnsFieldErrorWithoutProviderRequest",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Controllers.LegacyEmailHttpAcceptanceTests.MissingRequiredPlaintextValue_ReturnsFieldErrorWithoutProviderRequest(missing: \"body\", body: \"\")",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Controllers.LegacyEmailHttpAcceptanceTests",
+      "method": "MissingRequiredPlaintextValue_ReturnsFieldErrorWithoutProviderRequest",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Controllers.LegacyEmailHttpAcceptanceTests.MissingRequiredPlaintextValue_ReturnsFieldErrorWithoutProviderRequest(missing: \"subject\", body: \"nonempty\")",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Controllers.LegacyEmailHttpAcceptanceTests",
+      "method": "MissingRequiredPlaintextValue_ReturnsFieldErrorWithoutProviderRequest",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Controllers.LegacyEmailHttpAcceptanceTests.MissingRequiredPlaintextValue_ReturnsFieldErrorWithoutProviderRequest(missing: \"to\", body: \"nonempty\")",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Controllers.LegacyEmailHttpAcceptanceTests",
+      "method": "MissingRequiredQueryValue_ReturnsLegacyFieldErrorWithoutProviderRequest",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Controllers.LegacyEmailHttpAcceptanceTests.MissingRequiredQueryValue_ReturnsLegacyFieldErrorWithoutProviderRequest(missing: \"body\")",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Controllers.LegacyEmailHttpAcceptanceTests",
+      "method": "MissingRequiredQueryValue_ReturnsLegacyFieldErrorWithoutProviderRequest",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Controllers.LegacyEmailHttpAcceptanceTests.MissingRequiredQueryValue_ReturnsLegacyFieldErrorWithoutProviderRequest(missing: \"subject\")",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Controllers.LegacyEmailHttpAcceptanceTests",
+      "method": "MissingRequiredQueryValue_ReturnsLegacyFieldErrorWithoutProviderRequest",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Controllers.LegacyEmailHttpAcceptanceTests.MissingRequiredQueryValue_ReturnsLegacyFieldErrorWithoutProviderRequest(missing: \"to\")",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Controllers.LegacyEmailHttpAcceptanceTests",
+      "method": "MultipartQueryAndFiles_ReachConfiguredSenderWithExactUtf8Attachment",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Controllers.LegacyEmailHttpAcceptanceTests.MultipartQueryAndFiles_ReachConfiguredSenderWithExactUtf8Attachment(route: \"info\", sender: \"Info\")",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Controllers.LegacyEmailHttpAcceptanceTests",
+      "method": "MultipartQueryAndFiles_ReachConfiguredSenderWithExactUtf8Attachment",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Controllers.LegacyEmailHttpAcceptanceTests.MultipartQueryAndFiles_ReachConfiguredSenderWithExactUtf8Attachment(route: \"manufacturing\", sender: \"Manufacturing\")",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Controllers.LegacyEmailHttpAcceptanceTests",
+      "method": "MultipartQueryAndFiles_ReachConfiguredSenderWithExactUtf8Attachment",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Controllers.LegacyEmailHttpAcceptanceTests.MultipartQueryAndFiles_ReachConfiguredSenderWithExactUtf8Attachment(route: \"noreply\", sender: \"NoReply\")",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Controllers.LegacyEmailHttpAcceptanceTests",
+      "method": "MultipartQueryAndFiles_ReachConfiguredSenderWithExactUtf8Attachment",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Controllers.LegacyEmailHttpAcceptanceTests.MultipartQueryAndFiles_ReachConfiguredSenderWithExactUtf8Attachment(route: \"support\", sender: \"Support\")",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Controllers.LegacyEmailHttpAcceptanceTests",
+      "method": "MultipleAttachments_PreserveOrderAndExactBinaryBytes",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Controllers.LegacyEmailHttpAcceptanceTests.MultipleAttachments_PreserveOrderAndExactBinaryBytes",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Controllers.LegacyEmailHttpAcceptanceTests",
+      "method": "OpenApi_RetainsControllerAndPayloadDescriptions_WithoutSendingMail",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Controllers.LegacyEmailHttpAcceptanceTests.OpenApi_RetainsControllerAndPayloadDescriptions_WithoutSendingMail",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Controllers.LegacyEmailHttpAcceptanceTests",
+      "method": "PlaintextRoute_AcceptsRawUtf8BodyThroughHttpBinding",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Controllers.LegacyEmailHttpAcceptanceTests.PlaintextRoute_AcceptsRawUtf8BodyThroughHttpBinding(route: \"info\", sender: \"Info\")",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Controllers.LegacyEmailHttpAcceptanceTests",
+      "method": "PlaintextRoute_AcceptsRawUtf8BodyThroughHttpBinding",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Controllers.LegacyEmailHttpAcceptanceTests.PlaintextRoute_AcceptsRawUtf8BodyThroughHttpBinding(route: \"manufacturing\", sender: \"Manufacturing\")",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Controllers.LegacyEmailHttpAcceptanceTests",
+      "method": "PlaintextRoute_AcceptsRawUtf8BodyThroughHttpBinding",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Controllers.LegacyEmailHttpAcceptanceTests.PlaintextRoute_AcceptsRawUtf8BodyThroughHttpBinding(route: \"noreply\", sender: \"NoReply\")",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Controllers.LegacyEmailHttpAcceptanceTests",
+      "method": "PlaintextRoute_AcceptsRawUtf8BodyThroughHttpBinding",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Controllers.LegacyEmailHttpAcceptanceTests.PlaintextRoute_AcceptsRawUtf8BodyThroughHttpBinding(route: \"support\", sender: \"Support\")",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Controllers.LegacyEmailKestrelLimitHttpTests",
+      "method": "Multipart_AboveFormerDefault_PreservesExactAttachmentBytes",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Controllers.LegacyEmailKestrelLimitHttpTests.Multipart_AboveFormerDefault_PreservesExactAttachmentBytes",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Controllers.LegacyEmailKestrelLimitHttpTests",
+      "method": "Multipart_DeclaredAboveSourceRequestLimit_RejectsWithoutProvider",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Controllers.LegacyEmailKestrelLimitHttpTests.Multipart_DeclaredAboveSourceRequestLimit_RejectsWithoutProvider",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Controllers.LegacyEmailKestrelLimitHttpTests",
+      "method": "NormalProgram_UsesKestrelWithSourceRequestLimit",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Controllers.LegacyEmailKestrelLimitHttpTests.NormalProgram_UsesKestrelWithSourceRequestLimit",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Controllers.LegacyEmailKestrelLimitHttpTests",
+      "method": "RawBody_AboveFormerDefaultThroughExactSourceLimit_ReachesActualProvider",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Controllers.LegacyEmailKestrelLimitHttpTests.RawBody_AboveFormerDefaultThroughExactSourceLimit_ReachesActualProvider(length: 104857600)",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Controllers.LegacyEmailKestrelLimitHttpTests",
+      "method": "RawBody_AboveFormerDefaultThroughExactSourceLimit_ReachesActualProvider",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Controllers.LegacyEmailKestrelLimitHttpTests.RawBody_AboveFormerDefaultThroughExactSourceLimit_ReachesActualProvider(length: 33554432)",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Controllers.NotificationControllerContractTests",
+      "method": "Controller_RequiresAuthenticationAndExplicitSendPermission",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Controllers.NotificationControllerContractTests.Controller_RequiresAuthenticationAndExplicitSendPermission",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Controllers.NotificationControllerContractTests",
+      "method": "JsonRequest_DefinesValidationOnPrimaryConstructorParametersForAspNetCore10",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Controllers.NotificationControllerContractTests.JsonRequest_DefinesValidationOnPrimaryConstructorParametersForAspNetCore10",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Controllers.NotificationControllerContractTests",
+      "method": "SendEmail_MapsJsonBodyToProviderIndependentRequest",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Controllers.NotificationControllerContractTests.SendEmail_MapsJsonBodyToProviderIndependentRequest",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Controllers.NotificationControllerContractTests",
+      "method": "SendEmail_RejectsMalformedIdempotencyKeyBeforeProviderCall",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Controllers.NotificationControllerContractTests.SendEmail_RejectsMalformedIdempotencyKeyBeforeProviderCall",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Controllers.NotificationDeliveryIntentBoundaryTests",
+      "method": "CurrentInvoicePath_MissingIdentityOrGrant_HasNoProviderEffects",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Controllers.NotificationDeliveryIntentBoundaryTests.CurrentInvoicePath_MissingIdentityOrGrant_HasNoProviderEffects(authenticated: False, status: 401)",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Controllers.NotificationDeliveryIntentBoundaryTests",
+      "method": "CurrentInvoicePath_MissingIdentityOrGrant_HasNoProviderEffects",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Controllers.NotificationDeliveryIntentBoundaryTests.CurrentInvoicePath_MissingIdentityOrGrant_HasNoProviderEffects(authenticated: True, status: 403)",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Controllers.NotificationDeliveryIntentBoundaryTests",
+      "method": "V2Intent_CompletedSameKeyReplay_DoesNotSubmitProviderAgain",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Controllers.NotificationDeliveryIntentBoundaryTests.V2Intent_CompletedSameKeyReplay_DoesNotSubmitProviderAgain",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Controllers.NotificationDeliveryIntentBoundaryTests",
+      "method": "V2Intent_ProviderMayAcceptThenLoseResponse_DoesNotBlindResubmit",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Controllers.NotificationDeliveryIntentBoundaryTests.V2Intent_ProviderMayAcceptThenLoseResponse_DoesNotBlindResubmit",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Controllers.NotificationDeliveryIntentBoundaryTests",
+      "method": "V2Intent_SameKeyChangedBody_ConflictsBeforeProvider",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Controllers.NotificationDeliveryIntentBoundaryTests.V2Intent_SameKeyChangedBody_ConflictsBeforeProvider",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Controllers.NotificationHostTransportHttpTests",
+      "method": "DirectHttps_UsesProductionHstsWithoutRedirect",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Controllers.NotificationHostTransportHttpTests.DirectHttps_UsesProductionHstsWithoutRedirect(environment: \"Development\", hsts: False)",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Controllers.NotificationHostTransportHttpTests",
+      "method": "DirectHttps_UsesProductionHstsWithoutRedirect",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Controllers.NotificationHostTransportHttpTests.DirectHttps_UsesProductionHstsWithoutRedirect(environment: \"Production\", hsts: True)",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Controllers.NotificationHostTransportHttpTests",
+      "method": "ExplicitCorsPreflight_CompletesBeforeAuthenticationAtTrustedHttpsEdge",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Controllers.NotificationHostTransportHttpTests.ExplicitCorsPreflight_CompletesBeforeAuthenticationAtTrustedHttpsEdge(origin: \"https://allowed.example.invalid\", allowed: True)",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Controllers.NotificationHostTransportHttpTests",
+      "method": "ExplicitCorsPreflight_CompletesBeforeAuthenticationAtTrustedHttpsEdge",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Controllers.NotificationHostTransportHttpTests.ExplicitCorsPreflight_CompletesBeforeAuthenticationAtTrustedHttpsEdge(origin: \"https://unlisted.example.invalid\", allowed: False)",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Controllers.NotificationHostTransportHttpTests",
+      "method": "InternalHttp_PreservesProbeAndRealBearerAdmission",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Controllers.NotificationHostTransportHttpTests.InternalHttp_PreservesProbeAndRealBearerAdmission(path: \"/Emails/info\", bearer: True, status: 200)",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Controllers.NotificationHostTransportHttpTests",
+      "method": "InternalHttp_PreservesProbeAndRealBearerAdmission",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Controllers.NotificationHostTransportHttpTests.InternalHttp_PreservesProbeAndRealBearerAdmission(path: \"/emails/liveness\", bearer: False, status: 200)",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Controllers.NotificationHostTransportHttpTests",
+      "method": "InternalHttp_PreservesProbeAndRealBearerAdmission",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Controllers.NotificationHostTransportHttpTests.InternalHttp_PreservesProbeAndRealBearerAdmission(path: \"/emails/readiness\", bearer: False, status: 200)",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Controllers.NotificationHostTransportHttpTests",
+      "method": "RegisteredProbes_RemainReachableThroughTrustedHttp",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Controllers.NotificationHostTransportHttpTests.RegisteredProbes_RemainReachableThroughTrustedHttp(path: \"/emails/aspire-liveness\")",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Controllers.NotificationHostTransportHttpTests",
+      "method": "RegisteredProbes_RemainReachableThroughTrustedHttp",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Controllers.NotificationHostTransportHttpTests.RegisteredProbes_RemainReachableThroughTrustedHttp(path: \"/emails/liveness\")",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Controllers.NotificationHostTransportHttpTests",
+      "method": "RegisteredProbes_RemainReachableThroughTrustedHttp",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Controllers.NotificationHostTransportHttpTests.RegisteredProbes_RemainReachableThroughTrustedHttp(path: \"/emails/readiness\")",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Controllers.NotificationHostTransportHttpTests",
+      "method": "TrustedEdgeHttps_PreservesAnonymousAndWrongGrantDenial",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Controllers.NotificationHostTransportHttpTests.TrustedEdgeHttps_PreservesAnonymousAndWrongGrantDenial(signedWrongGrant: False, status: 401)",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Controllers.NotificationHostTransportHttpTests",
+      "method": "TrustedEdgeHttps_PreservesAnonymousAndWrongGrantDenial",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Controllers.NotificationHostTransportHttpTests.TrustedEdgeHttps_PreservesAnonymousAndWrongGrantDenial(signedWrongGrant: True, status: 403)",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Controllers.NotificationHostTransportHttpTests",
+      "method": "TrustedEdgeHttps_UsesActualForwarderAndRealBearerAdmission",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Controllers.NotificationHostTransportHttpTests.TrustedEdgeHttps_UsesActualForwarderAndRealBearerAdmission(remote: \"192.0.2.40\")",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Controllers.NotificationHostTransportHttpTests",
+      "method": "TrustedEdgeHttps_UsesActualForwarderAndRealBearerAdmission",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Controllers.NotificationHostTransportHttpTests.TrustedEdgeHttps_UsesActualForwarderAndRealBearerAdmission(remote: \"::ffff:192.0.2.40\")",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Controllers.NotificationHostTransportHttpTests",
+      "method": "TrustedEdge_InsecureOrUnprovenSchemeRejectsBeforeAuthentication",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Controllers.NotificationHostTransportHttpTests.TrustedEdge_InsecureOrUnprovenSchemeRejectsBeforeAuthentication(forwardedScheme: \"http\")",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Controllers.NotificationHostTransportHttpTests",
+      "method": "TrustedEdge_InsecureOrUnprovenSchemeRejectsBeforeAuthentication",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Controllers.NotificationHostTransportHttpTests.TrustedEdge_InsecureOrUnprovenSchemeRejectsBeforeAuthentication(forwardedScheme: \"https,http\")",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Controllers.NotificationHostTransportHttpTests",
+      "method": "TrustedEdge_InsecureOrUnprovenSchemeRejectsBeforeAuthentication",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Controllers.NotificationHostTransportHttpTests.TrustedEdge_InsecureOrUnprovenSchemeRejectsBeforeAuthentication(forwardedScheme: \"not a scheme\")",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Controllers.NotificationHostTransportHttpTests",
+      "method": "TrustedEdge_InsecureOrUnprovenSchemeRejectsBeforeAuthentication",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Controllers.NotificationHostTransportHttpTests.TrustedEdge_InsecureOrUnprovenSchemeRejectsBeforeAuthentication(forwardedScheme: null)",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Controllers.NotificationHostTransportHttpTests",
+      "method": "UnsupportedTransportPolicy_FailsNormalStartup",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Controllers.NotificationHostTransportHttpTests.UnsupportedTransportPolicy_FailsNormalStartup",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Controllers.NotificationHostTransportHttpTests",
+      "method": "UntrustedOrUnconfiguredPeer_CannotSpoofForwardedHttpsOrOriginalMarker",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Controllers.NotificationHostTransportHttpTests.UntrustedOrUnconfiguredPeer_CannotSpoofForwardedHttpsOrOriginalMarker(remote: \"192.0.2.40\", configuredProxy: False)",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Controllers.NotificationHostTransportHttpTests",
+      "method": "UntrustedOrUnconfiguredPeer_CannotSpoofForwardedHttpsOrOriginalMarker",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Controllers.NotificationHostTransportHttpTests.UntrustedOrUnconfiguredPeer_CannotSpoofForwardedHttpsOrOriginalMarker(remote: \"198.51.100.90\", configuredProxy: True)",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Controllers.NotificationHostTransportHttpTests",
+      "method": "UntrustedOrUnconfiguredPeer_CannotSpoofForwardedHttpsOrOriginalMarker",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Controllers.NotificationHostTransportHttpTests.UntrustedOrUnconfiguredPeer_CannotSpoofForwardedHttpsOrOriginalMarker(remote: null, configuredProxy: True)",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Controllers.NotificationIntentV2HttpTests",
+      "method": "AdmitExecuteReplayAndRead_PreserveOneEffect_AndRequireFreshResourceChecks",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Controllers.NotificationIntentV2HttpTests.AdmitExecuteReplayAndRead_PreserveOneEffect_AndRequireFreshResourceChecks",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Controllers.NotificationIntentV2HttpTests",
+      "method": "AnonymousOrMissingLiveCredential_CannotAdmitOrProduceAuthority",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Controllers.NotificationIntentV2HttpTests.AnonymousOrMissingLiveCredential_CannotAdmitOrProduceAuthority(missingCredential: False)",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Controllers.NotificationIntentV2HttpTests",
+      "method": "AnonymousOrMissingLiveCredential_CannotAdmitOrProduceAuthority",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Controllers.NotificationIntentV2HttpTests.AnonymousOrMissingLiveCredential_CannotAdmitOrProduceAuthority(missingCredential: True)",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Controllers.NotificationIntentV2HttpTests",
+      "method": "ChangedPayloadAndDuplicateBusinessEffect_ConflictWithoutAnotherSubmission",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Controllers.NotificationIntentV2HttpTests.ChangedPayloadAndDuplicateBusinessEffect_ConflictWithoutAnotherSubmission",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Controllers.NotificationIntentV2HttpTests",
+      "method": "ConcurrentHttpExecute_OnlyAcknowledgedWinnerReachesProvider_LoserSeesSubmitting",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Controllers.NotificationIntentV2HttpTests.ConcurrentHttpExecute_OnlyAcknowledgedWinnerReachesProvider_LoserSeesSubmitting",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Controllers.NotificationIntentV2HttpTests",
+      "method": "DefaultOff_Is503_NoAuthorityOrRemoteCalls",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Controllers.NotificationIntentV2HttpTests.DefaultOff_Is503_NoAuthorityOrRemoteCalls",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Controllers.NotificationIntentV2HttpTests",
+      "method": "InvalidCanonicalId_AndMalformedPayload_AreFixed400_NoProviderFence",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Controllers.NotificationIntentV2HttpTests.InvalidCanonicalId_AndMalformedPayload_AreFixed400_NoProviderFence",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Controllers.NotificationIntentV2HttpTests",
+      "method": "InvalidServiceIdentity_DeniesBeforeIamOrPersistence",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Controllers.NotificationIntentV2HttpTests.InvalidServiceIdentity_DeniesBeforeIamOrPersistence(identity: \"duplicate-kind\", expectedStatus: 403)",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Controllers.NotificationIntentV2HttpTests",
+      "method": "InvalidServiceIdentity_DeniesBeforeIamOrPersistence",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Controllers.NotificationIntentV2HttpTests.InvalidServiceIdentity_DeniesBeforeIamOrPersistence(identity: \"duplicate-sub\", expectedStatus: 401)",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Controllers.NotificationIntentV2HttpTests",
+      "method": "InvalidServiceIdentity_DeniesBeforeIamOrPersistence",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Controllers.NotificationIntentV2HttpTests.InvalidServiceIdentity_DeniesBeforeIamOrPersistence(identity: \"employee\", expectedStatus: 403)",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Controllers.NotificationIntentV2HttpTests",
+      "method": "InvalidServiceIdentity_DeniesBeforeIamOrPersistence",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Controllers.NotificationIntentV2HttpTests.InvalidServiceIdentity_DeniesBeforeIamOrPersistence(identity: \"other-service\", expectedStatus: 403)",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Controllers.NotificationIntentV2HttpTests",
+      "method": "KeyRotationAcrossActualHosts_RetainsBinding_AndMissingHistoricalKeyRefusesStartup",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Controllers.NotificationIntentV2HttpTests.KeyRotationAcrossActualHosts_RetainsBinding_AndMissingHistoricalKeyRefusesStartup",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Controllers.NotificationIntentV2HttpTests",
+      "method": "MissingPhysicalAuthority_RefusesStartup_WithoutAutomaticDdlOrRemoteEffects",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Controllers.NotificationIntentV2HttpTests.MissingPhysicalAuthority_RefusesStartup_WithoutAutomaticDdlOrRemoteEffects",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Controllers.NotificationIntentV2HttpTests",
+      "method": "NamedAuthorityPrimary_DoesNotRedirectWorkloadOrLiveCredentials",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Controllers.NotificationIntentV2HttpTests.NamedAuthorityPrimary_DoesNotRedirectWorkloadOrLiveCredentials(name: \"IAMService\")",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Controllers.NotificationIntentV2HttpTests",
+      "method": "NamedAuthorityPrimary_DoesNotRedirectWorkloadOrLiveCredentials",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Controllers.NotificationIntentV2HttpTests.NamedAuthorityPrimary_DoesNotRedirectWorkloadOrLiveCredentials(name: \"LegacyAuthServiceTokenExchange\")",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Controllers.NotificationIntentV2HttpTests",
+      "method": "NonProductionOpenApi_DefaultOff_DoesNotPublishV2Operations",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Controllers.NotificationIntentV2HttpTests.NonProductionOpenApi_DefaultOff_DoesNotPublishV2Operations",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Controllers.NotificationIntentV2HttpTests",
+      "method": "NonProductionOpenApi_ExplicitOn_MatchesLiteralCamelCaseRequestAndReceiptContract",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Controllers.NotificationIntentV2HttpTests.NonProductionOpenApi_ExplicitOn_MatchesLiteralCamelCaseRequestAndReceiptContract",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Controllers.NotificationIntentV2HttpTests",
+      "method": "NoncanonicalOrInsecureAuthorityOrigin_RefusesStartup_NoRemoteEffects",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Controllers.NotificationIntentV2HttpTests.NoncanonicalOrInsecureAuthorityOrigin_RefusesStartup_NoRemoteEffects(iam: \" https://iam-fixture.invalid\", auth: \"https://auth-fixture.invalid\")",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Controllers.NotificationIntentV2HttpTests",
+      "method": "NoncanonicalOrInsecureAuthorityOrigin_RefusesStartup_NoRemoteEffects",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Controllers.NotificationIntentV2HttpTests.NoncanonicalOrInsecureAuthorityOrigin_RefusesStartup_NoRemoteEffects(iam: \"http://iam-fixture.invalid\", auth: \"https://auth-fixture.invalid\")",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Controllers.NotificationIntentV2HttpTests",
+      "method": "NoncanonicalOrInsecureAuthorityOrigin_RefusesStartup_NoRemoteEffects",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Controllers.NotificationIntentV2HttpTests.NoncanonicalOrInsecureAuthorityOrigin_RefusesStartup_NoRemoteEffects(iam: \"https://iam-fixture.invalid\", auth: \"http://auth-fixture.invalid\")",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Controllers.NotificationIntentV2HttpTests",
+      "method": "NoncanonicalOrInsecureAuthorityOrigin_RefusesStartup_NoRemoteEffects",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Controllers.NotificationIntentV2HttpTests.NoncanonicalOrInsecureAuthorityOrigin_RefusesStartup_NoRemoteEffects(iam: \"https://iam-fixture.invalid\", auth: \"https://auth-fixture.invalid/other\")",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Controllers.NotificationIntentV2HttpTests",
+      "method": "OptionalArrayPresentEmpty_DiffersFromAdmittedNull_BeforeProviderFence",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Controllers.NotificationIntentV2HttpTests.OptionalArrayPresentEmpty_DiffersFromAdmittedNull_BeforeProviderFence",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Controllers.NotificationIntentV2HttpTests",
+      "method": "ProductionNamedProviderPrimary_IsActuallyRedirectDisabled_NotOnlyControlledTransport",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Controllers.NotificationIntentV2HttpTests.ProductionNamedProviderPrimary_IsActuallyRedirectDisabled_NotOnlyControlledTransport",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Controllers.NotificationIntentV2HttpTests",
+      "method": "ProductionOpenApi_RemainsUnavailable_ForBothVersions",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Controllers.NotificationIntentV2HttpTests.ProductionOpenApi_RemainsUnavailable_ForBothVersions",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Controllers.NotificationIntentV2HttpTests",
+      "method": "ProviderLostAcknowledgment_Is202ReadbackUnknown_AndNeverResubmits",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Controllers.NotificationIntentV2HttpTests.ProviderLostAcknowledgment_Is202ReadbackUnknown_AndNeverResubmits",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Controllers.NotificationIntentV2HttpTests",
+      "method": "ProviderRedirect_IsUnknown_NoSecondRequestOrAutomaticResubmission",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Controllers.NotificationIntentV2HttpTests.ProviderRedirect_IsUnknown_NoSecondRequestOrAutomaticResubmission(status: 307)",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Controllers.NotificationIntentV2HttpTests",
+      "method": "ProviderRedirect_IsUnknown_NoSecondRequestOrAutomaticResubmission",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Controllers.NotificationIntentV2HttpTests.ProviderRedirect_IsUnknown_NoSecondRequestOrAutomaticResubmission(status: 308)",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Controllers.NotificationIntentV2HttpTests",
+      "method": "RegisteredRetryStrategy_CommitAcknowledgmentLost_CannotForwardUncommittedFenceOrResendAccepted",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Controllers.NotificationIntentV2HttpTests.RegisteredRetryStrategy_CommitAcknowledgmentLost_CannotForwardUncommittedFenceOrResendAccepted(acceptance: False)",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Controllers.NotificationIntentV2HttpTests",
+      "method": "RegisteredRetryStrategy_CommitAcknowledgmentLost_CannotForwardUncommittedFenceOrResendAccepted",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Controllers.NotificationIntentV2HttpTests.RegisteredRetryStrategy_CommitAcknowledgmentLost_CannotForwardUncommittedFenceOrResendAccepted(acceptance: True)",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Controllers.NotificationIntentV2HttpTests",
+      "method": "RevokedOrUnavailableIam_DeniesExecuteAndRead_DespitePriorAllowAndWildcard",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Controllers.NotificationIntentV2HttpTests.RevokedOrUnavailableIam_DeniesExecuteAndRead_DespitePriorAllowAndWildcard(mode: \"deny\")",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Controllers.NotificationIntentV2HttpTests",
+      "method": "RevokedOrUnavailableIam_DeniesExecuteAndRead_DespitePriorAllowAndWildcard",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Controllers.NotificationIntentV2HttpTests.RevokedOrUnavailableIam_DeniesExecuteAndRead_DespitePriorAllowAndWildcard(mode: \"malformed\")",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Controllers.NotificationIntentV2HttpTests",
+      "method": "RevokedOrUnavailableIam_DeniesExecuteAndRead_DespitePriorAllowAndWildcard",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Controllers.NotificationIntentV2HttpTests.RevokedOrUnavailableIam_DeniesExecuteAndRead_DespitePriorAllowAndWildcard(mode: \"unavailable\")",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Controllers.NotificationIntentV2HttpTests",
+      "method": "V2Registration_DoesNotBroadenV1PermissionAuthority_OrContactLegacyProvider",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Controllers.NotificationIntentV2HttpTests.V2Registration_DoesNotBroadenV1PermissionAuthority_OrContactLegacyProvider",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Controllers.NotificationProviderAdmissionCancellationTests",
+      "method": "AlreadyCancelledValidRequest_NeverEntersProvider",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Controllers.NotificationProviderAdmissionCancellationTests.AlreadyCancelledValidRequest_NeverEntersProvider",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Controllers.NotificationProviderAdmissionCancellationTests",
+      "method": "CancellationAfterLastAttachmentCopy_NeverEntersProviderAndDisposesSourceOnce",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Controllers.NotificationProviderAdmissionCancellationTests.CancellationAfterLastAttachmentCopy_NeverEntersProviderAndDisposesSourceOnce(channel: Info)",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Controllers.NotificationProviderAdmissionCancellationTests",
+      "method": "CancellationAfterLastAttachmentCopy_NeverEntersProviderAndDisposesSourceOnce",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Controllers.NotificationProviderAdmissionCancellationTests.CancellationAfterLastAttachmentCopy_NeverEntersProviderAndDisposesSourceOnce(channel: Manufacturing)",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Controllers.NotificationProviderAdmissionCancellationTests",
+      "method": "CancellationAfterLastAttachmentCopy_NeverEntersProviderAndDisposesSourceOnce",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Controllers.NotificationProviderAdmissionCancellationTests.CancellationAfterLastAttachmentCopy_NeverEntersProviderAndDisposesSourceOnce(channel: NoReply)",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Controllers.NotificationProviderAdmissionCancellationTests",
+      "method": "CancellationAfterLastAttachmentCopy_NeverEntersProviderAndDisposesSourceOnce",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Controllers.NotificationProviderAdmissionCancellationTests.CancellationAfterLastAttachmentCopy_NeverEntersProviderAndDisposesSourceOnce(channel: Support)",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Controllers.NotificationStartupBoundaryTests",
+      "method": "ActualApiEntryPoint_FailsOnceWithPrivateMetadataAndNoPlaintextFallback",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Controllers.NotificationStartupBoundaryTests.ActualApiEntryPoint_FailsOnceWithPrivateMetadataAndNoPlaintextFallback(failure: \"argument\")",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Controllers.NotificationStartupBoundaryTests",
+      "method": "ActualApiEntryPoint_FailsOnceWithPrivateMetadataAndNoPlaintextFallback",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Controllers.NotificationStartupBoundaryTests.ActualApiEntryPoint_FailsOnceWithPrivateMetadataAndNoPlaintextFallback(failure: \"configuration\")",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Controllers.NotificationStartupBoundaryTests",
+      "method": "DirectoryCleanupFailure_PreservesPrimaryAndEveryCleanupFailureForRecovery",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Controllers.NotificationStartupBoundaryTests.DirectoryCleanupFailure_PreservesPrimaryAndEveryCleanupFailureForRecovery",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Controllers.NotificationStartupBoundaryTests",
+      "method": "EmbeddedNormalProgram_PreservesOriginalInitializationFailureAndCallerExitCode",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Controllers.NotificationStartupBoundaryTests.EmbeddedNormalProgram_PreservesOriginalInitializationFailureAndCallerExitCode",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Controllers.NotificationStartupBoundaryTests",
+      "method": "PartialStartUncertainty_RetainsExactHandleDirectoryAndOriginalFailure",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Controllers.NotificationStartupBoundaryTests.PartialStartUncertainty_RetainsExactHandleDirectoryAndOriginalFailure",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Controllers.NotificationStartupBoundaryTests",
+      "method": "StreamingReader_EnforcesBoundWithoutTruncatingAssertions",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Controllers.NotificationStartupBoundaryTests.StreamingReader_EnforcesBoundWithoutTruncatingAssertions(count: 65536, accepted: True)",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Controllers.NotificationStartupBoundaryTests",
+      "method": "StreamingReader_EnforcesBoundWithoutTruncatingAssertions",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Controllers.NotificationStartupBoundaryTests.StreamingReader_EnforcesBoundWithoutTruncatingAssertions(count: 65537, accepted: False)",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Controllers.NotificationStartupBoundaryTests",
+      "method": "UnsettledReaders_PreventDisposalAndRemovalUntilBothActuallyFinish",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Controllers.NotificationStartupBoundaryTests.UnsettledReaders_PreventDisposalAndRemovalUntilBothActuallyFinish",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Data.BrevoNotificationOptionsTests",
+      "method": "BrevoOptions_BindSenderDictionaryByLegacyChannelName",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Data.BrevoNotificationOptionsTests.BrevoOptions_BindSenderDictionaryByLegacyChannelName",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Data.BrevoNotificationOptionsTests",
+      "method": "BrevoOptions_WhenApiKeyIsMissing_FailClosedDuringValidation",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Data.BrevoNotificationOptionsTests.BrevoOptions_WhenApiKeyIsMissing_FailClosedDuringValidation",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Data.BrevoNotificationProviderResilienceTests",
+      "method": "SendAsync_WhenAttemptExceedsTimeout_ThrowsTimeoutWithoutWaitingForTransport",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Data.BrevoNotificationProviderResilienceTests.SendAsync_WhenAttemptExceedsTimeout_ThrowsTimeoutWithoutWaitingForTransport",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Data.BrevoNotificationProviderResilienceTests",
+      "method": "SendAsync_WhenCallerCancels_PropagatesCancellationWithoutRetry",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Data.BrevoNotificationProviderResilienceTests.SendAsync_WhenCallerCancels_PropagatesCancellationWithoutRetry",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Data.BrevoNotificationProviderResilienceTests",
+      "method": "SendAsync_WhenCallerSuppliesOperationId_ForwardsItAsIdempotencyKey",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Data.BrevoNotificationProviderResilienceTests.SendAsync_WhenCallerSuppliesOperationId_ForwardsItAsIdempotencyKey",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Data.BrevoNotificationProviderResilienceTests",
+      "method": "SendAsync_WhenFirstAttemptIsTransient_RetriesWithSameIdempotencyKey",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Data.BrevoNotificationProviderResilienceTests.SendAsync_WhenFirstAttemptIsTransient_RetriesWithSameIdempotencyKey",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Data.BrevoNotificationProviderResilienceTests",
+      "method": "SendAsync_WhenProviderRejectsRequest_DoesNotRetry",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Data.BrevoNotificationProviderResilienceTests.SendAsync_WhenProviderRejectsRequest_DoesNotRetry",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Data.BrevoNotificationProviderResilienceTests",
+      "method": "SendAsync_WhenProviderRequestsRetryDelay_HonorsItWithinTheConfiguredBound",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Data.BrevoNotificationProviderResilienceTests.SendAsync_WhenProviderRequestsRetryDelay_HonorsItWithinTheConfiguredBound",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Data.BrevoNotificationProviderResilienceTests",
+      "method": "SendAsync_WhenTransportFails_RetriesTheBoundedNumberOfTimes",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Data.BrevoNotificationProviderResilienceTests.SendAsync_WhenTransportFails_RetriesTheBoundedNumberOfTimes",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Data.BrevoNotificationTransportTests",
+      "method": "SendAsync_MapsTheCompleteCompatibilityRequestAndSecurityHeaders",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Data.BrevoNotificationTransportTests.SendAsync_MapsTheCompleteCompatibilityRequestAndSecurityHeaders",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Data.BrevoNotificationTransportTests",
+      "method": "SendAsync_WhenBrevoReturnsFailure_ExposesOnlyStatusAndRetryDelay",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Data.BrevoNotificationTransportTests.SendAsync_WhenBrevoReturnsFailure_ExposesOnlyStatusAndRetryDelay",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Data.BrevoNotificationTransportTests",
+      "method": "SendAsync_WhenCcAndBccAreAbsentOrEmpty_OmitsBothFields",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Data.BrevoNotificationTransportTests.SendAsync_WhenCcAndBccAreAbsentOrEmpty_OmitsBothFields(useEmptyLists: False)",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Data.BrevoNotificationTransportTests",
+      "method": "SendAsync_WhenCcAndBccAreAbsentOrEmpty_OmitsBothFields",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Data.BrevoNotificationTransportTests.SendAsync_WhenCcAndBccAreAbsentOrEmpty_OmitsBothFields(useEmptyLists: True)",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Data.BrevoNotificationTransportTests",
+      "method": "SendAsync_WhenRetryAfterUsesDate_ComputesDelayFromInjectedClock",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Data.BrevoNotificationTransportTests.SendAsync_WhenRetryAfterUsesDate_ComputesDelayFromInjectedClock",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Data.DeliveryIntentStorePostgresTests",
+      "method": "AcceptedResult_RejectsStaleUnknownAndRepeatedFence",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Data.DeliveryIntentStorePostgresTests.AcceptedResult_RejectsStaleUnknownAndRepeatedFence",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Data.DeliveryIntentStorePostgresTests",
+      "method": "ActualDisposalFailure_DoesNotReturnSubmissionAuthority_OrReplay",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Data.DeliveryIntentStorePostgresTests.ActualDisposalFailure_DoesNotReturnSubmissionAuthority_OrReplay(contextDisposal: False)",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Data.DeliveryIntentStorePostgresTests",
+      "method": "ActualDisposalFailure_DoesNotReturnSubmissionAuthority_OrReplay",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Data.DeliveryIntentStorePostgresTests.ActualDisposalFailure_DoesNotReturnSubmissionAuthority_OrReplay(contextDisposal: True)",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Data.DeliveryIntentStorePostgresTests",
+      "method": "ActualMigration_EmitsReviewedPhysicalConstraintMetadata",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Data.DeliveryIntentStorePostgresTests.ActualMigration_EmitsReviewedPhysicalConstraintMetadata",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Data.DeliveryIntentStorePostgresTests",
+      "method": "ActualMigration_HasMatchingSnapshot_RerunAndRefusedDownRetainAuthority",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Data.DeliveryIntentStorePostgresTests.ActualMigration_HasMatchingSnapshot_RerunAndRefusedDownRetainAuthority",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Data.DeliveryIntentStorePostgresTests",
+      "method": "Admission_ReplayCollisionAndServiceScope_RetainExactWinner",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Data.DeliveryIntentStorePostgresTests.Admission_ReplayCollisionAndServiceScope_RetainExactWinner",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Data.DeliveryIntentStorePostgresTests",
+      "method": "AmbientSearchPath_CannotSelectShadowAuthority",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Data.DeliveryIntentStorePostgresTests.AmbientSearchPath_CannotSelectShadowAuthority",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Data.DeliveryIntentStorePostgresTests",
+      "method": "CallerCanceledAfterActualCommit_IsUnknown_NotCancellationSuccessOrReplay",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Data.DeliveryIntentStorePostgresTests.CallerCanceledAfterActualCommit_IsUnknown_NotCancellationSuccessOrReplay",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Data.DeliveryIntentStorePostgresTests",
+      "method": "CallerCanceledBeforeAdmission_PropagatesAndLeavesNoAuthority",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Data.DeliveryIntentStorePostgresTests.CallerCanceledBeforeAdmission_PropagatesAndLeavesNoAuthority",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Data.DeliveryIntentStorePostgresTests",
+      "method": "ConcurrentFreshContexts_AdmitOneAndFenceOne_UnknownCannotResend",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Data.DeliveryIntentStorePostgresTests.ConcurrentFreshContexts_AdmitOneAndFenceOne_UnknownCannotResend",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Data.DeliveryIntentStorePostgresTests",
+      "method": "HiddenColumnsAndRewriteRules_RefuseBeforeAdmission",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Data.DeliveryIntentStorePostgresTests.HiddenColumnsAndRewriteRules_RefuseBeforeAdmission(ddl: \"ALTER TABLE public.\\\"NotificationDeliveryIntent\\\" \"\u00b7\u00b7\u00b7)",
+      "executions": 2
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Data.DeliveryIntentStorePostgresTests",
+      "method": "HiddenColumnsAndRewriteRules_RefuseBeforeAdmission",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Data.DeliveryIntentStorePostgresTests.HiddenColumnsAndRewriteRules_RefuseBeforeAdmission(ddl: \"CREATE RULE unexpected_rewrite AS ON INSERT TO pub\"\u00b7\u00b7\u00b7)",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Data.DeliveryIntentStorePostgresTests",
+      "method": "MissingRetainedKey_RefusesAdmissionReadAndFence_WithoutRebinding",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Data.DeliveryIntentStorePostgresTests.MissingRetainedKey_RefusesAdmissionReadAndFence_WithoutRebinding",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Data.DeliveryIntentStorePostgresTests",
+      "method": "PhysicalShapeMismatch_RefusesAdmissionAndLeavesNoRows",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Data.DeliveryIntentStorePostgresTests.PhysicalShapeMismatch_RefusesAdmissionAndLeavesNoRows(ddl: \"ALTER TABLE public.\\\"NotificationDeliveryIntent\\\" \"\u00b7\u00b7\u00b7)",
+      "executions": 10
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Data.DeliveryIntentStorePostgresTests",
+      "method": "RotatedActiveKey_ReplayVerifiesRetainedKey_WithoutRehashOrOverwrite",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Data.DeliveryIntentStorePostgresTests.RotatedActiveKey_ReplayVerifiesRetainedKey_WithoutRehashOrOverwrite",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Data.DeliveryIntentStorePostgresTests",
+      "method": "SameBusinessEffect_WithNewUuidAndChannel_AdmitsOnlyOneAcrossContexts",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Data.DeliveryIntentStorePostgresTests.SameBusinessEffect_WithNewUuidAndChannel_AdmitsOnlyOneAcrossContexts",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Data.DeliveryIntentStorePostgresTests",
+      "method": "SubmittedCommitAmbiguity_UsesOneConfiguredStrategyAttempt_AndRetainsAuthority",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Data.DeliveryIntentStorePostgresTests.SubmittedCommitAmbiguity_UsesOneConfiguredStrategyAttempt_AndRetainsAuthority(afterCommit: False, failureKind: 0)",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Data.DeliveryIntentStorePostgresTests",
+      "method": "SubmittedCommitAmbiguity_UsesOneConfiguredStrategyAttempt_AndRetainsAuthority",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Data.DeliveryIntentStorePostgresTests.SubmittedCommitAmbiguity_UsesOneConfiguredStrategyAttempt_AndRetainsAuthority(afterCommit: True, failureKind: 0)",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Data.DeliveryIntentStorePostgresTests",
+      "method": "SubmittedCommitAmbiguity_UsesOneConfiguredStrategyAttempt_AndRetainsAuthority",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Data.DeliveryIntentStorePostgresTests.SubmittedCommitAmbiguity_UsesOneConfiguredStrategyAttempt_AndRetainsAuthority(afterCommit: True, failureKind: 1)",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Data.DeliveryIntentStorePostgresTests",
+      "method": "SubmittedCommitAmbiguity_UsesOneConfiguredStrategyAttempt_AndRetainsAuthority",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Data.DeliveryIntentStorePostgresTests.SubmittedCommitAmbiguity_UsesOneConfiguredStrategyAttempt_AndRetainsAuthority(afterCommit: True, failureKind: 2)",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Data.DeliveryIntentStorePostgresTests",
+      "method": "UnexpectedRewriteRule_RefusesReadAuthority_NotOnlyUnsupportedOnConflictInsert",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Data.DeliveryIntentStorePostgresTests.UnexpectedRewriteRule_RefusesReadAuthority_NotOnlyUnsupportedOnConflictInsert",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Data.DeliveryIntentStorePostgresTests",
+      "method": "UnexpectedUniqueIndex_RefusesAdmissionWithoutInventingBusinessConflict",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Data.DeliveryIntentStorePostgresTests.UnexpectedUniqueIndex_RefusesAdmissionWithoutInventingBusinessConflict",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Data.DevelopmentRecordingNotificationProviderTests",
+      "method": "DevelopmentConfiguration_DoesNotContainABrevoApiKey",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Data.DevelopmentRecordingNotificationProviderTests.DevelopmentConfiguration_DoesNotContainABrevoApiKey",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Data.DevelopmentRecordingNotificationProviderTests",
+      "method": "DiagnosticsEndpoint_IsAvailableOnlyInDevelopment",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Data.DevelopmentRecordingNotificationProviderTests.DiagnosticsEndpoint_IsAvailableOnlyInDevelopment(environment: \"Development\", expectedStatus: OK)",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Data.DevelopmentRecordingNotificationProviderTests",
+      "method": "DiagnosticsEndpoint_IsAvailableOnlyInDevelopment",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Data.DevelopmentRecordingNotificationProviderTests.DiagnosticsEndpoint_IsAvailableOnlyInDevelopment(environment: \"Production\", expectedStatus: NotFound)",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Data.DevelopmentRecordingNotificationProviderTests",
+      "method": "ProductionStartup_AcceptsExternallySuppliedBrevoApiKey",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Data.DevelopmentRecordingNotificationProviderTests.ProductionStartup_AcceptsExternallySuppliedBrevoApiKey",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Data.DevelopmentRecordingNotificationProviderTests",
+      "method": "ProductionStartup_RejectsMissingProtectedBrevoApiKey",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Data.DevelopmentRecordingNotificationProviderTests.ProductionStartup_RejectsMissingProtectedBrevoApiKey(apiKey: \"   \")",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Data.DevelopmentRecordingNotificationProviderTests",
+      "method": "ProductionStartup_RejectsMissingProtectedBrevoApiKey",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Data.DevelopmentRecordingNotificationProviderTests.ProductionStartup_RejectsMissingProtectedBrevoApiKey(apiKey: \"\")",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Data.DevelopmentRecordingNotificationProviderTests",
+      "method": "Program_GatesRecordingProviderAndDiagnosticsToExplicitDevelopmentMode",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Data.DevelopmentRecordingNotificationProviderTests.Program_GatesRecordingProviderAndDiagnosticsToExplicitDevelopmentMode",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Data.DevelopmentRecordingNotificationProviderTests",
+      "method": "SendAsync_RecordsOnlyDeliveryMetadataAndReturnsStableSuccess",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Data.DevelopmentRecordingNotificationProviderTests.SendAsync_RecordsOnlyDeliveryMetadataAndReturnsStableSuccess",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Data.DevelopmentRecordingNotificationProviderTests",
+      "method": "SendAsync_WhenCancelled_DoesNotRecordDelivery",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Data.DevelopmentRecordingNotificationProviderTests.SendAsync_WhenCancelled_DoesNotRecordDelivery",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.NotificationJwtExternalizationTests",
+      "method": "NotificationApi_RequiresExternalPublicKeyWithoutStoredSymmetricKey",
+      "testName": "Legacy.Maliev.NotificationService.Tests.NotificationJwtExternalizationTests.NotificationApi_RequiresExternalPublicKeyWithoutStoredSymmetricKey",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.NotificationJwtExternalizationTests",
+      "method": "ProductionNotificationValidator_AcceptsOnlyConfiguredRs256IssuerAndAudience",
+      "testName": "Legacy.Maliev.NotificationService.Tests.NotificationJwtExternalizationTests.ProductionNotificationValidator_AcceptsOnlyConfiguredRs256IssuerAndAudience",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.NotificationJwtExternalizationTests",
+      "method": "ProductionNotificationValidator_DoesNotFallBackToLegacySymmetricKey",
+      "testName": "Legacy.Maliev.NotificationService.Tests.NotificationJwtExternalizationTests.ProductionNotificationValidator_DoesNotFallBackToLegacySymmetricKey",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Workflows.DependabotConfigurationContractTests",
+      "method": "NuGetUpdater_ScansOnlyIndependentlyResolvableProjectDirectories",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Workflows.DependabotConfigurationContractTests.NuGetUpdater_ScansOnlyIndependentlyResolvableProjectDirectories",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Workflows.WorkflowContractTests",
+      "method": "ApiProject_UsesOnlyLegacyServiceDefaults",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Workflows.WorkflowContractTests.ApiProject_UsesOnlyLegacyServiceDefaults",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Workflows.WorkflowContractTests",
+      "method": "BuildAndTest_RejectsChangedCurrentBffConsumerOrMissingPrecompileGuard",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Workflows.WorkflowContractTests.BuildAndTest_RejectsChangedCurrentBffConsumerOrMissingPrecompileGuard(original: \"path: .dependencies/Legacy.Maliev.Intranet\", replacement: \"path: .dependencies/other-intranet\")",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Workflows.WorkflowContractTests",
+      "method": "BuildAndTest_RejectsChangedCurrentBffConsumerOrMissingPrecompileGuard",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Workflows.WorkflowContractTests.BuildAndTest_RejectsChangedCurrentBffConsumerOrMissingPrecompileGuard(original: \"python3 scripts/verify-order-notification-consumer\"\u00b7\u00b7\u00b7, replacement: \"echo skipped consumer verification\")",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Workflows.WorkflowContractTests",
+      "method": "BuildAndTest_RejectsChangedCurrentBffConsumerOrMissingPrecompileGuard",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Workflows.WorkflowContractTests.BuildAndTest_RejectsChangedCurrentBffConsumerOrMissingPrecompileGuard(original: \"ref: cda7e5f6817e9462f058eaf6638da58c27e75024\", replacement: \"ref: main\")",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Workflows.WorkflowContractTests",
+      "method": "BuildAndTest_RejectsChangedCurrentBffConsumerOrMissingPrecompileGuard",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Workflows.WorkflowContractTests.BuildAndTest_RejectsChangedCurrentBffConsumerOrMissingPrecompileGuard(original: \"repository: MALIEV-Co-Ltd/Legacy.Maliev.Intranet\", replacement: \"repository: MALIEV-Co-Ltd/Legacy.Maliev.OrderServi\"\u00b7\u00b7\u00b7)",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Workflows.WorkflowContractTests",
+      "method": "BuildAndTest_RejectsChangedJoinedConsumer",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Workflows.WorkflowContractTests.BuildAndTest_RejectsChangedJoinedConsumer(original: \"path: .dependencies/Legacy.Maliev.AccountingServic\"\u00b7\u00b7\u00b7, replacement: \"path: .dependencies/other-accounting\")",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Workflows.WorkflowContractTests",
+      "method": "BuildAndTest_RejectsChangedJoinedConsumer",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Workflows.WorkflowContractTests.BuildAndTest_RejectsChangedJoinedConsumer(original: \"ref: c22e94a8202964a85ee69b96d5fe62cdc1fafe55\", replacement: \"ref: main\")",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Workflows.WorkflowContractTests",
+      "method": "BuildAndTest_RejectsChangedJoinedConsumer",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Workflows.WorkflowContractTests.BuildAndTest_RejectsChangedJoinedConsumer(original: \"repository: MALIEV-Co-Ltd/Legacy.Maliev.Accounting\"\u00b7\u00b7\u00b7, replacement: \"repository: MALIEV-Co-Ltd/Legacy.Maliev.OrderServi\"\u00b7\u00b7\u00b7)",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Workflows.WorkflowContractTests",
+      "method": "BuildAndTest_RejectsChangedOrNonblockingImagePreload",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Workflows.WorkflowContractTests.BuildAndTest_RejectsChangedOrNonblockingImagePreload(original: \"python3 -m unittest discover -s scripts -p test_pr\"\u00b7\u00b7\u00b7, replacement: \"echo skipped preload controls\")",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Workflows.WorkflowContractTests",
+      "method": "BuildAndTest_RejectsChangedOrNonblockingImagePreload",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Workflows.WorkflowContractTests.BuildAndTest_RejectsChangedOrNonblockingImagePreload(original: \"python3 scripts/preload-postgres-image.py\", replacement: \"python3 scripts/preload-postgres-image.py --image \"\u00b7\u00b7\u00b7)",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Workflows.WorkflowContractTests",
+      "method": "BuildAndTest_RejectsChangedOrNonblockingImagePreload",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Workflows.WorkflowContractTests.BuildAndTest_RejectsChangedOrNonblockingImagePreload(original: \"timeout-minutes: 6\", replacement: \"continue-on-error: true\\n        timeout-minutes: \"\u00b7\u00b7\u00b7)",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Workflows.WorkflowContractTests",
+      "method": "BuildAndTest_RejectsChangedOrNonblockingImagePreload",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Workflows.WorkflowContractTests.BuildAndTest_RejectsChangedOrNonblockingImagePreload(original: \"timeout-minutes: 6\", replacement: \"timeout-minutes: 60\")",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Workflows.WorkflowContractTests",
+      "method": "BuildAndTest_RejectsCommentedDependencySha",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Workflows.WorkflowContractTests.BuildAndTest_RejectsCommentedDependencySha",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Workflows.WorkflowContractTests",
+      "method": "BuildAndTest_RejectsJobPermissionEscalation",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Workflows.WorkflowContractTests.BuildAndTest_RejectsJobPermissionEscalation",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Workflows.WorkflowContractTests",
+      "method": "BuildAndTest_RejectsMissingLocalDependencyOptIn",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Workflows.WorkflowContractTests.BuildAndTest_RejectsMissingLocalDependencyOptIn",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Workflows.WorkflowContractTests",
+      "method": "BuildAndTest_RejectsMissingRawEvidence",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Workflows.WorkflowContractTests.BuildAndTest_RejectsMissingRawEvidence(original: \"VSTestCollect: XPlat Code Coverage\", replacement: \"VSTestCollect: disabled\")",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Workflows.WorkflowContractTests",
+      "method": "BuildAndTest_RejectsMissingRawEvidence",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Workflows.WorkflowContractTests.BuildAndTest_RejectsMissingRawEvidence(original: \"if: always()\", replacement: \"if: success()\")",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Workflows.WorkflowContractTests",
+      "method": "BuildAndTest_RejectsReservedGitHubActionsOverride",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Workflows.WorkflowContractTests.BuildAndTest_RejectsReservedGitHubActionsOverride",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Workflows.WorkflowContractTests",
+      "method": "BuildAndTest_RejectsSecretExpressionInJobEnvironment",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Workflows.WorkflowContractTests.BuildAndTest_RejectsSecretExpressionInJobEnvironment(expression: \"${{ secrets['X'] }}\")",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Workflows.WorkflowContractTests",
+      "method": "BuildAndTest_RejectsSecretExpressionInJobEnvironment",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Workflows.WorkflowContractTests.BuildAndTest_RejectsSecretExpressionInJobEnvironment(expression: \"${{secrets.X}}\")",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Workflows.WorkflowContractTests",
+      "method": "BuildAndTest_RejectsSecretReferenceAnywhere",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Workflows.WorkflowContractTests.BuildAndTest_RejectsSecretReferenceAnywhere",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Workflows.WorkflowContractTests",
+      "method": "BuildAndTest_RejectsSharedActionMainWithPinnedShaComment",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Workflows.WorkflowContractTests.BuildAndTest_RejectsSharedActionMainWithPinnedShaComment",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Workflows.WorkflowContractTests",
+      "method": "BuildAndTest_RejectsWhitespaceObfuscatedRestoreCommand",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Workflows.WorkflowContractTests.BuildAndTest_RejectsWhitespaceObfuscatedRestoreCommand",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Workflows.WorkflowContractTests",
+      "method": "BuildAndTest_SatisfiesStructuralContract",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Workflows.WorkflowContractTests.BuildAndTest_SatisfiesStructuralContract",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Workflows.WorkflowContractTests",
+      "method": "ImagePublication_IsManualValidatedOidcOnlyAndDoesNotDeploy",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Workflows.WorkflowContractTests.ImagePublication_IsManualValidatedOidcOnlyAndDoesNotDeploy",
+      "executions": 1
+    },
+    {
+      "className": "Legacy.Maliev.NotificationService.Tests.Workflows.WorkflowContractTests",
+      "method": "Source5ac_UsesVerifiedSharedLoggingInCiAndSelfContainedImageBuild",
+      "testName": "Legacy.Maliev.NotificationService.Tests.Workflows.WorkflowContractTests.Source5ac_UsesVerifiedSharedLoggingInCiAndSelfContainedImageBuild",
+      "executions": 1
+    }
+  ]
+}

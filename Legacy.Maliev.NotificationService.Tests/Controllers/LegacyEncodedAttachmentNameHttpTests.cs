@@ -97,7 +97,9 @@ public sealed class LegacyEncodedAttachmentNameHttpTests
         Assert.Equal("Synthetic", payload.GetProperty("subject").GetString());
         Assert.Equal("Body", payload.GetProperty("htmlContent").GetString());
         var attachment = Assert.Single(payload.GetProperty("attachment").EnumerateArray());
-        Assert.Equal(expectedName, attachment.GetProperty("name").GetString());
+        var actualName = attachment.GetProperty("name").GetString();
+        Assert.True(expectedName == actualName,
+            $"Attachment payload name mismatch; expected UTF8 base64={Convert.ToBase64String(Encoding.UTF8.GetBytes(expectedName))}; actual UTF8 base64={Convert.ToBase64String(Encoding.UTF8.GetBytes(actualName ?? string.Empty))}.");
         Assert.Equal(FileBytes, Convert.FromBase64String(attachment.GetProperty("content").GetString()!));
         Assert.False(payload.TryGetProperty("cc", out _));
         Assert.False(payload.TryGetProperty("bcc", out _));
