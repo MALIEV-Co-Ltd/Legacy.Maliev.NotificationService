@@ -103,19 +103,34 @@ public sealed class NotificationStartupBoundaryTests(ITestOutputHelper output)
         finally
         {
             await SettleStartupCustodyAsync(custody);
-            try { output.WriteLine("NOTIFICATION_STARTUP_RESOURCE=" + JsonSerializer.Serialize(new
+            try
             {
-                owner = "notification-startup-boundary", custody.Id, custody.Pid, custody.Birth, custody.Executable,
-                timeoutSeconds = 20, stopTimeoutSeconds = 5, readerSettlementSeconds = 5,
-                streamCharacterBound = OutputCharacterBound, custody.ExitVerified,
-                stdoutSettled = custody.Stdout?.IsCompleted ?? true,
-                stderrSettled = custody.Stderr?.IsCompleted ?? true, custody.ProcessDisposed, custody.ReadersDisposed,
-                custody.StdoutReaderDisposed, custody.StderrReaderDisposed,
-                custody.DirectoryRemoved, recoveryRequired = !custody.Released, custody.LeaseExpiresUtc,
-                primaryFailureType = custody.Primary?.GetType().Name,
-                cleanupFailureTypes = custody.CleanupFailures.Select(exception => exception.GetType().Name).ToArray(),
-                persistentData = false,
-            })); }
+                output.WriteLine("NOTIFICATION_STARTUP_RESOURCE=" + JsonSerializer.Serialize(new
+                {
+                    owner = "notification-startup-boundary",
+                    custody.Id,
+                    custody.Pid,
+                    custody.Birth,
+                    custody.Executable,
+                    timeoutSeconds = 20,
+                    stopTimeoutSeconds = 5,
+                    readerSettlementSeconds = 5,
+                    streamCharacterBound = OutputCharacterBound,
+                    custody.ExitVerified,
+                    stdoutSettled = custody.Stdout?.IsCompleted ?? true,
+                    stderrSettled = custody.Stderr?.IsCompleted ?? true,
+                    custody.ProcessDisposed,
+                    custody.ReadersDisposed,
+                    custody.StdoutReaderDisposed,
+                    custody.StderrReaderDisposed,
+                    custody.DirectoryRemoved,
+                    recoveryRequired = !custody.Released,
+                    custody.LeaseExpiresUtc,
+                    primaryFailureType = custody.Primary?.GetType().Name,
+                    cleanupFailureTypes = custody.CleanupFailures.Select(exception => exception.GetType().Name).ToArray(),
+                    persistentData = false,
+                }));
+            }
             catch (Exception exception) { custody.CleanupFailures.Add(exception); }
         }
         if (custody.FailureForCaller() is { } failureForCaller)
