@@ -18,6 +18,7 @@ try
 
     builder.AddServiceDefaults();
     builder.AddDefaultApiVersioning();
+    builder.AddPrivateRequestObservation("emails");
     builder.AddStandardCors();
     builder.AddJwtAuthentication();
     builder.AddStandardMiddleware(options => options.EnableRequestLogging = true);
