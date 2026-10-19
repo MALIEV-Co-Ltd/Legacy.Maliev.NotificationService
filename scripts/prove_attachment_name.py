@@ -23,6 +23,14 @@ CONTROLLER = "Legacy.Maliev.NotificationService.Api/Controllers/EmailsController
 TEST = "Legacy.Maliev.NotificationService.Tests/Controllers/LegacyEncodedAttachmentNameHttpTests.cs"
 NS = {"t": "http://microsoft.com/schemas/VisualStudio/TeamTest/2010"}
 
+OBSERVER_CLASS = "Legacy.Maliev.NotificationService.Tests.Controllers.NotificationHostTransportHttpTests"
+OBSERVER_METHODS = {
+    "RegisteredHealth_IdentifiesOnlyTheServingHostWithoutSuccessfulProbeLogs",
+    "SyntheticObservation_RequiresNativeLoopbackAndNonceAndSharesTheHealthIdentity",
+    "OrdinaryProviderFailure_RecordsOneHandledFailureWithoutHealthOrSyntheticIdentity",
+}
+OBSERVER_IDENTITIES = {(OBSERVER_CLASS, method, OBSERVER_CLASS + "." + method) for method in OBSERVER_METHODS}
+
 
 def require(condition, message):
     if not condition:
@@ -109,8 +117,19 @@ def verify_focus_rows(rows, baseline):
 
 def verify_full(path, inventory):
     rows = read_trx(path)
-    require(len(rows) == 347 and all(r["outcome"] == "Passed" and not r["errorInfo"] for r in rows), "Full suite must pass all 347")
-    prior = Counter((r["class"], r["method"], r["name"]) for r in rows if r["class"] != CLASS)
+    tree = ET.parse(path)
+    require(len(tree.findall(".//t:UnitTest", NS)) == len(rows)
+            and len(tree.findall(".//t:UnitTestResult", NS)) == len(rows), "Full suite contains nested/extra identities")
+    require(len(tree.findall(".//t:ResultSummary", NS)) == 1
+            and len(tree.findall(".//t:Counters", NS)) == 1, "Full suite summary/counters must be singletons")
+    require(not tree.findall(".//t:ErrorInfo", NS)
+            and not any(info.get("outcome") in {"Error", "Failed"} for info in tree.findall(".//t:RunInfo", NS)),
+            "Full suite contains an error notice")
+    require(len(rows) == 350 and all(r["outcome"] == "Passed" and not r["errorInfo"] for r in rows), "Full suite must pass all 350")
+    identity = lambda row: (row["class"], row["method"], row["name"])
+    observers = Counter(identity(row) for row in rows if identity(row) in OBSERVER_IDENTITIES)
+    require(observers == Counter({key: 1 for key in OBSERVER_IDENTITIES}), "Full suite changed exact three observer identities")
+    prior = Counter(identity(row) for row in rows if row["class"] != CLASS and identity(row) not in OBSERVER_IDENTITIES)
     expected = Counter({(r["className"], r["method"], r["testName"]): r["executions"] for r in inventory["rows"]})
     require(sum(expected.values()) == 327 and prior == expected, "Full suite changed accepted 327 identities")
     verify_focus_rows([r for r in rows if r["class"] == CLASS], False)
