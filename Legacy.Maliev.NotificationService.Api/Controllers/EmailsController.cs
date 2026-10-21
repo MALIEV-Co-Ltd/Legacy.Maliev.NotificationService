@@ -261,7 +261,8 @@ public sealed class EmailsController(INotificationService notificationService) :
 
     private async Task<string> ReadPlainTextBodyAsync(CancellationToken cancellationToken)
     {
-        using var reader = new StreamReader(this.Request.Body);
+        using var reader = new StreamReader(this.Request.Body, System.Text.Encoding.UTF8,
+            detectEncodingFromByteOrderMarks: true, bufferSize: 1024, leaveOpen: true);
         return await reader.ReadToEndAsync(cancellationToken);
     }
 
@@ -278,9 +279,11 @@ public sealed class EmailsController(INotificationService notificationService) :
         foreach (var file in files)
         {
             await using var stream = file.OpenReadStream();
+            // The original controller passed filenames through Attachment.Name, which decodes MIME encoded words.
+            using var legacyName = new System.Net.Mail.Attachment(Stream.Null, file.FileName);
             using var memoryStream = new MemoryStream();
             await stream.CopyToAsync(memoryStream, cancellationToken);
-            attachments.Add(new NotificationAttachment(file.FileName, file.ContentType, memoryStream.ToArray()));
+            attachments.Add(new NotificationAttachment(legacyName.Name!, file.ContentType, memoryStream.ToArray()));
         }
 
         return attachments;

@@ -42,10 +42,10 @@ public sealed class NotificationControllerContractTests
             StringComparer.OrdinalIgnoreCase);
 
         Assert.IsType<RequiredAttribute>(Assert.Single(parameters["To"].GetCustomAttributes<RequiredAttribute>()));
-        Assert.IsType<EmailAddressAttribute>(Assert.Single(parameters["To"].GetCustomAttributes<EmailAddressAttribute>()));
+        Assert.IsType<LegacyMailboxAttribute>(Assert.Single(parameters["To"].GetCustomAttributes<LegacyMailboxAttribute>()));
         Assert.IsType<RequiredAttribute>(Assert.Single(parameters["Subject"].GetCustomAttributes<RequiredAttribute>()));
         Assert.IsType<RequiredAttribute>(Assert.Single(parameters["Body"].GetCustomAttributes<RequiredAttribute>()));
-        Assert.IsType<EmailAddressAttribute>(Assert.Single(parameters["ReplyTo"].GetCustomAttributes<EmailAddressAttribute>()));
+        Assert.IsType<LegacyMailboxAttribute>(Assert.Single(parameters["ReplyTo"].GetCustomAttributes<LegacyMailboxAttribute>()));
         Assert.All(
             request.GetProperties(),
             property => Assert.Empty(property.GetCustomAttributes<ValidationAttribute>()));
