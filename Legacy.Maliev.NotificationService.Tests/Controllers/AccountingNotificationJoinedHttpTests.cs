@@ -171,9 +171,11 @@ public sealed class AccountingNotificationJoinedHttpTests(DeliveryIntentPostgres
         if (response.StatusCode == HttpStatusCode.OK) return;
         output.WriteLine("Joined Accounting response status: {0}", (int)response.StatusCode);
         using var problem = JsonDocument.Parse(await response.Content.ReadAsStringAsync());
+        var details = problem.RootElement.TryGetProperty("Value", out var valueObject)
+            ? valueObject : problem.RootElement;
         foreach (var property in new[] { "Title", "title", "StatusCode", "status" })
         {
-            if (problem.RootElement.TryGetProperty(property, out var value))
+            if (details.TryGetProperty(property, out var value))
                 output.WriteLine("Problem {0}: {1}", property, value.ToString());
         }
     }
