@@ -16,7 +16,7 @@ namespace Legacy.Maliev.NotificationService.Tests.Controllers;
 // Both actual Programs, normal JWT/delegation/live-IAM middleware and real PG
 // stores. Signed fixture actors and controlled remote transports are not a live
 // AuthService exchange or recipient-delivery claim.
-public sealed class AccountingNotificationJoinedHttpTests(DeliveryIntentPostgresFixture postgres)
+public sealed class AccountingNotificationJoinedHttpTests(DeliveryIntentPostgresFixture postgres, Xunit.Abstractions.ITestOutputHelper output)
     : IClassFixture<DeliveryIntentPostgresFixture>
 {
     [Fact]
@@ -147,8 +147,9 @@ public sealed class AccountingNotificationJoinedHttpTests(DeliveryIntentPostgres
         Assert.Single(await database.Files.AsNoTracking().ToListAsync());
     }
 
-    private static async Task<int> AcceptedAsync(HttpResponseMessage response)
+    private async Task<int> AcceptedAsync(HttpResponseMessage response)
     {
+        await RetainUnexpectedBoundaryAsync(response);
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         using var body = JsonDocument.Parse(await response.Content.ReadAsStringAsync());
         Assert.Equal(3, body.RootElement.GetProperty("EmailState").GetInt32());
@@ -156,12 +157,25 @@ public sealed class AccountingNotificationJoinedHttpTests(DeliveryIntentPostgres
         return body.RootElement.GetProperty("InvoiceId").GetInt32();
     }
 
-    private static async Task UncertainAsync(HttpResponseMessage response)
+    private async Task UncertainAsync(HttpResponseMessage response)
     {
+        await RetainUnexpectedBoundaryAsync(response);
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         using var body = JsonDocument.Parse(await response.Content.ReadAsStringAsync());
         Assert.Equal(2, body.RootElement.GetProperty("EmailState").GetInt32());
         Assert.False(body.RootElement.TryGetProperty("ProviderMessageId", out _));
+    }
+
+    private async Task RetainUnexpectedBoundaryAsync(HttpResponseMessage response)
+    {
+        if (response.StatusCode == HttpStatusCode.OK) return;
+        output.WriteLine("Joined Accounting response status: {0}", (int)response.StatusCode);
+        using var problem = JsonDocument.Parse(await response.Content.ReadAsStringAsync());
+        foreach (var property in new[] { "Title", "title", "StatusCode", "status" })
+        {
+            if (problem.RootElement.TryGetProperty(property, out var value))
+                output.WriteLine("Problem {0}: {1}", property, value.ToString());
+        }
     }
 
     private sealed class JoinedBoundary(IntentV2Factory producer, IntentFixture accounting,
