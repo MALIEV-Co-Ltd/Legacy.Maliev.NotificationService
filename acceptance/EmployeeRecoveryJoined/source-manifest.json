@@ -16,12 +16,12 @@
     "boundSourceHashes": "38 canonical Git blob hashes pinned; BFF csproj changes only accepted framework patch; all13 other prior BFF bindings unchanged; Server project added",
     "initialGitleaks": "FAIL manifest public commit metadata; retained",
     "finalGitleaks": "PASS scoped source; exact final seal qualification recorded separately",
-    "nativeBuildTestsFormatCoverageAudit": "Run39947734557 restore passed; Release build FAILED with 0 warnings and 5 missing Contracts errors. Native tests/format/audit NOT RUN. Ordinary exact-head39947734509 PASS.",
+    "nativeBuildTestsFormatCoverageAudit": "Run39948760743 restore and all producer builds passed; acceptance Release build FAILED with 0 warnings and 7 nullable/analyzer errors. Native tests/format/audit NOT RUN.",
     "publishedProducerBindings": "Auth d05c1ed ordinary39727079106 and BFF accepted229fb0d ordinary38954318992 plus applicable joins successful; joined execution remains pending",
-    "gitIndexRawCommit": "V12 raw committed-byte verification required after commit",
+    "gitIndexRawCommit": "V13 raw committed-byte verification required after commit",
     "actualHostPoolRegression": "1 authored NOT RUN; 8 joined cases unchanged; runtime pool/socket absence NOT QUALIFIED",
     "hostDisposalOrderRegressions": "3 authored NOT RUN: fault, timeout/late completion, successful ordering",
-    "actualGateControls": "Linux39947734557 EOF/release and exact helper absence passed; 38 bindings and8GiB admission passed. Restore/build groups absent, final cleanup PASS, no containers allocated."
+    "actualGateControls": "Linux39948760743 EOF/release and exact helper absence passed; 38 bindings and8GiB admission passed. Restore/build groups absent, final cleanup PASS, no containers allocated."
   },
   "resources": "No local SDK/container/server/browser allocation. Hosted failed build has exact process-group absence and no container allocation; CLI exit receipts retained.",
   "files": [
@@ -35,7 +35,7 @@
     },
     {
       "path": "HOSTED-EXECUTION.md",
-      "sha256": "8c577324a0ff46b94b546a5725c071f65a7508947ed587911f3719f079f438e7"
+      "sha256": "772406fca701aaaf7c7468c353cca5c820c19979cb2abcf26f5646c0c2f33ed5"
     },
     {
       "path": "HostPoolCleanupRegressionTests.cs",
@@ -51,7 +51,7 @@
     },
     {
       "path": "JoinedRecoveryTests.cs",
-      "sha256": "c0c02d31ea1fb24670a9e19953f46a3c5db2f00790c19da80c2955d56fcbdcbb"
+      "sha256": "db163baab79a4294c1b16abaa2135840b9b5e85bc25271bdeff041f0129f1b7e"
     },
     {
       "path": "notification62-hosted.yml",
@@ -59,7 +59,7 @@
     },
     {
       "path": "RecoveryJoinFixture.cs",
-      "sha256": "098fb34548cbc095733f452d7fa6f723b1b800c5c5f6b2ca6bfc138689cac642"
+      "sha256": "9c3839140f150d311ebd2f683b31431203a9a1b1f4276b8e3e93b90bef177945"
     },
     {
       "path": "resource-ledger.json",
@@ -126,8 +126,8 @@
       "tree": "5031d608d117ecbd9ff2b562356d036b025cbf1b"
     }
   },
-  "version": "V12 local dependency graph isolated to SDK child environment",
-  "supersedesSourceManifestSha256": "46a41aaf5525a398f10f6b195d18a68ccbe902cfac24b143da3045e682d83fab",
+  "version": "V13 acceptance fixture nullable configuration and assertion fixes",
+  "supersedesSourceManifestSha256": "529671dd7d6eb924b0ed9f6ed5f21af923f46ff4857e5e58080911793f7695bf",
   "dispatchHold": "One exact-head hosted joined attempt authorized after coordinator source/effects review; actual Linux gate controls must pass before SDK admission. Existing guards and cleanup are mandatory.",
   "authoredPoolCleanupRegressionCases": 1,
   "nativeExecutedPoolCleanupRegressionCases": null,

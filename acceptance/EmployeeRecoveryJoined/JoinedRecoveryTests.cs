@@ -54,13 +54,11 @@ public sealed class JoinedRecoveryTests
         Assert.Equal(HttpStatusCode.Accepted, requested.StatusCode);
         var acceptedBody = await requested.Content.ReadAsStringAsync(fixture.Token);
         Assert.DoesNotContain("token", acceptedBody, StringComparison.OrdinalIgnoreCase);
-        Assert.Equal(1, fixture.Provider.Payloads.Count);
-        var captured = fixture.Provider.Payloads[0];
+        var captured = Assert.Single(fixture.Provider.Payloads);
         Assert.Equal(email, captured.GetProperty("to")[0].GetProperty("email").GetString());
         var html = captured.GetProperty("htmlContent").GetString()!;
         var links = Regex.Matches(html, "href=\"([^\"]+)\"");
-        Assert.Equal(1, links.Count);
-        var link = links[0];
+        var link = Assert.Single(links);
         var callback = new Uri(WebUtility.HtmlDecode(link.Groups[1].Value));
         Assert.Equal(RecoveryJoinFixture.PublicOrigin.Authority, callback.Authority);
         Assert.Equal("https", callback.Scheme);

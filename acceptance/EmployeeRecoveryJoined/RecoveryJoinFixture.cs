@@ -67,11 +67,12 @@ public sealed class RecoveryJoinFixture : IAsyncDisposable
             .WithLabel("maliev.validation.notification62.fixture", fixtureId)
             .WithCreateParameterModifier(parameters =>
             {
-                parameters.HostConfig.Memory = 1024L * 1024 * 1024;
-                parameters.HostConfig.NanoCPUs = 1_000_000_000;
-                parameters.HostConfig.Tmpfs = new Dictionary<string, string>
+                var hostConfig = parameters.HostConfig ?? throw new InvalidOperationException("PostgreSQL host configuration is unavailable.");
+                hostConfig.Memory = 1024L * 1024 * 1024;
+                hostConfig.NanoCPUs = 1_000_000_000;
+                hostConfig.Tmpfs = new Dictionary<string, string>
                 { ["/var/lib/postgresql"] = "rw,size=512m" };
-                foreach (var bindings in parameters.HostConfig.PortBindings.Values)
+                foreach (var bindings in hostConfig.PortBindings.Values)
                     foreach (var binding in bindings) binding.HostIP = "127.0.0.1";
             }).Build();
         redis = new RedisBuilder("redis:7-alpine")
@@ -79,10 +80,11 @@ public sealed class RecoveryJoinFixture : IAsyncDisposable
             .WithLabel("maliev.validation.notification62.fixture", fixtureId)
             .WithCreateParameterModifier(parameters =>
             {
-                parameters.HostConfig.Memory = 128L * 1024 * 1024;
-                parameters.HostConfig.NanoCPUs = 500_000_000;
-                parameters.HostConfig.Tmpfs = new Dictionary<string, string> { ["/data"] = "rw,size=64m" };
-                foreach (var bindings in parameters.HostConfig.PortBindings.Values)
+                var hostConfig = parameters.HostConfig ?? throw new InvalidOperationException("Redis host configuration is unavailable.");
+                hostConfig.Memory = 128L * 1024 * 1024;
+                hostConfig.NanoCPUs = 500_000_000;
+                hostConfig.Tmpfs = new Dictionary<string, string> { ["/data"] = "rw,size=64m" };
+                foreach (var bindings in hostConfig.PortBindings.Values)
                     foreach (var binding in bindings) binding.HostIP = "127.0.0.1";
             }).Build();
         SaveLedger("allocated-source-handles");
@@ -193,11 +195,11 @@ public sealed class RecoveryJoinFixture : IAsyncDisposable
 
     public void AssertRealJoin(string purpose)
     {
-        Assert.Single(routes.Where(x => x.Host == "auth" && x.Path == "/auth/v1/service/login" && x.Status == 200));
-        Assert.Single(routes.Where(x => x.Host == "auth" && x.Path == "/auth/v1/employee-self-service/" + purpose + "/request" && x.Status == 200));
+        Assert.Single(routes, x => x.Host == "auth" && x.Path == "/auth/v1/service/login" && x.Status == 200);
+        Assert.Single(routes, x => x.Host == "auth" && x.Path == "/auth/v1/employee-self-service/" + purpose + "/request" && x.Status == 200);
         var completions = routes.Where(x => x.Host == "auth" && x.Path == "/auth/v1/employee-self-service/" + purpose + "/complete").ToArray();
         Assert.Equal(new[] { 204, 400 }, completions.Select(x => x.Status));
-        var sent = Assert.Single(routes.Where(x => x.Host == "notification" && x.Path == "/notifications/v1/email/NoReply"));
+        var sent = Assert.Single(routes, x => x.Host == "notification" && x.Path == "/notifications/v1/email/NoReply");
         Assert.Equal(Provider.Status == 201 ? 200 : 502, sent.Status);
     }
 
