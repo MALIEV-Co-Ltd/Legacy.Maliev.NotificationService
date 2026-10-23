@@ -159,7 +159,7 @@
     {
       "repo": "intranet",
       "path": "Legacy.Maliev.Intranet.Bff/Legacy.Maliev.Intranet.Bff.csproj",
-      "sha256": "41672ae83ab59c7dc34a03c5d9d6d33c688ec65723d83eb38f19a7908a04c3e3"
+      "sha256": "a7fac43f5f7779353ff051364c04b2b7deda79daff7d0b6f8536c22cb06a593d"
     },
     {
       "repo": "intranet",
@@ -198,6 +198,11 @@
       "repo": "intranet",
       "path": ".gitattributes",
       "sha256": "d659a5a32a52085fc2ef5ca8b58cded13e1091f177651a87a6c9ee3e0751e68f"
+    },
+    {
+      "repo": "intranet",
+      "path": "Legacy.Maliev.Intranet.Server/Legacy.Maliev.Intranet.Server.csproj",
+      "sha256": "67350c616681b218035cd1411e0be2efe43a9b4341804368c104117197451fc6"
     }
   ],
   "bases": [
@@ -220,8 +225,8 @@
       "tree": "98da44c2c74c6a51d98026e5a39b1024e7f6abef"
     },
     "intranet": {
-      "head": "a54055de51e5adf25779c9ca303c1c2d06f5fbab",
-      "tree": "f3193fde7b95b30e277f72396d15ca01a1a6cc83"
+      "head": "229fb0d80f697b2c079da1f44baf4ce472181bde",
+      "tree": "5031d608d117ecbd9ff2b562356d036b025cbf1b"
     }
   }
 }

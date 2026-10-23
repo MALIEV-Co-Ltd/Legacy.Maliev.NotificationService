@@ -15,7 +15,7 @@ on:
       intranet_head:
         description: Reviewed published BFF recovery commit (40 hex SHA)
         required: true
-        default: a54055de51e5adf25779c9ca303c1c2d06f5fbab
+        default: 229fb0d80f697b2c079da1f44baf4ce472181bde
       notification_head:
         description: Reviewed Notification commit including this acceptance slice (40 hex SHA)
         required: true
@@ -38,7 +38,7 @@ jobs:
     timeout-minutes: 55
     env:
       IDENTITY_SOURCE_REVISION: d05c1ed990303beb2fba630b49c78adca9d0b610
-      INTRANET_HEAD: a54055de51e5adf25779c9ca303c1c2d06f5fbab
+      INTRANET_HEAD: 229fb0d80f697b2c079da1f44baf4ce472181bde
       INPUT_IDENTITY_SOURCE_REVISION: ${{ inputs.auth_head }}
       INPUT_INTRANET_HEAD: ${{ inputs.intranet_head }}
       NOTIFICATION_HEAD: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || inputs.notification_head }}

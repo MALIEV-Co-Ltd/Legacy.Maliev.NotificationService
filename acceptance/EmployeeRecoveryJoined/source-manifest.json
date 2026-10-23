@@ -2,7 +2,7 @@
   "classification": "SOURCE_IMPLEMENTED_JOINED_NATIVE_VALIDATION_PENDING",
   "owner": "notification_delivery subagent under current migration coordinator",
   "producerManifestSha256": "990cda3a2c3d6c2b41fd0e01572c3c53d9b166aaafa8a2c2e7f9a99d5a351f42",
-  "sourceBindings": 37,
+  "sourceBindings": 38,
   "producerPins": "12/12 PASS",
   "authoredJoinedCases": 8,
   "nativeExecutedJoinedCases": null,
@@ -13,15 +13,15 @@
     "pythonAst": "PASS",
     "projectXml": "PASS",
     "workflowYaml": "PASS actionlint on exact workflow; external shellcheck/pyflakes not installed or invoked",
-    "boundSourceHashes": "37 canonical Git blob hashes pinned, including BFF .gitattributes; original36 hashes unchanged;12 BFF CSharp files match actual declared Git CRLF materialization",
+    "boundSourceHashes": "38 canonical Git blob hashes pinned; BFF csproj changes only accepted framework patch; all13 other prior BFF bindings unchanged; Server project added",
     "initialGitleaks": "FAIL manifest public commit metadata; retained",
     "finalGitleaks": "PASS scoped source; exact final seal qualification recorded separately",
     "nativeBuildTestsFormatCoverageAudit": "NOT RUN source-only scope",
-    "publishedProducerBindings": "Auth d05c1ed and BFF a54055d exact ordinary checks successful; joined execution remains pending",
-    "gitIndexRawCommit": "V10 raw committed-byte verification pending commit",
+    "publishedProducerBindings": "Auth d05c1ed ordinary39727079106 and BFF accepted229fb0d ordinary38954318992 plus applicable joins successful; joined execution remains pending",
+    "gitIndexRawCommit": "V11 raw committed-byte verification pending commit",
     "actualHostPoolRegression": "1 authored NOT RUN; 8 joined cases unchanged; runtime pool/socket absence NOT QUALIFIED",
     "hostDisposalOrderRegressions": "3 authored NOT RUN: fault, timeout/late completion, successful ordering",
-    "actualGateControls": "Linux39946350253 both actual EOF125/no target and explicitrelease0/sentinel passed with exact helper absence; SDK setup and nativejoin were skipped after sourcepreflight EOL mismatch. Windows failed release is not acceptance."
+    "actualGateControls": "Linux39946990566 actual EOF/release and exact helper absence passed,38th binding not yet used; 37-source preflight and8GiB admission passed. Restore stopped on old BFF10.0.12 vulnerabilities; build/tests not run; restore process absence and container absence verified."
   },
   "resources": "No SDK/container/server/browser allocation; CLI exit receipts retained",
   "files": [
@@ -35,7 +35,7 @@
     },
     {
       "path": "HOSTED-EXECUTION.md",
-      "sha256": "2d5637e8040587d014a193be714c05bd3800e36f2c3e3f5c20f5f70bb43386d9"
+      "sha256": "158d24d1f23a591a14dd05259efb3d6e0124b4e8593cb541fbc17b80e9774c64"
     },
     {
       "path": "HostPoolCleanupRegressionTests.cs",
@@ -47,7 +47,7 @@
     },
     {
       "path": "JoinedRecovery.AcceptanceTests.csproj",
-      "sha256": "992b262ba02805977166eab3083bba78ffc9abc1e97149d57df60008818bc629"
+      "sha256": "30f563f35fad6a00cdd457be9efc6dfd5bbd5d4a0faa0f145fb9e84a78a6bc2a"
     },
     {
       "path": "JoinedRecoveryTests.cs",
@@ -55,7 +55,7 @@
     },
     {
       "path": "notification62-hosted.yml",
-      "sha256": "b3a5fccdb8f96ad60c33843948765aa7bef6f1f299606f1d949e4eb519012e3b"
+      "sha256": "138fb5a2c0858defb17d2101be0df3d0b0d8c5246191fabc2dcb7cdc666bf46f"
     },
     {
       "path": "RecoveryJoinFixture.cs",
@@ -71,7 +71,7 @@
     },
     {
       "path": "source-bindings.json",
-      "sha256": "d09d218b6a2ee4aa101cf9ca20826643fce40128b3ba4c51fdd45cf30f69d09f"
+      "sha256": "1c743af6ccf45f64bb45ea6843a2073dee6892d62e7aeeac79eabbb6ede197bb"
     },
     {
       "path": "test_run_hosted_join.py",
@@ -122,12 +122,12 @@
       "tree": "98da44c2c74c6a51d98026e5a39b1024e7f6abef"
     },
     "intranet": {
-      "head": "a54055de51e5adf25779c9ca303c1c2d06f5fbab",
-      "tree": "f3193fde7b95b30e277f72396d15ca01a1a6cc83"
+      "head": "229fb0d80f697b2c079da1f44baf4ce472181bde",
+      "tree": "5031d608d117ecbd9ff2b562356d036b025cbf1b"
     }
   },
-  "version": "V10 explicit pinned BFF checkout EOL materialization",
-  "supersedesSourceManifestSha256": "a6a5f64f257597c99b5f01b40a3796b555f5c02722ccb6bccf78c01ead3015c4",
+  "version": "V11 accepted BFF recovery merge and audited framework patch",
+  "supersedesSourceManifestSha256": "3171c9a588514afa6ce35031cac8223e37dd37feaee2df03404652d8fee16c25",
   "dispatchHold": "One exact-head hosted joined attempt authorized after coordinator source/effects review; actual Linux gate controls must pass before SDK admission. Existing guards and cleanup are mandatory.",
   "authoredPoolCleanupRegressionCases": 1,
   "nativeExecutedPoolCleanupRegressionCases": null,
