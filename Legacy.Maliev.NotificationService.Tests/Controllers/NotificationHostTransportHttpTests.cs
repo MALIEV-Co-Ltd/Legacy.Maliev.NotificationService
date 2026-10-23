@@ -262,6 +262,8 @@ public sealed class NotificationHostTransportHttpTests
         await using var factory = Factory(providerFailure: true, observe: true);
         var response = await factory.Server.SendAsync(context =>
             ConfigureRequest(context, ApiPath, Caller, "http", null, true, factory), deadline.Token);
+        // SendAsync can expose headers before the completed-response observer returns.
+        await response.Response.Body.CopyToAsync(Stream.Null, deadline.Token);
         Assert.Equal(502, response.Response.StatusCode);
         Assert.False(response.Response.Headers.ContainsKey("X-Maliev-Health-Instance"));
         Assert.False(response.Response.Headers.ContainsKey("X-Maliev-Diagnostic-Id"));
