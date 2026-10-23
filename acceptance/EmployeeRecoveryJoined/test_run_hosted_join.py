@@ -44,6 +44,30 @@ class SourceBindingTests(unittest.TestCase):
                     supervisor.verify_sources({"auth": root}, {"auth": "c" * 40})
                 command.assert_not_called()
 
+    def test_reviewed_intranet_crlf_checkout_keeps_canonical_blob_hash(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            source = root / "source.cs"
+            raw = b"class Source {}\n// bound source\n"
+            item = {"repo": "intranet", "path": source.name,
+                    "sha256": hashlib.sha256(raw).hexdigest(), "checkoutEol": "crlf"}
+            (root / "source-bindings.json").write_text(json.dumps({"files": [item]}))
+            source.write_bytes(raw.replace(b"\n", b"\r\n"))
+            head = "a" * 40
+            with patch.object(supervisor, "PACKET", root), \
+                 patch.object(supervisor, "command", side_effect=lambda args: head if args[-1] == "HEAD" else ""):
+                supervisor.verify_sources({"intranet": root}, {"intranet": head})
+                for altered in (raw, b"class Source {}\r\n// bound source\n",
+                                b"class Changed {}\r\n// bound source\r\n"):
+                    with self.subTest(altered=altered):
+                        source.write_bytes(altered)
+                        with self.assertRaisesRegex(ValueError, "Reviewed source"):
+                            supervisor.verify_sources({"intranet": root}, {"intranet": head})
+                item["checkoutEol"] = "lf"
+                (root / "source-bindings.json").write_text(json.dumps({"files": [item]}))
+                with self.assertRaisesRegex(ValueError, "checkout rule is invalid"):
+                    supervisor.verify_sources({"intranet": root}, {"intranet": head})
+
 
 class CleanupBoundaryTests(unittest.TestCase):
     def setUp(self):

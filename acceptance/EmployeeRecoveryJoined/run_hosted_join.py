@@ -40,7 +40,15 @@ def verify_sources(roots, heads):
         for item in bindings["files"]:
             if item["repo"] == name:
                 command(["git", "-C", str(root), "ls-files", "--error-unmatch", "--", item["path"]])
-                if hashlib.sha256((root / item["path"]).read_bytes()).hexdigest() != item["sha256"]:
+                raw = (root / item["path"]).read_bytes()
+                if "checkoutEol" in item:
+                    if item["checkoutEol"] != "crlf" or name != "intranet" or not item["path"].endswith(".cs"):
+                        raise ValueError("Reviewed source checkout rule is invalid")
+                    canonical = raw.replace(b"\r\n", b"\n")
+                    if b"\r" in canonical or raw != canonical.replace(b"\n", b"\r\n"):
+                        raise ValueError("Reviewed source checkout line endings mismatch: " + item["path"])
+                    raw = canonical
+                if hashlib.sha256(raw).hexdigest() != item["sha256"]:
                     raise ValueError("Reviewed source file mismatch: " + name + "/" + item["path"])
     return {name: {"head": heads[name], "tree": command(["git", "-C", str(root), "rev-parse", "HEAD^{tree}"])}
             for name, root in roots.items()}

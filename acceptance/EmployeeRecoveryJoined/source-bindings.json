@@ -20,17 +20,20 @@
     {
       "repo": "intranet",
       "path": "Legacy.Maliev.Intranet.Contracts/EmployeeRecoveryContracts.cs",
-      "sha256": "bb1d657bf20fcf40aaf5dc15be616b38ab3e9b4f1f9b34d0b6e0b72734a2fad5"
+      "sha256": "bb1d657bf20fcf40aaf5dc15be616b38ab3e9b4f1f9b34d0b6e0b72734a2fad5",
+      "checkoutEol": "crlf"
     },
     {
       "repo": "intranet",
       "path": "Legacy.Maliev.Intranet.Contracts/EmployeeRecoveryEmailAttribute.cs",
-      "sha256": "a26d59d996499fe62d1831d3aded56e86382328dde77bf7f542e35649fd8dafc"
+      "sha256": "a26d59d996499fe62d1831d3aded56e86382328dde77bf7f542e35649fd8dafc",
+      "checkoutEol": "crlf"
     },
     {
       "repo": "intranet",
       "path": "Legacy.Maliev.Intranet.Tests/BffEmployeeRecoveryContractTests.cs",
-      "sha256": "0f808fd11fc08c78e7479d301328987203282273c9e0f58bb4995da462eb0b55"
+      "sha256": "0f808fd11fc08c78e7479d301328987203282273c9e0f58bb4995da462eb0b55",
+      "checkoutEol": "crlf"
     },
     {
       "repo": "auth",
@@ -75,32 +78,38 @@
     {
       "repo": "intranet",
       "path": "Legacy.Maliev.Intranet.Bff/Program.cs",
-      "sha256": "b95eb7de9e355efce916095625446ece4c309d431a4947fe50c3a74cb7bd2023"
+      "sha256": "b95eb7de9e355efce916095625446ece4c309d431a4947fe50c3a74cb7bd2023",
+      "checkoutEol": "crlf"
     },
     {
       "repo": "intranet",
       "path": "Legacy.Maliev.Intranet.Bff/Employees/EmployeeRecoveryEndpointMapper.cs",
-      "sha256": "952ebfc9458f1da98039d25eba5c2cd9b8cf5588a6e0e1c39d11fc0d0ea2c980"
+      "sha256": "952ebfc9458f1da98039d25eba5c2cd9b8cf5588a6e0e1c39d11fc0d0ea2c980",
+      "checkoutEol": "crlf"
     },
     {
       "repo": "intranet",
       "path": "Legacy.Maliev.Intranet.Bff/Employees/EmployeeRecoveryProxies.cs",
-      "sha256": "7b0936f9e21422c0e29e648e50805bc859037077d5507e7a3973fb2695d819b0"
+      "sha256": "7b0936f9e21422c0e29e648e50805bc859037077d5507e7a3973fb2695d819b0",
+      "checkoutEol": "crlf"
     },
     {
       "repo": "intranet",
       "path": "Legacy.Maliev.Intranet.Server/Auth/ServiceAccessTokenProvider.cs",
-      "sha256": "f1ed6a46897d1683a414d0f966efe1801adaf8ecea15c806b36f92ad5a1ceeac"
+      "sha256": "f1ed6a46897d1683a414d0f966efe1801adaf8ecea15c806b36f92ad5a1ceeac",
+      "checkoutEol": "crlf"
     },
     {
       "repo": "intranet",
       "path": "Legacy.Maliev.Intranet.Server/Auth/LegacyServiceAuthenticationHandler.cs",
-      "sha256": "d1d3e7910f3890831a70026a24a3bf541ccc3b77b28e0c6720a92e5152eb1442"
+      "sha256": "d1d3e7910f3890831a70026a24a3bf541ccc3b77b28e0c6720a92e5152eb1442",
+      "checkoutEol": "crlf"
     },
     {
       "repo": "intranet",
       "path": "Legacy.Maliev.Intranet.Server/Auth/LegacyDataProtection.cs",
-      "sha256": "5d05e8af5e119f82683f47daa8b636b752c10989e72c88ee0931bee2a29e2429"
+      "sha256": "5d05e8af5e119f82683f47daa8b636b752c10989e72c88ee0931bee2a29e2429",
+      "checkoutEol": "crlf"
     },
     {
       "repo": "notification",
@@ -155,17 +164,20 @@
     {
       "repo": "intranet",
       "path": "Legacy.Maliev.Intranet.Bff/AntiforgeryValidationFilter.cs",
-      "sha256": "be4927d511526c04f3f74836281e478be6c3d0f187505764349ef30a19ed081f"
+      "sha256": "be4927d511526c04f3f74836281e478be6c3d0f187505764349ef30a19ed081f",
+      "checkoutEol": "crlf"
     },
     {
       "repo": "intranet",
       "path": "Legacy.Maliev.Intranet.Server/Auth/LegacyJwtValidation.cs",
-      "sha256": "3f92026e585252bc20042d4d2529f48a11d6e2cb6380a2623fbc281f3020b4c9"
+      "sha256": "3f92026e585252bc20042d4d2529f48a11d6e2cb6380a2623fbc281f3020b4c9",
+      "checkoutEol": "crlf"
     },
     {
       "repo": "intranet",
       "path": "Legacy.Maliev.Intranet.Server/Auth/LegacyDataProtectionResources.cs",
-      "sha256": "5bf94dcdcb17d345cf706601216e2b98bc316240a54d7d3ffe90e53c6b319ee0"
+      "sha256": "5bf94dcdcb17d345cf706601216e2b98bc316240a54d7d3ffe90e53c6b319ee0",
+      "checkoutEol": "crlf"
     },
     {
       "repo": "notification",
@@ -181,6 +193,11 @@
       "repo": "auth",
       "path": "Legacy.Maliev.AuthService.Infrastructure/ServiceCollectionExtensions.cs",
       "sha256": "222d3a5e28af5c92da613bd2b17256bc6684c6670a07e925f19aa525a48dfbd2"
+    },
+    {
+      "repo": "intranet",
+      "path": ".gitattributes",
+      "sha256": "d659a5a32a52085fc2ef5ca8b58cded13e1091f177651a87a6c9ee3e0751e68f"
     }
   ],
   "bases": [

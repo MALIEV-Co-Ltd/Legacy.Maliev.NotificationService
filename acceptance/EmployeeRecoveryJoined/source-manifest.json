@@ -2,26 +2,26 @@
   "classification": "SOURCE_IMPLEMENTED_JOINED_NATIVE_VALIDATION_PENDING",
   "owner": "notification_delivery subagent under current migration coordinator",
   "producerManifestSha256": "990cda3a2c3d6c2b41fd0e01572c3c53d9b166aaafa8a2c2e7f9a99d5a351f42",
-  "sourceBindings": 36,
+  "sourceBindings": 37,
   "producerPins": "12/12 PASS",
   "authoredJoinedCases": 8,
   "nativeExecutedJoinedCases": null,
   "bootstrap": "Actual Auth/BFF/Notification Programs implemented; only external Brevo controlled; real CSRF, service login, RS256, worker and disposable PostgreSQL/Redis",
   "hostedWorkflow": "Implemented source only; exact published producer heads and Root review required",
   "validation": {
-    "supervisorTests": "24 passed in normal and optimized Python, zero failed or skipped; child exits verified. Original19-case baseline reproduced4 assertions failing, zero errors.",
+    "supervisorTests": "25 passed in normal and optimized Python, zero failed or skipped; child exits verified. Declared-CRLF case reproduced prior source-file mismatch before correction.",
     "pythonAst": "PASS",
     "projectXml": "PASS",
     "workflowYaml": "PASS actionlint on exact workflow; external shellcheck/pyflakes not installed or invoked",
-    "boundSourceHashes": "36/36 immutable Git blob hashes verified; 18 unchanged, 9 BFF CRLF-only corrections, 8 accepted Auth changes, 1 accepted Notification Program change",
+    "boundSourceHashes": "37 canonical Git blob hashes pinned, including BFF .gitattributes; original36 hashes unchanged;12 BFF CSharp files match actual declared Git CRLF materialization",
     "initialGitleaks": "FAIL manifest public commit metadata; retained",
     "finalGitleaks": "PASS scoped source; exact final seal qualification recorded separately",
     "nativeBuildTestsFormatCoverageAudit": "NOT RUN source-only scope",
     "publishedProducerBindings": "Auth d05c1ed and BFF a54055d exact ordinary checks successful; joined execution remains pending",
-    "gitIndexRawCommit": "V9 raw committed-byte verification pending commit",
+    "gitIndexRawCommit": "V10 raw committed-byte verification pending commit",
     "actualHostPoolRegression": "1 authored NOT RUN; 8 joined cases unchanged; runtime pool/socket absence NOT QUALIFIED",
     "hostDisposalOrderRegressions": "3 authored NOT RUN: fault, timeout/late completion, successful ordering",
-    "actualGateControls": "Hosted Linux required before SDK setup. Local Windows EOF125/no target passed; explicit release failed with access violation and is not acceptance."
+    "actualGateControls": "Linux39946350253 both actual EOF125/no target and explicitrelease0/sentinel passed with exact helper absence; SDK setup and nativejoin were skipped after sourcepreflight EOL mismatch. Windows failed release is not acceptance."
   },
   "resources": "No SDK/container/server/browser allocation; CLI exit receipts retained",
   "files": [
@@ -35,7 +35,7 @@
     },
     {
       "path": "HOSTED-EXECUTION.md",
-      "sha256": "4fe2d402f4b9c4581295d8c7982da2287f597a115961a19c914a5db8dacf396e"
+      "sha256": "2d5637e8040587d014a193be714c05bd3800e36f2c3e3f5c20f5f70bb43386d9"
     },
     {
       "path": "HostPoolCleanupRegressionTests.cs",
@@ -67,15 +67,15 @@
     },
     {
       "path": "run_hosted_join.py",
-      "sha256": "1f30b07b600f729b3d921acf0238ab56fc869db1fea66bfe825a6341cf9b8c06"
+      "sha256": "550e2fc30fa2a44d9a28e6dd1f4c2acca4700dcebd0350504418c0982746903b"
     },
     {
       "path": "source-bindings.json",
-      "sha256": "6896b27d50ba0e9aa3244aaa80835252ea6dd27063947fb85f6ed43e7eae5d2e"
+      "sha256": "d09d218b6a2ee4aa101cf9ca20826643fce40128b3ba4c51fdd45cf30f69d09f"
     },
     {
       "path": "test_run_hosted_join.py",
-      "sha256": "2706c4f0326c7a6311fa706a024fadaacd1a1e9cd67c210cf83e0a5dfd59b6d7"
+      "sha256": "afede88425fbf91db78a14a01686cb7d3f822c6108a89e9bd57e736beaf10ada"
     },
     {
       "path": "verify_packet.py",
@@ -126,8 +126,8 @@
       "tree": "f3193fde7b95b30e277f72396d15ca01a1a6cc83"
     }
   },
-  "version": "V9 exact PR71 premerge execution with custody-before-SDK gates",
-  "supersedesSourceManifestSha256": "ee1f697e381ee4eeaffa03c9845c90b3b8a0259a9d6ba79a9a62c3e77469b190",
+  "version": "V10 explicit pinned BFF checkout EOL materialization",
+  "supersedesSourceManifestSha256": "a6a5f64f257597c99b5f01b40a3796b555f5c02722ccb6bccf78c01ead3015c4",
   "dispatchHold": "One exact-head hosted joined attempt authorized after coordinator source/effects review; actual Linux gate controls must pass before SDK admission. Existing guards and cleanup are mandatory.",
   "authoredPoolCleanupRegressionCases": 1,
   "nativeExecutedPoolCleanupRegressionCases": null,
