@@ -10,6 +10,33 @@ import run_hosted_join as supervisor
 
 
 class SourceBindingTests(unittest.TestCase):
+    def test_local_project_graph_is_scoped_to_sdk_children(self):
+        with tempfile.TemporaryDirectory() as directory:
+            output = Path(directory) / "results"
+            argv = ["run_hosted_join.py", "--output", str(output), "--execute"]
+            for name in ("auth", "intranet", "notification", "defaults", "contracts"):
+                head = {"defaults": "1fec4ef5c8c24fd57806b952182ae6bdb2d6a7fa",
+                        "contracts": "78e48ffc4ee000df0510cba5e7c7a3c4c4d539d7"}.get(name, "a" * 40)
+                argv.extend(["--" + name + "-root", str(Path(directory) / name), "--" + name + "-head", head])
+            hosted_os = Mock(wraps=supervisor.os)
+            hosted_os.name = "posix"
+            hosted_os.environ = {"GITHUB_ACTIONS": "true"}
+            stages = []
+            def native(args, env, target, stage, run, deadline):
+                self.assertEqual("true", supervisor.os.environ["GITHUB_ACTIONS"])
+                self.assertEqual("false", env["GITHUB_ACTIONS"])
+                self.assertEqual("true", env["UseLocalMalievDependencies"])
+                stages.append(stage)
+                if stage == "package-audit":
+                    (target / "package-audit.log").write_text(json.dumps({"projects": [{"frameworks": []}]}))
+            with patch.object(supervisor.sys, "argv", argv), patch.object(supervisor, "os", hosted_os), \
+                 patch.object(supervisor, "verify_sources", return_value={}), \
+                 patch.object(supervisor.signal, "signal"), patch.object(supervisor, "run_native", side_effect=native), \
+                 patch.object(supervisor, "cleanup_containers", return_value=[]):
+                supervisor.main()
+            self.assertEqual(["restore", "build", "test", "format", "package-audit"], stages)
+            self.assertEqual({"GITHUB_ACTIONS": "true"}, hosted_os.environ)
+
     def test_exact_lf_blob_passes_and_crlf_or_changed_source_fails(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)

@@ -1,6 +1,6 @@
 # Notification62 genuine recovery join with implemented bootstrap
 
-Classification: **SOURCE IMPLEMENTED; JOINED NATIVE VALIDATION PENDING**. The packet is published through PR71. Eight joined cases, one actual pool regression and three host-disposal regressions remain unexecuted; 25 offline Python supervisor controls cover source and custody failures. Ordinary producer CI is separate evidence.
+Classification: **SOURCE IMPLEMENTED; JOINED NATIVE VALIDATION PENDING**. The packet is published through PR71. Eight joined cases, one actual pool regression and three host-disposal regressions remain unexecuted; 26 offline Python supervisor controls cover source and custody failures. Ordinary producer CI is separate evidence.
 
 ## Implemented normal join
 
@@ -42,7 +42,7 @@ The included workflow builds the actual referenced Programs and acceptance proje
 
 Before issue62 closure, require source review, actual hosted build with zero warnings/errors, executed joined case identities and state evidence, producer Auth12/BFF11 tests and full affected suites, unchanged required gates, cleanup receipts, and exact protected-main evidence. A causal baseline swap at the historical validation boundary must be separately source-reviewed, executed for precise quoted model-admission failures with ordinary controls passing, restored, and revalidated; no native RED is claimed from source alone.
 
-Current limitations: local native validation is blocked by the unchanged 8 GiB admission guard. Joined C# build, all 12 native cases, runtime cleanup qualification, formatting, package audit and causal proof are **NOT RUN**. Ordinary producer successes do not replace these checks.
+Current validation: hosted run 39947734557 passed the real Linux gate probes, all 38 source bindings and restore. Release compilation failed with zero warnings and five missing Contracts-reference errors in ServiceDefaults; native tests, formatting, package audit and causal proof did not run. Both recorded native process groups were absent, final cleanup passed, and no containers were allocated. The successor selects the same local project graph as ordinary source CI by setting GITHUB_ACTIONS=false only in the copied SDK child environment. The supervisor retains GITHUB_ACTIONS=true for hosted admission and cleanup. The regression proves this separation across restore, build, test, format and audit. Local native validation remains blocked by the unchanged 8 GiB admission guard. Ordinary exact-head CI 39947734509 passed; this does not establish joined acceptance.
 
 An initial scoped Gitleaks scan flagged the explicit public Auth base commit under the metadata key `authBase`. That failing scan, redacted report and original bindings are retained beside the packet. The successor uses the producer packet's ordinary `repo`/`base` records and retains the exact commit in clear. No allowlist, ignore, scan configuration or credential change was made. Root must independently review this manifest-only finding classification; a later scan result does not erase the initial FAIL.
 

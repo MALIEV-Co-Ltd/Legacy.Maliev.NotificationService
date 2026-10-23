@@ -322,7 +322,8 @@ def main():
                RECOVERY_NOTIFICATION_ROOT=str(roots["notification"]), TESTCONTAINERS_RYUK_DISABLED="true",
                RecoveryAuthRoot=str(roots["auth"]), RecoveryIntranetRoot=str(roots["intranet"]),
                RecoveryNotificationRoot=str(roots["notification"]), MalievWorkspaceRoot=str(roots["defaults"].parent),
-               UseLocalMalievDependencies="true", UseSharedCompilation="false",
+               # Match ordinary source CI's local-project graph only inside SDK children.
+               GITHUB_ACTIONS="false", UseLocalMalievDependencies="true", UseSharedCompilation="false",
                DOTNET_PROCESSOR_COUNT="2", MSBUILDDISABLENODEREUSE="1", DOTNET_CLI_TELEMETRY_OPTOUT="1",
                DOTNET_GCHeapHardLimit="0x100000000")
     properties = ["-p:RecoveryAuthRoot=" + str(roots["auth"]), "-p:RecoveryIntranetRoot=" + str(roots["intranet"]),
