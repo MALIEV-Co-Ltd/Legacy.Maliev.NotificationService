@@ -9,21 +9,21 @@
   "bootstrap": "Actual Auth/BFF/Notification Programs implemented; only external Brevo controlled; real CSRF, service login, RS256, worker and disposable PostgreSQL/Redis",
   "hostedWorkflow": "Implemented source only; exact published producer heads and Root review required",
   "validation": {
-    "supervisorTests": "33 passed normal and optimized Python; zero failed/skipped; owned child exits verified. Exact composed-lock tampering rejected; all9 SDK stages inherit isolated props and leave parent admission unchanged.",
+    "supervisorTests": "34 passed normal and optimized Python; zero failed/skipped; owned child exits verified. Actual pre-checkout inline guard rejects alternate valid SHA and non-main ref; prior guard reproduced both failures.",
     "pythonAst": "PASS",
     "projectXml": "PASS",
     "workflowYaml": "PASS actionlint on exact workflow; external shellcheck/pyflakes not installed or invoked",
     "boundSourceHashes": "38 canonical Git blob hashes pinned; BFF csproj changes only accepted framework patch; all13 other prior BFF bindings unchanged; Server project added",
     "initialGitleaks": "FAIL manifest public commit metadata; retained",
     "finalGitleaks": "PASS scoped source; exact final seal qualification recorded separately",
-    "nativeBuildTestsFormatCoverageAudit": "Run39954103801 initial Release0W/0E,12/12 native cases,format/audit PASS. Historical build0W/0E,four precise quoted failures/four ordinary passes;model restored. Strict source gate rejected BFF lock. Restored build/tests NOT RUN. Ordinary39954103766 initial350 passed;restored suite349/350 due observation race. Successor hosted checks required.",
+    "nativeBuildTestsFormatCoverageAudit": "Exact922fdc4 joined39955446441 PASS:3 Release builds0W/0E;12 initial,4 precise quoted baseline failures/4 ordinary passes,12 restored;format/audit PASS. Ordinary39955446805 PASS:350 initial/350 restored;unchanged coverage83.10/95.03/96.33/100%. Successor exact-head and protected-main checks required.",
     "publishedProducerBindings": "Auth d05c1ed ordinary39727079106 and BFF accepted229fb0d ordinary38954318992 plus applicable joins successful; joined execution remains pending",
-    "gitIndexRawCommit": "V18 raw committed-byte verification required after commit",
+    "gitIndexRawCommit": "V19 raw committed-byte verification required after commit",
     "actualHostPoolRegression": "1 native case PASS;9 fixture receipts each register and clear7pools;all3hosts disposed;no cleanup failures/retained ownership. Pool bookkeeping alone is not backend socket proof; native groups and containers also absent.",
     "hostDisposalOrderRegressions": "3 native cases PASS: fault,timeout/late completion,successful ordering.",
-    "actualGateControls": "Linux39954103801 EOF/release and exact helper absence passed;38 bindings and8GiB admission passed. All7 native groups absent;final cleanup PASS;no remaining containers."
+    "actualGateControls": "Linux39955446441 EOF/release and exact helper absence passed;38 bindings and8GiB admission passed. All9 native groups absent;final cleanup PASS;no remaining containers."
   },
-  "resources": "No local SDK/container/server/browser allocation. Hosted7 native groups absent,17 fixtures disposed,final cleanup PASS with no containers. Owned Python control processes exited.",
+  "resources": "No local SDK/container/server/browser allocation. Hosted9 native groups absent,26 fixtures disposed,final cleanup PASS with no containers. Owned Python control processes exited.",
   "files": [
     {
       "path": "HostDisposalFailureRegressionTests.cs",
@@ -35,7 +35,7 @@
     },
     {
       "path": "HOSTED-EXECUTION.md",
-      "sha256": "1da231e746ff9fbb8187f4f1664f3b5ce7793589451d111dbba8045532937196"
+      "sha256": "bba128761081306a18e90d1cc9e4a808a39bbdfd6347387bc2c45da9a528f939"
     },
     {
       "path": "HostPoolCleanupRegressionTests.cs",
@@ -55,7 +55,7 @@
     },
     {
       "path": "notification62-hosted.yml",
-      "sha256": "a1e34f3639142a85b5282d861634bd2aace2ec19ddba359f13d6174eb108d49b"
+      "sha256": "6ec629c83585ff815adb514eb25b0ae892245b23ab8ec6554452eaede9cacf9c"
     },
     {
       "path": "RecoveryJoinFixture.cs",
@@ -75,7 +75,7 @@
     },
     {
       "path": "test_run_hosted_join.py",
-      "sha256": "2edcf09a6f71f283720b31438281729b23a9aabb8c107f8b770ea490062e9e7c"
+      "sha256": "7f54961720fd5c1a2943e86956c12710e3085d400f902e581ae63bf29d8a5427"
     },
     {
       "path": "verify_packet.py",
@@ -142,8 +142,8 @@
       "tree": "5031d608d117ecbd9ff2b562356d036b025cbf1b"
     }
   },
-  "version": "V18 immutable composed BFF lock with project-specific locked restore",
-  "supersedesSourceManifestSha256": "e06a811332dddcc3add5ce82d76655c86b692994b1a2601c72806fa5eae579c3",
+  "version": "V19 bind manual Notification input to protected-main workflow revision",
+  "supersedesSourceManifestSha256": "81439037813a5fd4df773af2693252275ae579bf6c28bcd425002b930b1fabe5",
   "dispatchHold": "One exact-head hosted joined attempt authorized after coordinator source/effects review; actual Linux gate controls must pass before SDK admission. Existing guards and cleanup are mandatory.",
   "authoredPoolCleanupRegressionCases": 1,
   "nativeExecutedPoolCleanupRegressionCases": 1,
@@ -151,5 +151,5 @@
   "authoredHostDisposalRegressionCases": 3,
   "nativeExecutedHostDisposalRegressionCases": 3,
   "hostFailureCustody": "Preserve pools/containers/runtime-only keys/lease if any actual host disposal fails or times out; poison admission; supervisor final removal requires exact native group absence",
-  "causalBaseline": "Run39954103801 exact historical baseline qualified and model restored;strict source gate failed BFF lock. Exact captured graph is sealed for separate locked restore; restored12-case proof pending."
+  "causalBaseline": "Exact922fdc4 run39955446441 historical4quoted failures/4ordinary passes qualified;model restored;strict sources clean and exact12 restored tests passed. Successor exact-head validation required."
 }

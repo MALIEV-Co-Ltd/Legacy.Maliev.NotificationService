@@ -5,12 +5,31 @@ import hashlib
 import json
 from pathlib import Path
 import tempfile
+import textwrap
 import unittest
 from unittest.mock import Mock, patch
 import run_hosted_join as supervisor
 
 
 class SourceBindingTests(unittest.TestCase):
+    def test_actual_precheckout_guard_binds_manual_input_to_protected_workflow_revision(self):
+        workflow = (supervisor.PACKET / "notification62-hosted.yml").read_text()
+        guard = textwrap.dedent(workflow.split("python3 -B - <<'PY'\n", 1)[1].split("          PY\n", 1)[0])
+        head = "a" * 40
+        environment = {"GITHUB_EVENT_NAME": "workflow_dispatch", "GITHUB_REF": "refs/heads/main",
+                       "GITHUB_SHA": head, "NOTIFICATION_HEAD": head,
+                       "IDENTITY_SOURCE_REVISION": "b" * 40, "INPUT_IDENTITY_SOURCE_REVISION": "b" * 40,
+                       "INTRANET_HEAD": "c" * 40, "INPUT_INTRANET_HEAD": "c" * 40}
+        with patch.dict(supervisor.os.environ, environment, clear=True):
+            exec(guard, {})
+        for key, value in (("NOTIFICATION_HEAD", "d" * 40), ("GITHUB_REF", "refs/heads/candidate")):
+            with self.subTest(key=key), patch.dict(supervisor.os.environ, dict(environment, **{key: value}), clear=True):
+                with self.assertRaisesRegex(SystemExit, "protected-main workflow revision"):
+                    exec(guard, {})
+        with patch.dict(supervisor.os.environ, dict(environment, GITHUB_EVENT_NAME="pull_request",
+                                                    GITHUB_REF="refs/pull/71/merge", GITHUB_SHA="d" * 40), clear=True):
+            exec(guard, {})
+
     def test_composed_lock_rejects_changed_dependency_graph(self):
         supervisor.verify_composed_lock()
         with tempfile.TemporaryDirectory() as directory:

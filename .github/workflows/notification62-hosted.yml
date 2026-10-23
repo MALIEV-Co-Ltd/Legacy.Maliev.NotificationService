@@ -51,6 +51,8 @@ jobs:
           python3 -B - <<'PY'
           import os,re
           if os.environ['GITHUB_EVENT_NAME'] == 'workflow_dispatch':
+              if os.environ['GITHUB_REF'] != 'refs/heads/main' or os.environ['NOTIFICATION_HEAD'] != os.environ['GITHUB_SHA']:
+                  raise SystemExit('Manual Notification input must equal the protected-main workflow revision')
               for key in ('IDENTITY_SOURCE_REVISION','INTRANET_HEAD'):
                   if os.environ['INPUT_'+key] != os.environ[key]:
                       raise SystemExit('Manual producer input differs from reviewed head: '+key)
