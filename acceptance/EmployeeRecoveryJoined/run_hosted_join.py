@@ -245,7 +245,7 @@ def main():
     names = ("auth", "intranet", "notification", "defaults", "contracts")
     roots = {name: getattr(args, name + "_root").resolve() for name in names}
     heads = {name: getattr(args, name + "_head") for name in names}
-    if heads["defaults"] != "4517cf16f5f1159318e184969732d46eae4a8308" or heads["contracts"] != "78e48ffc4ee000df0510cba5e7c7a3c4c4d539d7":
+    if heads["defaults"] != "1fec4ef5c8c24fd57806b952182ae6bdb2d6a7fa" or heads["contracts"] != "78e48ffc4ee000df0510cba5e7c7a3c4c4d539d7":
         raise ValueError("Joined shared dependency pins must match the reviewed source packet")
     pins = verify_sources(roots, heads)
     if roots["defaults"].parent != roots["contracts"].parent:

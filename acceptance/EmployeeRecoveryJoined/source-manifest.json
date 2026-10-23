@@ -1,6 +1,6 @@
 {
-  "classification": "SOURCE_BOOTSTRAP_IMPLEMENTED_NOT_NATIVE_VALIDATED_NOT_PUBLISHED",
-  "owner": "01a1009d-1c8e-7821-a1f2-fded3ac6928d",
+  "classification": "SOURCE_IMPLEMENTED_JOINED_NATIVE_VALIDATION_PENDING",
+  "owner": "notification_delivery subagent under current migration coordinator",
   "producerManifestSha256": "990cda3a2c3d6c2b41fd0e01572c3c53d9b166aaafa8a2c2e7f9a99d5a351f42",
   "sourceBindings": 36,
   "producerPins": "12/12 PASS",
@@ -9,16 +9,16 @@
   "bootstrap": "Actual Auth/BFF/Notification Programs implemented; only external Brevo controlled; real CSRF, service login, RS256, worker and disposable PostgreSQL/Redis",
   "hostedWorkflow": "Implemented source only; exact published producer heads and Root review required",
   "validation": {
-    "supervisorTests": "14 passed",
+    "supervisorTests": "16 passed, zero failed or skipped; task-owned process exit verified",
     "pythonAst": "PASS",
     "projectXml": "PASS",
     "workflowYaml": "PASS",
-    "boundSourceHashes": "36/36 source hashes pinned; actual host pool regression NOT RUN",
+    "boundSourceHashes": "36/36 immutable Git blob hashes verified; 18 unchanged, 9 BFF CRLF-only corrections, 8 accepted Auth changes, 1 accepted Notification Program change",
     "initialGitleaks": "FAIL manifest public commit metadata; retained",
     "finalGitleaks": "PASS scoped source; exact final seal qualification recorded separately",
     "nativeBuildTestsFormatCoverageAudit": "NOT RUN source-only scope",
-    "publishedProducerBindings": "28/28 PASS, Auth15/BFF13, including six producer postimages",
-    "gitIndexRawCommit": "PASS V5 all15 packet files inclmanifest + installed workflow16/16",
+    "publishedProducerBindings": "Auth d05c1ed and BFF a54055d exact ordinary checks successful; joined execution remains pending",
+    "gitIndexRawCommit": "V7 raw committed-byte verification pending commit",
     "actualHostPoolRegression": "1 authored NOT RUN; 8 joined cases unchanged; runtime pool/socket absence NOT QUALIFIED",
     "hostDisposalOrderRegressions": "3 authored NOT RUN: fault, timeout/late completion, successful ordering"
   },
@@ -34,7 +34,7 @@
     },
     {
       "path": "HOSTED-EXECUTION.md",
-      "sha256": "a6b08f2962ddf53a058ae8626b9390f95a8c1263fff56966884d3961c16f0ddf"
+      "sha256": "1313efbd6d2d9a054b3e3ffb007a8fb5f68888afe4c105358bd9f54debd487c5"
     },
     {
       "path": "HostPoolCleanupRegressionTests.cs",
@@ -54,7 +54,7 @@
     },
     {
       "path": "notification62-hosted.yml",
-      "sha256": "ff0102a46b138f1f6f3e24535cb7167b73b2415b61840bd35fdd5b1d712f0d39"
+      "sha256": "109735be1abc922745f0f56224537b7dfb9d09bb56cb4d34e2ac53e55ce4053c"
     },
     {
       "path": "RecoveryJoinFixture.cs",
@@ -66,15 +66,15 @@
     },
     {
       "path": "run_hosted_join.py",
-      "sha256": "84ea96a821afa5c5d0f20158fc69f1abf9f370dbd4984d5b9bd79bf44e2deafb"
+      "sha256": "451c47e59dc32e026972caf4c96f5a81129024398fe266d7a692792e1354ec0f"
     },
     {
       "path": "source-bindings.json",
-      "sha256": "d73406e659b5eed7788b68c16c640b75f14e7bc4b6f85f8196fe8c88a2896d18"
+      "sha256": "6896b27d50ba0e9aa3244aaa80835252ea6dd27063947fb85f6ed43e7eae5d2e"
     },
     {
       "path": "test_run_hosted_join.py",
-      "sha256": "8fa54d424cd4bbd16010f61f27e1ad87ac40b6fc52ee16df9afda1708f54da7e"
+      "sha256": "c25791f09852112744a5e530e31570f0faf7cfe88690c5e2b5fc3aad9581cc4d"
     },
     {
       "path": "verify_packet.py",
@@ -113,17 +113,17 @@
   ],
   "candidateHeads": {
     "auth": {
-      "head": "52b480e48948ac0fda5af971f00cc3a74585f243",
-      "tree": "a374bf380ef438233e0ef8c4868aeca317af2d2f"
+      "head": "d05c1ed990303beb2fba630b49c78adca9d0b610",
+      "tree": "98da44c2c74c6a51d98026e5a39b1024e7f6abef"
     },
     "intranet": {
       "head": "a54055de51e5adf25779c9ca303c1c2d06f5fbab",
       "tree": "f3193fde7b95b30e277f72396d15ca01a1a6cc83"
     }
   },
-  "version": "V6 explicit immutable-head environment dictionary; no tuple classification ambiguity",
-  "supersedesSourceManifestSha256": "f147c844546c8832ce3538d5c019f0b9c4f8600881ac7db93c0a2457338b5410",
-  "dispatchHold": "Root hold pending producer gates; Auth175 supplementary profile reports946P1F/947, diagnosis owner active; no joined acceptance inferred",
+  "version": "V7 accepted producer inputs and immutable LF source bindings",
+  "supersedesSourceManifestSha256": "4b2bd47c6fcfd57721ccb43ebf139ea2e0bfceff320d05c5c956b2bf031234bf",
+  "dispatchHold": "Manual joined execution held for Root review of V7 immutable bindings and disposable hosted effects; old Auth175 failure superseded by accepted d05c1ed ordinary CI",
   "authoredPoolCleanupRegressionCases": 1,
   "nativeExecutedPoolCleanupRegressionCases": null,
   "poolCleanup": "Actual host effective identities captured by lifecycle observer before worker StartAsync; fixture/bootstrap identities also retained; no global ClearAllPools or policy changes; backend absence unproven",

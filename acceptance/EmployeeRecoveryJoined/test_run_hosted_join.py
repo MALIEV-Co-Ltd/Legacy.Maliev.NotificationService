@@ -1,9 +1,48 @@
 import copy
 import datetime as dt
+import hashlib
 import json
+from pathlib import Path
+import tempfile
 import unittest
 from unittest.mock import patch
 import run_hosted_join as supervisor
+
+
+class SourceBindingTests(unittest.TestCase):
+    def test_exact_lf_blob_passes_and_crlf_or_changed_source_fails(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            source = root / "source.cs"
+            raw = b"class Source {}\n"
+            source.write_bytes(raw)
+            head, tree = "a" * 40, "b" * 40
+            bindings = {"candidateHeads": {"auth": {"head": head, "tree": tree}},
+                        "files": [{"repo": "auth", "path": source.name,
+                                   "sha256": hashlib.sha256(raw).hexdigest()}]}
+            (root / "source-bindings.json").write_text(json.dumps(bindings))
+            def command(args):
+                if args[-1] == "HEAD":
+                    return head
+                if args[-1] == "HEAD^{tree}":
+                    return tree
+                return ""
+            with patch.object(supervisor, "PACKET", root), patch.object(supervisor, "command", side_effect=command):
+                self.assertEqual(head, supervisor.verify_sources({"auth": root}, {"auth": head})["auth"]["head"])
+                for altered in (b"class Source {}\r\n", b"class Changed {}\n"):
+                    source.write_bytes(altered)
+                    with self.assertRaisesRegex(ValueError, "Reviewed source file mismatch"):
+                        supervisor.verify_sources({"auth": root}, {"auth": head})
+
+    def test_unreviewed_producer_head_fails_before_checkout_inspection(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            (root / "source-bindings.json").write_text(json.dumps({
+                "candidateHeads": {"auth": {"head": "a" * 40, "tree": "b" * 40}}, "files": []}))
+            with patch.object(supervisor, "PACKET", root), patch.object(supervisor, "command") as command:
+                with self.assertRaisesRegex(ValueError, "reviewed published head"):
+                    supervisor.verify_sources({"auth": root}, {"auth": "c" * 40})
+                command.assert_not_called()
 
 
 class CleanupBoundaryTests(unittest.TestCase):

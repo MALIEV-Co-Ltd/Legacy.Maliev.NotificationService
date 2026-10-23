@@ -1,6 +1,6 @@
 {
   "producerManifestSha256": "990cda3a2c3d6c2b41fd0e01572c3c53d9b166aaafa8a2c2e7f9a99d5a351f42",
-  "sharedDependency": "4517cf16f5f1159318e184969732d46eae4a8308 (Auth ordinary CI pin; descendant of Notification/BFF 7edcd pin; isolated joined lane only; review required)",
+  "sharedDependency": "1fec4ef5c8c24fd57806b952182ae6bdb2d6a7fa (accepted Auth producer ordinary CI dependency; isolated joined lane only)",
   "files": [
     {
       "repo": "auth",
@@ -15,7 +15,7 @@
     {
       "repo": "auth",
       "path": "Legacy.Maliev.AuthService.Tests/EmployeeRecoveryHttpTests.cs",
-      "sha256": "de5f4181f248196c71ebe5c40f7db1acea55a7909c12c710e73e6a5839dc2ea2"
+      "sha256": "d701aa31ceb52f25d10381cf39a3b37ec6456f5e3a29e76f5b77a693531b5e4d"
     },
     {
       "repo": "intranet",
@@ -35,7 +35,7 @@
     {
       "repo": "auth",
       "path": "Legacy.Maliev.AuthService.Api/Program.cs",
-      "sha256": "c3496610a97ffcd6e4d2b13efd8474dc8cdf472c64c04dd5f9fc6382f8bfb2ff"
+      "sha256": "1c6a02eb81858f3efa4e4252fb4a4426feeb2ef526be338fc2ff31e67448af0c"
     },
     {
       "repo": "auth",
@@ -55,12 +55,12 @@
     {
       "repo": "auth",
       "path": "Legacy.Maliev.AuthService.Infrastructure/EmployeeRecoveryWorker.cs",
-      "sha256": "478546535d635ad206389874e6ef6ede6e60c828ea686a8b04eaabf0f4b9f338"
+      "sha256": "e2a489cb5524fc0a044235e8924361691ebb2c5b942777bac1eed0ee8e119d2e"
     },
     {
       "repo": "auth",
       "path": "Legacy.Maliev.AuthService.Infrastructure/EmployeeSelfService.cs",
-      "sha256": "2b5f7c4bd18850455c289d18c5a92c3189124922934d91bf59602975e57dd611"
+      "sha256": "3d959993f7e975fc2a561d4efd00a4daa9e451d36a16f0cd02b68ea5fa53640a"
     },
     {
       "repo": "auth",
@@ -70,42 +70,42 @@
     {
       "repo": "auth",
       "path": "Legacy.Maliev.AuthService.Infrastructure/LegacyIdentityContexts.cs",
-      "sha256": "bbdb2d3a069cdf7f9de495a36e4ea0e199cb3ec69f6c3cdb6978708913f92c27"
+      "sha256": "dd2fa6a2d101d8775d3db70a647f1ef1cce28431f82b64d117f9c0ec49a3b125"
     },
     {
       "repo": "intranet",
       "path": "Legacy.Maliev.Intranet.Bff/Program.cs",
-      "sha256": "623e75473083dc8ee31eb23f37a52274ee1ced68336a8346c09223c8f3aa24ac"
+      "sha256": "b95eb7de9e355efce916095625446ece4c309d431a4947fe50c3a74cb7bd2023"
     },
     {
       "repo": "intranet",
       "path": "Legacy.Maliev.Intranet.Bff/Employees/EmployeeRecoveryEndpointMapper.cs",
-      "sha256": "93818da8892a921b7c6894220347ae39d928f07c5b5601845d5739f7633e40e8"
+      "sha256": "952ebfc9458f1da98039d25eba5c2cd9b8cf5588a6e0e1c39d11fc0d0ea2c980"
     },
     {
       "repo": "intranet",
       "path": "Legacy.Maliev.Intranet.Bff/Employees/EmployeeRecoveryProxies.cs",
-      "sha256": "4dce59b8a54d404a2682dbd013e75c0d680da21bbe48abc4995f881198403294"
+      "sha256": "7b0936f9e21422c0e29e648e50805bc859037077d5507e7a3973fb2695d819b0"
     },
     {
       "repo": "intranet",
       "path": "Legacy.Maliev.Intranet.Server/Auth/ServiceAccessTokenProvider.cs",
-      "sha256": "ccdb9106a1cd194aa78e626b7b72fb96f223f56b323fe4d1aad6553e262237a5"
+      "sha256": "f1ed6a46897d1683a414d0f966efe1801adaf8ecea15c806b36f92ad5a1ceeac"
     },
     {
       "repo": "intranet",
       "path": "Legacy.Maliev.Intranet.Server/Auth/LegacyServiceAuthenticationHandler.cs",
-      "sha256": "d94c5018f5bc111de969fdfcc330db55a416d92894a67501247e461bb362f83e"
+      "sha256": "d1d3e7910f3890831a70026a24a3bf541ccc3b77b28e0c6720a92e5152eb1442"
     },
     {
       "repo": "intranet",
       "path": "Legacy.Maliev.Intranet.Server/Auth/LegacyDataProtection.cs",
-      "sha256": "a0ee41095a4d24e28b2308a01b5045ff5712e76e8a750e1430bccf4a5dd6762c"
+      "sha256": "5d05e8af5e119f82683f47daa8b636b752c10989e72c88ee0931bee2a29e2429"
     },
     {
       "repo": "notification",
       "path": "Legacy.Maliev.NotificationService.Api/Program.cs",
-      "sha256": "da40e0c36393b58dcbe148180555733b401f67cb9ae27e0d3ad0bc18b3aa016d"
+      "sha256": "82bfb67f05298972d78d578d8c52fe1b068b37faefae822045ec40630afa0d82"
     },
     {
       "repo": "notification",
@@ -130,12 +130,12 @@
     {
       "repo": "auth",
       "path": "Legacy.Maliev.AuthService.Api/Legacy.Maliev.AuthService.Api.csproj",
-      "sha256": "2e1d7cc23eb9e1c107bf327bab28df1ee30f04fe6a8de41c036f6aaf247fe1dc"
+      "sha256": "810d6d42d23487250d06cfaad502ea05d55e3d92a4e0def1e8c754b510e686b3"
     },
     {
       "repo": "auth",
       "path": "Legacy.Maliev.AuthService.Infrastructure/Legacy.Maliev.AuthService.Infrastructure.csproj",
-      "sha256": "63c5c09375663419c3b1d5555ce66c8705f1c91bda08f12eaf8e72ea2fe0e54a"
+      "sha256": "a5e407c0e9eeeeeaec25e4640a79e194fe9f97f656413c0b2abc06858efaadac"
     },
     {
       "repo": "auth",
@@ -155,17 +155,17 @@
     {
       "repo": "intranet",
       "path": "Legacy.Maliev.Intranet.Bff/AntiforgeryValidationFilter.cs",
-      "sha256": "08c5752ab069d791c5217acc3402e35ff01de8060b3970b492d56d12e009a7cd"
+      "sha256": "be4927d511526c04f3f74836281e478be6c3d0f187505764349ef30a19ed081f"
     },
     {
       "repo": "intranet",
       "path": "Legacy.Maliev.Intranet.Server/Auth/LegacyJwtValidation.cs",
-      "sha256": "2b5fffe119f60edbacaf578f09024ca1292b738cc9f37e4877cda1d53f2bab8e"
+      "sha256": "3f92026e585252bc20042d4d2529f48a11d6e2cb6380a2623fbc281f3020b4c9"
     },
     {
       "repo": "intranet",
       "path": "Legacy.Maliev.Intranet.Server/Auth/LegacyDataProtectionResources.cs",
-      "sha256": "92cc41b5cac74fa216ea18f818e89a922a02c90c65e2e1993f290a80346b31f1"
+      "sha256": "5bf94dcdcb17d345cf706601216e2b98bc316240a54d7d3ffe90e53c6b319ee0"
     },
     {
       "repo": "notification",
@@ -180,7 +180,7 @@
     {
       "repo": "auth",
       "path": "Legacy.Maliev.AuthService.Infrastructure/ServiceCollectionExtensions.cs",
-      "sha256": "ac3e31768341be0ac982fb515680ed7caf915e0f5de769a49d6ede8567a6c087"
+      "sha256": "222d3a5e28af5c92da613bd2b17256bc6684c6670a07e925f19aa525a48dfbd2"
     }
   ],
   "bases": [
@@ -199,8 +199,8 @@
   ],
   "candidateHeads": {
     "auth": {
-      "head": "52b480e48948ac0fda5af971f00cc3a74585f243",
-      "tree": "a374bf380ef438233e0ef8c4868aeca317af2d2f"
+      "head": "d05c1ed990303beb2fba630b49c78adca9d0b610",
+      "tree": "98da44c2c74c6a51d98026e5a39b1024e7f6abef"
     },
     "intranet": {
       "head": "a54055de51e5adf25779c9ca303c1c2d06f5fbab",

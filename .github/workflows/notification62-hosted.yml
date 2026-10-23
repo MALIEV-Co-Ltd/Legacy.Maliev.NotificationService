@@ -6,7 +6,7 @@ on:
       auth_head:
         description: Reviewed published Auth recovery commit (40 hex SHA)
         required: true
-        default: 52b480e48948ac0fda5af971f00cc3a74585f243
+        default: d05c1ed990303beb2fba630b49c78adca9d0b610
       intranet_head:
         description: Reviewed published BFF recovery commit (40 hex SHA)
         required: true
@@ -30,7 +30,7 @@ jobs:
       AUTH_HEAD: ${{ inputs.auth_head }}
       INTRANET_HEAD: ${{ inputs.intranet_head }}
       NOTIFICATION_HEAD: ${{ inputs.notification_head }}
-      DEFAULTS_HEAD: 4517cf16f5f1159318e184969732d46eae4a8308
+      DEFAULTS_HEAD: 1fec4ef5c8c24fd57806b952182ae6bdb2d6a7fa
       CONTRACTS_HEAD: 78e48ffc4ee000df0510cba5e7c7a3c4c4d539d7
       N62_REQUIRED_MEM_KIB: '8388608'
     steps:
@@ -65,7 +65,7 @@ jobs:
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
           repository: MALIEV-Co-Ltd/Legacy.Maliev.ServiceDefaults
-          ref: 4517cf16f5f1159318e184969732d46eae4a8308
+          ref: 1fec4ef5c8c24fd57806b952182ae6bdb2d6a7fa
           path: .joined/Legacy.Maliev.ServiceDefaults
           persist-credentials: false
       - name: Checkout exact compatibility contracts
