@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.IdentityModel.Tokens;
@@ -166,8 +167,111 @@ public sealed class NotificationHostTransportHttpTests
         Assert.Throws<OptionsValidationException>(() => factory.CreateClient());
     }
 
+    [Fact]
+    public async Task RegisteredHealth_IdentifiesOnlyTheServingHostWithoutSuccessfulProbeLogs()
+    {
+        using var deadline = new CancellationTokenSource(TimeSpan.FromSeconds(30));
+        await using var factory = Factory(observe: true);
+        using var client = factory.CreateClient();
+        var before = factory.Observation.Snapshot().Length;
+        string? instance = null;
+        foreach (var path in new[] { "/emails/liveness", "/emails/readiness", "/emails/liveness" })
+        {
+            using var response = await client.GetAsync(path, deadline.Token);
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            var current = Assert.Single(response.Headers.GetValues("X-Maliev-Health-Instance"));
+            Assert.True(Guid.TryParseExact(current, "N", out _));
+            Assert.Equal("no-store", response.Headers.CacheControl?.ToString());
+            instance ??= current;
+            Assert.Equal(instance, current);
+        }
+        await using var other = Factory(observe: true);
+        using var otherClient = other.CreateClient();
+        using var independent = await otherClient.GetAsync("/emails/liveness", deadline.Token);
+        Assert.NotEqual(instance, Assert.Single(independent.Headers.GetValues("X-Maliev-Health-Instance")));
+        foreach (var path in new[] { "/emails/aspire-liveness", "/not-a-health-endpoint" })
+        {
+            using var response = await client.GetAsync(path, deadline.Token);
+            Assert.False(response.Headers.Contains("X-Maliev-Health-Instance"));
+        }
+        using var post = await client.PostAsync("/emails/liveness", null, deadline.Token);
+        Assert.False(post.Headers.Contains("X-Maliev-Health-Instance"));
+        Assert.Equal(before, factory.Observation.Snapshot().Length);
+        Assert.False(factory.Observation.Overflowed);
+        Assert.Equal(0, factory.ProviderCalls);
+        Assert.Equal(0, other.ProviderCalls);
+    }
+
+    [Fact]
+    public async Task SyntheticObservation_RequiresNativeLoopbackAndNonceAndSharesTheHealthIdentity()
+    {
+        using var deadline = new CancellationTokenSource(TimeSpan.FromSeconds(30));
+        await using var factory = Factory(observe: true);
+        using var client = factory.CreateClient();
+        using var health = await client.GetAsync("/emails/liveness", deadline.Token);
+        var instance = Assert.Single(health.Headers.GetValues("X-Maliev-Health-Instance"));
+        const string diagnosticPath = "/internal/diagnostics/observability";
+        const string nonce = "0123456789abcdef0123456789abcdef";
+        foreach (var denied in new[]
+        {
+            (Remote: Caller, Nonce: nonce, Method: "GET"),
+            (Remote: "127.0.0.1", Nonce: "invalid", Method: "GET"),
+            (Remote: "127.0.0.1", Nonce: nonce, Method: "POST"),
+        })
+        {
+            var response = await factory.Server.SendAsync(context =>
+            {
+                ConfigureRequest(context, diagnosticPath, denied.Remote, "http", null, false, factory);
+                context.Request.Method = denied.Method;
+                context.Request.Headers["X-Maliev-Diagnostic-Id"] = denied.Nonce;
+                context.Request.Headers["X-Forwarded-For"] = "127.0.0.1";
+            }, deadline.Token);
+            Assert.Equal(404, response.Response.StatusCode);
+            Assert.False(response.Response.Headers.ContainsKey("X-Maliev-Health-Instance"));
+        }
+        Assert.Empty(factory.Observation.Snapshot());
+        var admitted = await factory.Server.SendAsync(context =>
+        {
+            ConfigureRequest(context, diagnosticPath, "127.0.0.1", "http", null, false, factory);
+            context.Request.Headers["X-Maliev-Diagnostic-Id"] = nonce;
+        }, deadline.Token);
+        Assert.Equal(500, admitted.Response.StatusCode);
+        Assert.Equal(instance, admitted.Response.Headers["X-Maliev-Health-Instance"].ToString());
+        Assert.Equal(nonce, admitted.Response.Headers["X-Maliev-Diagnostic-Id"].ToString());
+        Assert.Equal("no-store", admitted.Response.Headers.CacheControl.ToString());
+        Assert.Equal("noindex", admitted.Response.Headers["X-Robots-Tag"].ToString());
+        Assert.Equal(new[] { LogLevel.Warning, LogLevel.Error, LogLevel.Critical },
+            factory.Observation.Snapshot());
+        var throttled = await factory.Server.SendAsync(context =>
+        {
+            ConfigureRequest(context, diagnosticPath, "127.0.0.1", "http", null, false, factory);
+            context.Request.Headers["X-Maliev-Diagnostic-Id"] = nonce;
+        }, deadline.Token);
+        Assert.Equal(429, throttled.Response.StatusCode);
+        Assert.False(throttled.Response.Headers.ContainsKey("X-Maliev-Health-Instance"));
+        Assert.Equal(new[] { LogLevel.Warning, LogLevel.Error, LogLevel.Critical },
+            factory.Observation.Snapshot());
+        Assert.False(factory.Observation.Overflowed);
+        Assert.Equal(0, factory.ProviderCalls);
+    }
+
+    [Fact]
+    public async Task OrdinaryProviderFailure_RecordsOneHandledFailureWithoutHealthOrSyntheticIdentity()
+    {
+        using var deadline = new CancellationTokenSource(TimeSpan.FromSeconds(30));
+        await using var factory = Factory(providerFailure: true, observe: true);
+        var response = await factory.Server.SendAsync(context =>
+            ConfigureRequest(context, ApiPath, Caller, "http", null, true, factory), deadline.Token);
+        Assert.Equal(502, response.Response.StatusCode);
+        Assert.False(response.Response.Headers.ContainsKey("X-Maliev-Health-Instance"));
+        Assert.False(response.Response.Headers.ContainsKey("X-Maliev-Diagnostic-Id"));
+        Assert.Equal(new[] { LogLevel.Error }, factory.Observation.Snapshot());
+        Assert.False(factory.Observation.Overflowed);
+        Assert.Equal(1, factory.ProviderCalls);
+    }
+
     private NotificationHostFactory Factory(bool configuredProxy = true, string environment = "Production",
-        string policy = "InternalHttpWithTrustedEdgeHttps") => new(configuredProxy, environment, policy);
+        string policy = "InternalHttpWithTrustedEdgeHttps", bool providerFailure = false, bool observe = false) => new(configuredProxy, environment, policy, providerFailure, observe);
 
     private static Task<HttpContext> SendAsync(NotificationHostFactory factory, string path, string? remote,
         string scheme = "http", string? forwardedScheme = null, bool bearer = false, bool spoofOriginal = false) =>
@@ -200,17 +304,19 @@ public sealed class NotificationHostTransportHttpTests
         if (bearer) context.Request.Headers.Authorization = "Bearer " + factory.Token();
     }
 
-    private sealed class NotificationHostFactory(bool configuredProxy, string environment, string policy)
+    private sealed class NotificationHostFactory(bool configuredProxy, string environment, string policy, bool providerFailure = false, bool observe = false)
         : WebApplicationFactory<NotificationProgram>
     {
         private const string Issuer = "https://notification-host-policy-fixture.invalid";
         private const string Audience = "notification-host-policy";
         private readonly RSA signingKey = RSA.Create(2048);
         public int ProviderCalls { get; private set; }
+        public ObservationCapture Observation { get; } = new();
 
         protected override void ConfigureWebHost(IWebHostBuilder builder)
         {
             builder.UseEnvironment(environment);
+            if (observe) builder.ConfigureLogging(logging => logging.AddProvider(Observation));
             var settings = new Dictionary<string, string?>
             {
                 ["Jwt:PublicKey"] = Convert.ToBase64String(Encoding.UTF8.GetBytes(signingKey.ExportSubjectPublicKeyInfoPem())),
@@ -232,7 +338,7 @@ public sealed class NotificationHostTransportHttpTests
             foreach (var setting in settings) builder.UseSetting(setting.Key, setting.Value);
             builder.ConfigureAppConfiguration((_, configuration) => configuration.AddInMemoryCollection(settings));
             builder.ConfigureServices(services => services.AddHttpClient<IBrevoNotificationTransport, BrevoNotificationTransport>()
-                .ConfigurePrimaryHttpMessageHandler(() => new ControlledHandler(() => ProviderCalls++)));
+                .ConfigurePrimaryHttpMessageHandler(() => new ControlledHandler(() => ProviderCalls++, providerFailure)));
         }
 
         public string Token(bool includePermission = true)
@@ -266,11 +372,46 @@ public sealed class NotificationHostTransportHttpTests
         }
     }
 
-    private sealed class ControlledHandler(Action recordCall) : HttpMessageHandler
+    // Passive bounded capture leaves the native console formatter, providers and filters unchanged.
+    private sealed class ObservationCapture : ILoggerProvider
+    {
+        private readonly object gate = new();
+        private readonly List<LogLevel> levels = [];
+        public bool Overflowed { get; private set; }
+
+        public LogLevel[] Snapshot()
+        {
+            lock (gate) return levels.ToArray();
+        }
+
+        public ILogger CreateLogger(string categoryName) => new CaptureLogger(this,
+            categoryName is "Maliev.Aspire.ServiceDefaults.Diagnostics.PrivateRequestObservation"
+                or "Microsoft.AspNetCore.Diagnostics.ExceptionHandlerMiddleware");
+        public void Dispose() { }
+
+        private sealed class CaptureLogger(ObservationCapture owner, bool selected) : ILogger
+        {
+            public IDisposable? BeginScope<TState>(TState state) where TState : notnull => null;
+            public bool IsEnabled(LogLevel logLevel) => selected && logLevel >= LogLevel.Warning;
+            public void Log<TState>(LogLevel logLevel, EventId eventId, TState state,
+                Exception? exception, Func<TState, Exception?, string> formatter)
+            {
+                if (!IsEnabled(logLevel)) return;
+                lock (owner.gate)
+                {
+                    if (owner.levels.Count == 16) owner.Overflowed = true;
+                    else owner.levels.Add(logLevel);
+                }
+            }
+        }
+    }
+
+    private sealed class ControlledHandler(Action recordCall, bool failure = false) : HttpMessageHandler
     {
         protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
         {
             recordCall();
+            if (failure) throw new InvalidOperationException("Synthetic controlled provider failure.");
             return Task.FromResult(new HttpResponseMessage(HttpStatusCode.OK)
             {
                 Content = new StringContent("{\"messageId\":\"synthetic-host-policy\"}", Encoding.UTF8, "application/json"),

@@ -1,6 +1,7 @@
 """Synthetic negative receipts; these do not run a renderer, SDK, HTTP host or provider."""
 import base64
 from copy import deepcopy
+import json
 from pathlib import Path
 import tempfile
 import unittest
@@ -148,6 +149,121 @@ class AttachmentNameProofTests(unittest.TestCase):
             ET.ElementTree(self.fixture(False)).write(path)
             with self.assertRaises(ValueError):
                 verify_full(path, {"rows": []})
+
+    def full_fixture(self):
+        root = self.fixture(False)
+        inventory = json.loads((Path(__file__).resolve().parents[1] / "docs/attachment-name-prior327-inventory.json").read_text())
+        definitions, results = root.find(N + "TestDefinitions"), root.find(N + "Results")
+        index = 20
+
+        def append(cls, method, name):
+            nonlocal index
+            identity, execution = "full" + str(index), "full-execution" + str(index)
+            definition = ET.SubElement(definitions, N + "UnitTest", id=identity, name=name)
+            ET.SubElement(definition, N + "TestMethod", className=cls, name=method)
+            ET.SubElement(definition, N + "Execution", id=execution)
+            ET.SubElement(results, N + "UnitTestResult", testId=identity, executionId=execution, testName=name, outcome="Passed")
+            index += 1
+
+        for row in inventory["rows"]:
+            for _ in range(row["executions"]):
+                append(row["className"], row["method"], row["testName"])
+        observer = "Legacy.Maliev.NotificationService.Tests.Controllers.NotificationHostTransportHttpTests"
+        for method in (
+            "RegisteredHealth_IdentifiesOnlyTheServingHostWithoutSuccessfulProbeLogs",
+            "SyntheticObservation_RequiresNativeLoopbackAndNonceAndSharesTheHealthIdentity",
+            "OrdinaryProviderFailure_RecordsOneHandledFailureWithoutHealthOrSyntheticIdentity",
+        ):
+            append(observer, method, observer + "." + method)
+        counters = root.find(".//" + N + "Counters")
+        for name in ("total", "executed", "passed"):
+            counters.set(name, "350")
+        return root, inventory
+
+    def check_full(self, root, inventory):
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "full.trx"
+            ET.ElementTree(root).write(path, encoding="utf-8")
+            return verify_full(path, inventory)
+
+    def test_full350_retains_all_frozen327_and_twenty_attachment_identities(self):
+        root, inventory = self.full_fixture()
+        rows = self.check_full(root, inventory)
+        self.assertEqual(350, len(rows))
+        self.assertEqual(22, sum(row["class"] == "Legacy.Maliev.NotificationService.Tests.Controllers.NotificationHostTransportHttpTests"
+                                 and not row["name"].endswith((
+                                     ".RegisteredHealth_IdentifiesOnlyTheServingHostWithoutSuccessfulProbeLogs",
+                                     ".SyntheticObservation_RequiresNativeLoopbackAndNonceAndSharesTheHealthIdentity",
+                                     ".OrdinaryProviderFailure_RecordsOneHandledFailureWithoutHealthOrSyntheticIdentity",
+                                 )) for row in rows))
+
+    def test_full_rejects_missing_duplicate_or_renamed_observer(self):
+        for mutation in ("missing", "duplicate", "renamed", "argument"):
+            root, inventory = self.full_fixture()
+            definitions, results = root.find(N + "TestDefinitions"), root.find(N + "Results")
+            if mutation == "missing":
+                definitions.remove(definitions[-1])
+                results.remove(results[-1])
+                for key in ("total", "executed", "passed"):
+                    root.find(".//" + N + "Counters").set(key, "349")
+            elif mutation == "duplicate":
+                definitions[-1].set("name", definitions[-2].get("name"))
+                definitions[-1].find(N + "TestMethod").set("name", definitions[-2].find(N + "TestMethod").get("name"))
+                results[-1].set("testName", definitions[-2].get("name"))
+            else:
+                method = definitions[-1].find(N + "TestMethod")
+                if mutation == "renamed":
+                    method.set("name", method.get("name") + "Renamed")
+                name = definitions[-1].get("name") + ("Renamed" if mutation == "renamed" else "(unexpected: true)")
+                definitions[-1].set("name", name)
+                results[-1].set("testName", name)
+            with self.subTest(mutation=mutation), self.assertRaises(ValueError):
+                self.check_full(root, inventory)
+
+    def test_full_rejects_replaced_old_host_identity_and_extra_wrong_identity(self):
+        for replacement in ("old-host", "observer"):
+            root, inventory = self.full_fixture()
+            definitions, results = root.find(N + "TestDefinitions"), root.find(N + "Results")
+            index = -1 if replacement == "observer" else next(
+                index for index, definition in enumerate(definitions[:-3])
+                if definition.find(N + "TestMethod").get("className").endswith(".NotificationHostTransportHttpTests"))
+            method = definitions[index].find(N + "TestMethod")
+            method.set("name", "UnreviewedReplacement")
+            name = method.get("className") + ".UnreviewedReplacement"
+            definitions[index].set("name", name)
+            results[index].set("testName", name)
+            with self.subTest(replacement=replacement), self.assertRaises(ValueError):
+                self.check_full(root, inventory)
+
+    def test_full_rejects_errors_skips_and_counter_spoof(self):
+        for mutation in ("failed", "skipped", "error-info", "run-error", "counter", "nested-summary", "nested-counter", "nested-definition", "nested-result"):
+            root, inventory = self.full_fixture()
+            result = root.find(".//" + N + "UnitTestResult")
+            counters = root.find(".//" + N + "Counters")
+            if mutation == "failed":
+                result.set("outcome", "Failed")
+                counters.set("passed", "349")
+                counters.set("failed", "1")
+                root.find(N + "ResultSummary").set("outcome", "Failed")
+            elif mutation == "skipped":
+                result.set("outcome", "NotExecuted")
+                counters.set("passed", "349")
+            elif mutation == "error-info":
+                ET.SubElement(ET.SubElement(result, N + "Output"), N + "ErrorInfo")
+            elif mutation == "run-error":
+                ET.SubElement(ET.SubElement(root.find(N + "ResultSummary"), N + "RunInfos"), N + "RunInfo", outcome="Error")
+            elif mutation == "counter":
+                counters.set("passed", "351")
+            elif mutation == "nested-summary":
+                ET.SubElement(ET.SubElement(root, N + "Extension"), N + "ResultSummary", outcome="Failed")
+            elif mutation == "nested-counter":
+                ET.SubElement(ET.SubElement(root, N + "Extension"), N + "Counters", failed="1")
+            else:
+                name = "UnitTest" if mutation == "nested-definition" else "UnitTestResult"
+                ET.SubElement(ET.SubElement(root, N + "Extension"), N + name)
+            with self.subTest(mutation=mutation), self.assertRaises(ValueError):
+                self.check_full(root, inventory)
+
 
 
 if __name__ == "__main__":
