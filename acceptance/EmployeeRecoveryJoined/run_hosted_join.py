@@ -11,6 +11,7 @@ import subprocess
 import sys
 import time
 import uuid
+from causal_baseline import historical_model, verify_baseline, verify_restored
 
 PACKET = Path(__file__).resolve().parent
 MIN_AVAILABLE_KIB = 8 * 1024 * 1024
@@ -189,7 +190,7 @@ def cleanup_containers(run, started):
     return receipts
 
 
-def run_native(args, env, output, stage, run, deadline=None):
+def run_native(args, env, output, stage, run, deadline=None, expected_exit=0):
     if deadline is not None and time.monotonic() >= deadline:
         raise TimeoutError("Overall hosted native lease expired before resource admission")
     admission = admit()
@@ -224,7 +225,9 @@ def run_native(args, env, output, stage, run, deadline=None):
             try:
                 remaining = 900 if deadline is None else min(900, max(1, deadline - time.monotonic()))
                 result = process.wait(timeout=remaining)
-                if result != 0:
+                receipt["exitCode"] = result
+                receipt["expectedExitCode"] = expected_exit
+                if result != expected_exit:
                     raise RuntimeError(f"Native {stage} failed with exit {result}")
             finally:
                 quiesce(leader, run, process)
@@ -356,6 +359,23 @@ def main():
                 for category in ("topLevelPackages", "transitivePackages"):
                     if any(package.get("vulnerabilities") for package in framework.get(category, [])):
                         raise RuntimeError("Hosted package audit reports vulnerabilities")
+        baseline_env = dict(env, N62_RESOURCE_DIRECTORY=str(args.output.resolve() / "resources-baseline"))
+        with historical_model(roots["notification"], args.output):
+            run_native(["dotnet", "build", "JoinedRecovery.AcceptanceTests.csproj", "-c", "Release", "--no-restore",
+                        "-warnaserror", *properties], env, args.output, "baseline-build", run, deadline)
+            run_native(["dotnet", "test", "JoinedRecovery.AcceptanceTests.csproj", "-c", "Release", "--no-build", "--no-restore",
+                        "--filter", "FullyQualifiedName~JoinedRecoveryTests", "--logger", "trx", "--results-directory",
+                        str(args.output.resolve() / "trx-baseline"), *properties], baseline_env, args.output,
+                       "baseline-test", run, deadline, expected_exit=1)
+            verify_baseline(args.output)
+        verify_sources(roots, heads)
+        restored_env = dict(env, N62_RESOURCE_DIRECTORY=str(args.output.resolve() / "resources-restored"))
+        run_native(["dotnet", "build", "JoinedRecovery.AcceptanceTests.csproj", "-c", "Release", "--no-restore",
+                    "-warnaserror", *properties], env, args.output, "restored-build", run, deadline)
+        run_native(["dotnet", "test", "JoinedRecovery.AcceptanceTests.csproj", "-c", "Release", "--no-build", "--no-restore",
+                    "--logger", "trx", "--results-directory", str(args.output.resolve() / "trx-restored"),
+                    *properties], restored_env, args.output, "restored-test", run, deadline)
+        verify_restored(args.output)
     finally:
         try:
             cleanup["stages"] = json.loads((args.output / "run-owner.json").read_text())["stages"]

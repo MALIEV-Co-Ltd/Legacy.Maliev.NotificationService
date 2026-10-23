@@ -95,7 +95,7 @@ jobs:
         working-directory: acceptance/EmployeeRecoveryJoined
         run: |
           python3 -B verify_packet.py
-          python3 -B -m unittest test_run_hosted_join.py -v
+          python3 -B -m unittest test_run_hosted_join.py test_causal_baseline.py -v
       - name: Verify real Linux gate controls before SDK admission
         working-directory: acceptance/EmployeeRecoveryJoined
         run: python3 -B verify_gate_runtime.py "$GITHUB_WORKSPACE/joined-gate-results"

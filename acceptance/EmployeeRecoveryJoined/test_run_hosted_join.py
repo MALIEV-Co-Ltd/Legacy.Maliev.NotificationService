@@ -1,4 +1,5 @@
 import copy
+from contextlib import nullcontext
 import datetime as dt
 import hashlib
 import json
@@ -22,7 +23,7 @@ class SourceBindingTests(unittest.TestCase):
             hosted_os.name = "posix"
             hosted_os.environ = {"GITHUB_ACTIONS": "true"}
             stages = []
-            def native(args, env, target, stage, run, deadline):
+            def native(args, env, target, stage, run, deadline, expected_exit=0):
                 self.assertEqual("true", supervisor.os.environ["GITHUB_ACTIONS"])
                 self.assertEqual("false", env["GITHUB_ACTIONS"])
                 self.assertEqual("true", env["UseLocalMalievDependencies"])
@@ -31,10 +32,14 @@ class SourceBindingTests(unittest.TestCase):
                     (target / "package-audit.log").write_text(json.dumps({"projects": [{"frameworks": []}]}))
             with patch.object(supervisor.sys, "argv", argv), patch.object(supervisor, "os", hosted_os), \
                  patch.object(supervisor, "verify_sources", return_value={}), \
+                 patch.object(supervisor, "historical_model", return_value=nullcontext()), \
+                 patch.object(supervisor, "verify_baseline"), \
+                 patch.object(supervisor, "verify_restored"), \
                  patch.object(supervisor.signal, "signal"), patch.object(supervisor, "run_native", side_effect=native), \
                  patch.object(supervisor, "cleanup_containers", return_value=[]):
                 supervisor.main()
-            self.assertEqual(["restore", "build", "test", "format", "package-audit"], stages)
+            self.assertEqual(["restore", "build", "test", "format", "package-audit",
+                              "baseline-build", "baseline-test", "restored-build", "restored-test"], stages)
             self.assertEqual({"GITHUB_ACTIONS": "true"}, hosted_os.environ)
 
     def test_exact_lf_blob_passes_and_crlf_or_changed_source_fails(self):
@@ -305,6 +310,28 @@ class CleanupBoundaryTests(unittest.TestCase):
             process.stdin.write.assert_not_called()
             process.stdin.close.assert_called()
             process.wait.assert_called()
+
+    def test_expected_baseline_exit_does_not_accept_unrelated_exit_codes(self):
+        for actual, expected in ((1, 1), (0, 1), (2, 1), (1, 0)):
+            with self.subTest(actual=actual, expected=expected), tempfile.TemporaryDirectory() as directory:
+                output = Path(directory)
+                (output / "run-owner.json").write_text(json.dumps({"run": "run", "stages": []}))
+                process = Mock(pid=12)
+                process.wait.return_value = actual
+                identity = {"pid": 12, "pgrp": 12, "birthTicks": 20, "executable": "python3"}
+                with patch.object(supervisor, "admit", return_value={}), \
+                     patch.object(supervisor.subprocess, "Popen", return_value=process), \
+                     patch.object(supervisor, "proc_identity", return_value=identity), \
+                     patch.object(supervisor, "quiesce"), patch.object(supervisor, "group_members", return_value=[]):
+                    if actual == expected:
+                        supervisor.run_native(["dotnet", "test"], {}, output, "test", "run", expected_exit=expected)
+                    else:
+                        with self.assertRaisesRegex(RuntimeError, "failed with exit"):
+                            supervisor.run_native(["dotnet", "test"], {}, output, "test", "run", expected_exit=expected)
+                receipt = json.loads((output / "test-custody.json").read_text())
+                self.assertEqual(actual, receipt["exitCode"])
+                self.assertEqual(expected, receipt["expectedExitCode"])
+                self.assertTrue(receipt["groupAbsent"])
 
     def test_unverified_leader_or_remaining_group_blocks_container_cleanup(self):
         with tempfile.TemporaryDirectory() as directory:

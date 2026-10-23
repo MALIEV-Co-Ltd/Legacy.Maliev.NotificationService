@@ -203,6 +203,15 @@ public sealed class RecoveryJoinFixture : IAsyncDisposable
         Assert.Equal(Provider.Status == 201 ? 200 : 502, sent.Status);
     }
 
+    public void AssertDisposedDeliveryEvidence(int expected)
+    {
+        Assert.Empty(Provider.Payloads);
+        Assert.Equal(expected, Provider.DeliveryCount);
+        using var ledger = JsonDocument.Parse(File.ReadAllText(Path.Combine(resourceDirectory, fixtureId + ".json")));
+        Assert.Equal("disposed", ledger.RootElement.GetProperty("phase").GetString());
+        Assert.Equal(expected, ledger.RootElement.GetProperty("providerDeliveryCount").GetInt32());
+    }
+
     private Dictionary<string, string?> Common() => new()
     {
         ["Jwt:Issuer"] = Issuer,
@@ -332,6 +341,8 @@ public sealed class RecoveryJoinFixture : IAsyncDisposable
 
     public sealed class ProviderCapture
     {
+        private int deliveryCount;
+        public int DeliveryCount => Volatile.Read(ref deliveryCount);
         public int Status { get; set; } = 201;
         public List<JsonElement> Payloads { get; } = [];
         public HttpMessageHandler CreateHandler() => new CaptureHandler(this);
@@ -344,6 +355,7 @@ public sealed class RecoveryJoinFixture : IAsyncDisposable
                 Assert.Single(request.Headers.GetValues("api-key"));
                 Assert.True(capture.Payloads.Count < 16);
                 capture.Payloads.Add(await request.Content!.ReadFromJsonAsync<JsonElement>(token));
+                Interlocked.Increment(ref capture.deliveryCount);
                 return new((HttpStatusCode)capture.Status)
                 {
                     Content = JsonContent.Create(capture.Status == 201
@@ -450,6 +462,13 @@ public sealed class RecoveryJoinFixture : IAsyncDisposable
             registeredPoolCount = connections.Count,
             clearedPoolCount = clearedConnections.Count,
             allRegisteredPoolsCleared = AllRegisteredPoolsCleared,
+            authRecoveryRequests = routes.Where(route => route.Host == "auth" &&
+                (route.Path == "/auth/v1/employee-self-service/password-reset/request" ||
+                 route.Path == "/auth/v1/employee-self-service/email-confirmation/request"))
+                .Select(route => route.Status).ToArray(),
+            notificationDeliveryStatuses = routes.Where(route => route.Host == "notification" &&
+                route.Path == "/notifications/v1/email/NoReply").Select(route => route.Status).ToArray(),
+            providerDeliveryCount = Provider.DeliveryCount,
             dependentCleanupDeferred,
             supervisorCustodyReceipt = Path.GetFullPath(Path.Combine(resourceDirectory, "..", "run-owner.json")),
             pendingExpiryOwner = dependentCleanupDeferred ? "Recorded finite supervisor stage/job lease; fixture admission remains poisoned" : null,

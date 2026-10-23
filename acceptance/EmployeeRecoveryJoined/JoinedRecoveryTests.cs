@@ -105,6 +105,8 @@ public sealed class JoinedRecoveryTests
         Assert.Equal(consumed.FinalizedAt, replayToken.FinalizedAt);
         Assert.Single(await employees.RecoveryEffects.Where(x => x.IdentityId == user.Id).ToListAsync(fixture.Token));
         fixture.AssertRealJoin(purpose);
+        await fixture.DisposeAsync();
+        fixture.AssertDisposedDeliveryEvidence(1);
     }
 
     private static (string? PasswordHash, string? SecurityStamp, string? ConcurrencyStamp, bool EmailConfirmed)
