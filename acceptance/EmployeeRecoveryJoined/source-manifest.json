@@ -9,7 +9,7 @@
   "bootstrap": "Actual Auth/BFF/Notification Programs implemented; only external Brevo controlled; real CSRF, service login, RS256, worker and disposable PostgreSQL/Redis",
   "hostedWorkflow": "Implemented source only; exact published producer heads and Root review required",
   "validation": {
-    "supervisorTests": "16 passed, zero failed or skipped; task-owned process exit verified",
+    "supervisorTests": "24 passed in normal and optimized Python, zero failed or skipped; child exits verified. Original19-case baseline reproduced4 assertions failing, zero errors.",
     "pythonAst": "PASS",
     "projectXml": "PASS",
     "workflowYaml": "PASS",
@@ -18,9 +18,10 @@
     "finalGitleaks": "PASS scoped source; exact final seal qualification recorded separately",
     "nativeBuildTestsFormatCoverageAudit": "NOT RUN source-only scope",
     "publishedProducerBindings": "Auth d05c1ed and BFF a54055d exact ordinary checks successful; joined execution remains pending",
-    "gitIndexRawCommit": "V7 raw committed-byte verification pending commit",
+    "gitIndexRawCommit": "V8 raw committed-byte verification pending commit",
     "actualHostPoolRegression": "1 authored NOT RUN; 8 joined cases unchanged; runtime pool/socket absence NOT QUALIFIED",
-    "hostDisposalOrderRegressions": "3 authored NOT RUN: fault, timeout/late completion, successful ordering"
+    "hostDisposalOrderRegressions": "3 authored NOT RUN: fault, timeout/late completion, successful ordering",
+    "actualGateControls": "Hosted Linux required before SDK setup. Local Windows EOF125/no target passed; explicit release failed with access violation and is not acceptance."
   },
   "resources": "No SDK/container/server/browser allocation; CLI exit receipts retained",
   "files": [
@@ -34,7 +35,7 @@
     },
     {
       "path": "HOSTED-EXECUTION.md",
-      "sha256": "1313efbd6d2d9a054b3e3ffb007a8fb5f68888afe4c105358bd9f54debd487c5"
+      "sha256": "3c92495f604223d74a50cca8145542fcdb0f6ca9fd97ad661082ebece93a47f3"
     },
     {
       "path": "HostPoolCleanupRegressionTests.cs",
@@ -54,7 +55,7 @@
     },
     {
       "path": "notification62-hosted.yml",
-      "sha256": "109735be1abc922745f0f56224537b7dfb9d09bb56cb4d34e2ac53e55ce4053c"
+      "sha256": "c9a56ac90a2bad1420f0b007d6c06914ab5950eb6d03715dbe2ddbd45b740e02"
     },
     {
       "path": "RecoveryJoinFixture.cs",
@@ -66,7 +67,7 @@
     },
     {
       "path": "run_hosted_join.py",
-      "sha256": "451c47e59dc32e026972caf4c96f5a81129024398fe266d7a692792e1354ec0f"
+      "sha256": "1f30b07b600f729b3d921acf0238ab56fc869db1fea66bfe825a6341cf9b8c06"
     },
     {
       "path": "source-bindings.json",
@@ -74,11 +75,15 @@
     },
     {
       "path": "test_run_hosted_join.py",
-      "sha256": "c25791f09852112744a5e530e31570f0faf7cfe88690c5e2b5fc3aad9581cc4d"
+      "sha256": "2706c4f0326c7a6311fa706a024fadaacd1a1e9cd67c210cf83e0a5dfd59b6d7"
     },
     {
       "path": "verify_packet.py",
       "sha256": "c94443baea808b430b0840e1c45f1287407d1d1dc7d50ee3ddc35c9d4715ec54"
+    },
+    {
+      "path": "verify_gate_runtime.py",
+      "sha256": "c742647987961ddea64719507e8c18cdd7f61bdd37325e6f69b41724e6dae361"
     }
   ],
   "externalEvidence": [
@@ -121,9 +126,9 @@
       "tree": "f3193fde7b95b30e277f72396d15ca01a1a6cc83"
     }
   },
-  "version": "V7 accepted producer inputs and immutable LF source bindings",
-  "supersedesSourceManifestSha256": "4b2bd47c6fcfd57721ccb43ebf139ea2e0bfceff320d05c5c956b2bf031234bf",
-  "dispatchHold": "Manual joined execution held for Root review of V7 immutable bindings and disposable hosted effects; old Auth175 failure superseded by accepted d05c1ed ordinary CI",
+  "version": "V8 custody established before SDK execution and image-specific cleanup caps",
+  "supersedesSourceManifestSha256": "fb51e31a97ca9fa9f1739cc0d5a8de58f94f227d595181aeda9c176e31bcd594",
+  "dispatchHold": "One exact-head hosted joined attempt authorized after coordinator source/effects review; actual Linux gate controls must pass before SDK admission. Existing guards and cleanup are mandatory.",
   "authoredPoolCleanupRegressionCases": 1,
   "nativeExecutedPoolCleanupRegressionCases": null,
   "poolCleanup": "Actual host effective identities captured by lifecycle observer before worker StartAsync; fixture/bootstrap identities also retained; no global ClearAllPools or policy changes; backend absence unproven",

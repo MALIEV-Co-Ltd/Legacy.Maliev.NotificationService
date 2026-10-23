@@ -15,6 +15,7 @@ import uuid
 PACKET = Path(__file__).resolve().parent
 MIN_AVAILABLE_KIB = 8 * 1024 * 1024
 LABEL = "maliev.validation.notification62.run"
+SDK_GATE = "import os,sys\nif os.read(0,1) != b'1': sys.exit(125)\nos.execvpe(sys.argv[1],sys.argv[1:],os.environ)\n"
 
 
 def command(args, **kwargs):
@@ -139,7 +140,9 @@ def validate_container(value, run, started):
         if any(binding["HostIp"] != "127.0.0.1" for binding in bindings):
             raise RuntimeError("Container has a non-loopback port binding")
     limits = value["HostConfig"]
-    if not 0 < limits.get("Memory", 0) <= 1024 * 1024 * 1024 or not 0 < limits.get("NanoCpus", 0) <= 1_000_000_000:
+    memory, cpu = ((128 * 1024 * 1024, 500_000_000) if value["Config"]["Image"] == "redis:7-alpine"
+                   else (1024 * 1024 * 1024, 1_000_000_000))
+    if not 0 < limits.get("Memory", 0) <= memory or not 0 < limits.get("NanoCpus", 0) <= cpu:
         raise RuntimeError("Container resource limits mismatch")
     return {"id": value["Id"], "created": value["Created"], "image": value["Config"]["Image"],
             "labels": labels, "mountTypes": [mount["Type"] for mount in value.get("Mounts", [])],
@@ -184,15 +187,32 @@ def run_native(args, env, output, stage, run, deadline=None):
     admission = admit()
     leader = None
     process = None
-    receipt = {"stage": stage, "admission": admission, "command": args}
+    released = False
+    receipt = {"stage": stage, "admission": admission, "command": args, "gateReleased": False,
+               "groupAbsent": False}
+    owner_path = output / "run-owner.json"
+    owner = json.loads(owner_path.read_text())
+    owner["stages"].append(stage)
+    owner_path.write_text(json.dumps(owner))
+    custody = output / (stage + "-custody.json")
+    custody.write_text(json.dumps(receipt, indent=2))
     try:
         with (output / (stage + ".log")).open("w") as log:
-            process = subprocess.Popen(args, env=env, cwd=PACKET, stdout=log, stderr=subprocess.STDOUT, start_new_session=True)
+            # The direct child cannot exec the SDK until its identity is durably recorded.
+            process = subprocess.Popen([sys.executable, "-c", SDK_GATE, *args], env=env, cwd=PACKET,
+                                       stdin=subprocess.PIPE, stdout=log, stderr=subprocess.STDOUT, start_new_session=True)
             leader = proc_identity(process.pid)
             if leader is None or leader["pgrp"] != process.pid:
+                leader = None
                 raise RuntimeError("Native leader custody unavailable")
             receipt["leader"] = leader
-            (output / (stage + "-custody.json")).write_text(json.dumps(receipt, indent=2))
+            custody.write_text(json.dumps(receipt, indent=2))
+            # Mark release before the write: a partial write must use full native cleanup.
+            released = True
+            receipt["gateReleased"] = True
+            process.stdin.write(b"1")
+            process.stdin.flush()
+            process.stdin.close()
             try:
                 remaining = 900 if deadline is None else min(900, max(1, deadline - time.monotonic()))
                 result = process.wait(timeout=remaining)
@@ -203,9 +223,39 @@ def run_native(args, env, output, stage, run, deadline=None):
                 process.wait(timeout=5)
                 receipt["groupAbsent"] = not group_members(leader["pgrp"])
     finally:
-        if leader is not None and group_members(leader["pgrp"]):
-            quiesce(leader, run, process)
-        (output / (stage + "-custody.json")).write_text(json.dumps(receipt, indent=2))
+        try:
+            if process is not None and not released:
+                # EOF is graceful cancellation of the unopened gate, not a PID-based kill.
+                process.stdin.close()
+                process.wait(timeout=5)
+                receipt["groupAbsent"] = not group_members(process.pid)
+            elif leader is not None:
+                quiesce(leader, run, process)
+                process.wait(timeout=5)
+                receipt["groupAbsent"] = not group_members(leader["pgrp"])
+            elif process is None:
+                receipt["groupAbsent"] = True
+        finally:
+            custody.write_text(json.dumps(receipt, indent=2))
+
+
+def require_native_absence(output, owner, stop=False):
+    stages = owner.get("stages")
+    if not isinstance(stages, list):
+        raise RuntimeError("Native stage custody is unavailable; preserve containers")
+    for stage in stages:
+        path = output / (stage + "-custody.json")
+        if not path.is_file():
+            raise RuntimeError("Native stage custody receipt is missing; preserve containers")
+        receipt = json.loads(path.read_text())
+        leader = receipt.get("leader")
+        if leader:
+            if stop:
+                quiesce(leader, owner["run"])
+            if group_members(leader["pgrp"]):
+                raise RuntimeError("Native clients remain; preserve containers")
+        elif receipt.get("groupAbsent") is not True or receipt.get("gateReleased") is not False:
+            raise RuntimeError("Native leader custody is unverified; preserve containers")
 
 
 def main():
@@ -219,10 +269,7 @@ def main():
             raise RuntimeError("Cleanup receipts require the original hosted Linux job")
         record = json.loads(owner.read_text())
         try:
-            for path in output.glob("*-custody.json"):
-                leader = json.loads(path.read_text()).get("leader")
-                if leader:
-                    quiesce(leader, record["run"])
+            require_native_absence(output, record, stop=True)
             record["containers"] = cleanup_containers(record["run"], dt.datetime.fromisoformat(record["started"]))
             record["result"] = "PASS"
         except Exception as exception:
@@ -274,7 +321,8 @@ def main():
                   "-p:RecoveryNotificationRoot=" + str(roots["notification"]),
                   "-p:MalievWorkspaceRoot=" + str(roots["defaults"].parent), "-p:UseLocalMalievDependencies=true",
                   "-p:UseSharedCompilation=false", "-m:1", "-nr:false"]
-    cleanup = {"run": run, "started": started.isoformat(), "expires": (started + dt.timedelta(minutes=50)).isoformat()}
+    cleanup = {"run": run, "started": started.isoformat(), "expires": (started + dt.timedelta(minutes=50)).isoformat(),
+               "stages": []}
     (args.output / "run-owner.json").write_text(json.dumps(cleanup))
     deadline = time.monotonic() + 45 * 60
     try:
@@ -301,10 +349,8 @@ def main():
                         raise RuntimeError("Hosted package audit reports vulnerabilities")
     finally:
         try:
-            for receipt in args.output.glob("*-custody.json"):
-                leader = json.loads(receipt.read_text()).get("leader")
-                if leader and group_members(leader["pgrp"]):
-                    raise RuntimeError("Native clients remain; preserve containers until exact process cleanup succeeds")
+            cleanup["stages"] = json.loads((args.output / "run-owner.json").read_text())["stages"]
+            require_native_absence(args.output, cleanup)
             cleanup["containers"] = cleanup_containers(run, started)
             cleanup["result"] = "PASS"
         except Exception as exception:

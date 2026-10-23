@@ -5,7 +5,7 @@ import json
 from pathlib import Path
 import tempfile
 import unittest
-from unittest.mock import patch
+from unittest.mock import Mock, patch
 import run_hosted_join as supervisor
 
 
@@ -99,6 +99,17 @@ class CleanupBoundaryTests(unittest.TestCase):
         with self.assertRaisesRegex(RuntimeError, "limits"):
             supervisor.validate_container(self.value, "run", self.started)
 
+    def test_redis_requires_its_own_memory_and_cpu_limits(self):
+        self.value["Config"]["Image"] = "redis:7-alpine"
+        self.value["HostConfig"].update(Memory=128 * 1024 * 1024, NanoCpus=500_000_000)
+        supervisor.validate_container(self.value, "run", self.started)
+        for key, over in (("Memory", 128 * 1024 * 1024 + 1), ("NanoCpus", 500_000_001)):
+            with self.subTest(limit=key):
+                changed = copy.deepcopy(self.value)
+                changed["HostConfig"][key] = over
+                with self.assertRaisesRegex(RuntimeError, "limits"):
+                    supervisor.validate_container(changed, "run", self.started)
+
     def test_pid_reuse_does_not_signal(self):
         identity = {"pid": 12, "pgrp": 12, "birthTicks": 20, "executable": "dotnet"}
         changed = copy.copy(identity)
@@ -148,6 +159,128 @@ class CleanupBoundaryTests(unittest.TestCase):
             with self.assertRaises(TimeoutError):
                 supervisor.run_native([], {}, None, 'test', 'run', deadline=-1)
             launch.assert_not_called()
+
+    def test_missing_leader_closes_unreleased_gate_and_reaps_helper(self):
+        with tempfile.TemporaryDirectory() as directory:
+            output = Path(directory)
+            (output / "run-owner.json").write_text(json.dumps({"run": "run", "stages": []}))
+            process = Mock(pid=12)
+            process.wait.return_value = 125
+            with patch.object(supervisor, "admit", return_value={}), \
+                 patch.object(supervisor.subprocess, "Popen", return_value=process), \
+                 patch.object(supervisor, "proc_identity", return_value=None), \
+                 patch.object(supervisor, "group_members", return_value=[]):
+                with self.assertRaisesRegex(RuntimeError, "custody unavailable"):
+                    supervisor.run_native(["dotnet", "build"], {}, output, "build", "run")
+            process.stdin.write.assert_not_called()
+            process.stdin.close.assert_called()
+            process.wait.assert_called()
+            receipt = json.loads((output / "build-custody.json").read_text())
+            self.assertTrue(receipt["groupAbsent"])
+            self.assertFalse(receipt["gateReleased"])
+
+    def test_cleanup_preserves_containers_when_planned_stage_receipt_is_missing(self):
+        with tempfile.TemporaryDirectory() as directory:
+            output = Path(directory)
+            (output / "run-owner.json").write_text(json.dumps({
+                "run": "run", "started": self.started.isoformat(), "stages": ["build"]}))
+            with patch.object(supervisor.sys, "argv", ["run_hosted_join.py", "--cleanup-only", directory]), \
+                 patch.object(supervisor, "Path", type(output)), \
+                 patch.object(supervisor.os, "name", "posix"), \
+                 patch.dict(supervisor.os.environ, {"GITHUB_ACTIONS": "true"}), \
+                 patch.object(supervisor, "cleanup_containers", return_value=[]) as cleanup:
+                with self.assertRaisesRegex(RuntimeError, "custody"):
+                    supervisor.main()
+                cleanup.assert_not_called()
+
+    def test_sdk_gate_rejects_eof_and_only_executes_after_explicit_release(self):
+        with patch.object(supervisor.os, "read", return_value=b""), \
+             patch.object(supervisor.os, "execvpe") as execute:
+            with self.assertRaises(SystemExit) as result:
+                exec(supervisor.SDK_GATE, {})
+            self.assertEqual(125, result.exception.code)
+            execute.assert_not_called()
+        with patch.object(supervisor.os, "read", return_value=b"1"), \
+             patch.object(supervisor.os, "execvpe") as execute, \
+             patch.object(supervisor.sys, "argv", ["-c", "dotnet", "build"]):
+            exec(supervisor.SDK_GATE, {})
+            execute.assert_called_once_with("dotnet", ["dotnet", "build"], supervisor.os.environ)
+
+    def test_gate_release_follows_durable_stage_and_identity_custody(self):
+        with tempfile.TemporaryDirectory() as directory:
+            output = Path(directory)
+            (output / "run-owner.json").write_text(json.dumps({"run": "run", "stages": []}))
+            process = Mock(pid=12)
+            process.wait.return_value = 0
+            identity = {"pid": 12, "pgrp": 12, "birthTicks": 20, "executable": "python3"}
+            def release(value):
+                self.assertEqual(b"1", value)
+                self.assertEqual(["build"], json.loads((output / "run-owner.json").read_text())["stages"])
+                self.assertEqual(identity, json.loads((output / "build-custody.json").read_text())["leader"])
+            process.stdin.write.side_effect = release
+            with patch.object(supervisor, "admit", return_value={}), \
+                 patch.object(supervisor.subprocess, "Popen", return_value=process) as launch, \
+                 patch.object(supervisor, "proc_identity", return_value=identity), \
+                 patch.object(supervisor, "quiesce"), \
+                 patch.object(supervisor, "group_members", return_value=[]):
+                supervisor.run_native(["dotnet", "build"], {}, output, "build", "run")
+            process.stdin.write.assert_called_once()
+            self.assertEqual([supervisor.sys.executable, "-c", supervisor.SDK_GATE, "dotnet", "build"], launch.call_args.args[0])
+            self.assertTrue(launch.call_args.kwargs["start_new_session"])
+            self.assertTrue(json.loads((output / "build-custody.json").read_text())["groupAbsent"])
+
+    def test_failed_identity_receipt_never_releases_sdk_gate(self):
+        with tempfile.TemporaryDirectory() as directory:
+            output = Path(directory)
+            (output / "run-owner.json").write_text(json.dumps({"run": "run", "stages": []}))
+            process = Mock(pid=12)
+            process.wait.return_value = 125
+            identity = {"pid": 12, "pgrp": 12, "birthTicks": 20, "executable": "python3"}
+            write_text = Path.write_text
+            failed = False
+            def write(path, value, *args, **kwargs):
+                nonlocal failed
+                if path.name == "build-custody.json" and '"leader"' in value and not failed:
+                    failed = True
+                    raise OSError("Custody write failed")
+                return write_text(path, value, *args, **kwargs)
+            with patch.object(supervisor, "admit", return_value={}), \
+                 patch.object(supervisor.subprocess, "Popen", return_value=process), \
+                 patch.object(supervisor, "proc_identity", return_value=identity), \
+                 patch.object(Path, "write_text", write), \
+                 patch.object(supervisor, "group_members", return_value=[]):
+                with self.assertRaisesRegex(OSError, "Custody write"):
+                    supervisor.run_native(["dotnet", "build"], {}, output, "build", "run")
+            process.stdin.write.assert_not_called()
+            process.stdin.close.assert_called()
+            process.wait.assert_called()
+
+    def test_unverified_leader_or_remaining_group_blocks_container_cleanup(self):
+        with tempfile.TemporaryDirectory() as directory:
+            output = Path(directory)
+            owner = {"run": "run", "stages": ["build"]}
+            (output / "build-custody.json").write_text(json.dumps({"groupAbsent": False, "gateReleased": False}))
+            with self.assertRaisesRegex(RuntimeError, "unverified"):
+                supervisor.require_native_absence(output, owner)
+            (output / "build-custody.json").write_text(json.dumps({"leader": {"pgrp": 12}, "groupAbsent": True}))
+            with patch.object(supervisor, "group_members", return_value=[{"pid": 12}]):
+                with self.assertRaisesRegex(RuntimeError, "remain"):
+                    supervisor.require_native_absence(output, owner)
+
+    def test_unconfirmed_gate_helper_exit_preserves_unknown_custody(self):
+        with tempfile.TemporaryDirectory() as directory:
+            output = Path(directory)
+            (output / "run-owner.json").write_text(json.dumps({"run": "run", "stages": []}))
+            process = Mock(pid=12)
+            process.wait.side_effect = supervisor.subprocess.TimeoutExpired("gate", 5)
+            with patch.object(supervisor, "admit", return_value={}), \
+                 patch.object(supervisor.subprocess, "Popen", return_value=process), \
+                 patch.object(supervisor, "proc_identity", return_value=None):
+                with self.assertRaises(supervisor.subprocess.TimeoutExpired):
+                    supervisor.run_native(["dotnet", "build"], {}, output, "build", "run")
+            process.stdin.write.assert_not_called()
+            with self.assertRaisesRegex(RuntimeError, "unverified"):
+                supervisor.require_native_absence(output, json.loads((output / "run-owner.json").read_text()))
 
 
 if __name__ == "__main__":
