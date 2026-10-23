@@ -12,13 +12,13 @@
     "supervisorTests": "24 passed in normal and optimized Python, zero failed or skipped; child exits verified. Original19-case baseline reproduced4 assertions failing, zero errors.",
     "pythonAst": "PASS",
     "projectXml": "PASS",
-    "workflowYaml": "PASS",
+    "workflowYaml": "PASS actionlint on exact workflow; external shellcheck/pyflakes not installed or invoked",
     "boundSourceHashes": "36/36 immutable Git blob hashes verified; 18 unchanged, 9 BFF CRLF-only corrections, 8 accepted Auth changes, 1 accepted Notification Program change",
     "initialGitleaks": "FAIL manifest public commit metadata; retained",
     "finalGitleaks": "PASS scoped source; exact final seal qualification recorded separately",
     "nativeBuildTestsFormatCoverageAudit": "NOT RUN source-only scope",
     "publishedProducerBindings": "Auth d05c1ed and BFF a54055d exact ordinary checks successful; joined execution remains pending",
-    "gitIndexRawCommit": "V8 raw committed-byte verification pending commit",
+    "gitIndexRawCommit": "V9 raw committed-byte verification pending commit",
     "actualHostPoolRegression": "1 authored NOT RUN; 8 joined cases unchanged; runtime pool/socket absence NOT QUALIFIED",
     "hostDisposalOrderRegressions": "3 authored NOT RUN: fault, timeout/late completion, successful ordering",
     "actualGateControls": "Hosted Linux required before SDK setup. Local Windows EOF125/no target passed; explicit release failed with access violation and is not acceptance."
@@ -35,7 +35,7 @@
     },
     {
       "path": "HOSTED-EXECUTION.md",
-      "sha256": "3c92495f604223d74a50cca8145542fcdb0f6ca9fd97ad661082ebece93a47f3"
+      "sha256": "4fe2d402f4b9c4581295d8c7982da2287f597a115961a19c914a5db8dacf396e"
     },
     {
       "path": "HostPoolCleanupRegressionTests.cs",
@@ -55,7 +55,7 @@
     },
     {
       "path": "notification62-hosted.yml",
-      "sha256": "c9a56ac90a2bad1420f0b007d6c06914ab5950eb6d03715dbe2ddbd45b740e02"
+      "sha256": "b3a5fccdb8f96ad60c33843948765aa7bef6f1f299606f1d949e4eb519012e3b"
     },
     {
       "path": "RecoveryJoinFixture.cs",
@@ -126,8 +126,8 @@
       "tree": "f3193fde7b95b30e277f72396d15ca01a1a6cc83"
     }
   },
-  "version": "V8 custody established before SDK execution and image-specific cleanup caps",
-  "supersedesSourceManifestSha256": "fb51e31a97ca9fa9f1739cc0d5a8de58f94f227d595181aeda9c176e31bcd594",
+  "version": "V9 exact PR71 premerge execution with custody-before-SDK gates",
+  "supersedesSourceManifestSha256": "ee1f697e381ee4eeaffa03c9845c90b3b8a0259a9d6ba79a9a62c3e77469b190",
   "dispatchHold": "One exact-head hosted joined attempt authorized after coordinator source/effects review; actual Linux gate controls must pass before SDK admission. Existing guards and cleanup are mandatory.",
   "authoredPoolCleanupRegressionCases": 1,
   "nativeExecutedPoolCleanupRegressionCases": null,

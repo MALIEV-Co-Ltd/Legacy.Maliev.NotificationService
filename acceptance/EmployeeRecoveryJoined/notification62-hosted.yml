@@ -1,6 +1,11 @@
 name: Genuine employee recovery join
 
 on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'acceptance/EmployeeRecoveryJoined/**'
+      - '.github/workflows/notification62-hosted.yml'
   workflow_dispatch:
     inputs:
       auth_head:
@@ -24,12 +29,19 @@ concurrency:
 
 jobs:
   joined:
+    if: >-
+      github.event_name == 'workflow_dispatch' ||
+      (github.event.pull_request.number == 71 &&
+       github.event.pull_request.head.ref == 'codex/notification62-v6-clean-source-20261011' &&
+       github.event.pull_request.head.repo.full_name == github.repository)
     runs-on: ubuntu-latest
     timeout-minutes: 55
     env:
-      AUTH_HEAD: ${{ inputs.auth_head }}
-      INTRANET_HEAD: ${{ inputs.intranet_head }}
-      NOTIFICATION_HEAD: ${{ inputs.notification_head }}
+      IDENTITY_SOURCE_REVISION: d05c1ed990303beb2fba630b49c78adca9d0b610
+      INTRANET_HEAD: a54055de51e5adf25779c9ca303c1c2d06f5fbab
+      INPUT_IDENTITY_SOURCE_REVISION: ${{ inputs.auth_head }}
+      INPUT_INTRANET_HEAD: ${{ inputs.intranet_head }}
+      NOTIFICATION_HEAD: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || inputs.notification_head }}
       DEFAULTS_HEAD: 1fec4ef5c8c24fd57806b952182ae6bdb2d6a7fa
       CONTRACTS_HEAD: 78e48ffc4ee000df0510cba5e7c7a3c4c4d539d7
       N62_REQUIRED_MEM_KIB: '8388608'
@@ -38,27 +50,31 @@ jobs:
         run: |
           python3 -B - <<'PY'
           import os,re
-          for key in ('AUTH_HEAD','INTRANET_HEAD','NOTIFICATION_HEAD'):
+          if os.environ['GITHUB_EVENT_NAME'] == 'workflow_dispatch':
+              for key in ('IDENTITY_SOURCE_REVISION','INTRANET_HEAD'):
+                  if os.environ['INPUT_'+key] != os.environ[key]:
+                      raise SystemExit('Manual producer input differs from reviewed head: '+key)
+          for key in ('IDENTITY_SOURCE_REVISION','INTRANET_HEAD','NOTIFICATION_HEAD'):
               if not re.fullmatch('[0-9a-f]{40}',os.environ[key]):
                   raise SystemExit('Explicit reviewed immutable SHA required: '+key)
           PY
       - name: Checkout exact Notification candidate
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
-          ref: ${{ inputs.notification_head }}
+          ref: ${{ env.NOTIFICATION_HEAD }}
           persist-credentials: false
       - name: Checkout exact Auth candidate
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
           repository: MALIEV-Co-Ltd/Legacy.Maliev.AuthService
-          ref: ${{ inputs.auth_head }}
+          ref: ${{ env.IDENTITY_SOURCE_REVISION }}
           path: .joined/Legacy.Maliev.AuthService
           persist-credentials: false
       - name: Checkout exact BFF candidate
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
           repository: MALIEV-Co-Ltd/Legacy.Maliev.Intranet
-          ref: ${{ inputs.intranet_head }}
+          ref: ${{ env.INTRANET_HEAD }}
           path: .joined/Legacy.Maliev.Intranet
           persist-credentials: false
       - name: Checkout exact shared host dependency
@@ -96,7 +112,7 @@ jobs:
                  'notification':workspace,
                  'defaults':workspace/'.joined/Legacy.Maliev.ServiceDefaults',
                  'contracts':workspace/'.joined/Legacy.Maliev.CompatibilityContracts'}
-          heads={'auth':os.environ['AUTH_HEAD'],
+          heads={'auth':os.environ['IDENTITY_SOURCE_REVISION'],
                  'intranet':os.environ['INTRANET_HEAD'],
                  'notification':os.environ['NOTIFICATION_HEAD'],
                  'defaults':os.environ['DEFAULTS_HEAD'],
@@ -112,7 +128,7 @@ jobs:
         working-directory: acceptance/EmployeeRecoveryJoined
         run: |
           python3 -B run_hosted_join.py --execute \
-            --auth-root "$GITHUB_WORKSPACE/.joined/Legacy.Maliev.AuthService" --auth-head "$AUTH_HEAD" \
+            --auth-root "$GITHUB_WORKSPACE/.joined/Legacy.Maliev.AuthService" --auth-head "$IDENTITY_SOURCE_REVISION" \
             --intranet-root "$GITHUB_WORKSPACE/.joined/Legacy.Maliev.Intranet" --intranet-head "$INTRANET_HEAD" \
             --notification-root "$GITHUB_WORKSPACE" --notification-head "$NOTIFICATION_HEAD" \
             --defaults-root "$GITHUB_WORKSPACE/.joined/Legacy.Maliev.ServiceDefaults" --defaults-head "$DEFAULTS_HEAD" \
