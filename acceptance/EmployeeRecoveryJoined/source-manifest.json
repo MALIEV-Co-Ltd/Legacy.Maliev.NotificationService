@@ -9,21 +9,21 @@
   "bootstrap": "Actual Auth/BFF/Notification Programs implemented; only external Brevo controlled; real CSRF, service login, RS256, worker and disposable PostgreSQL/Redis",
   "hostedWorkflow": "Implemented source only; exact published producer heads and Root review required",
   "validation": {
-    "supervisorTests": "32 passed normal and optimized Python;0failed/skipped;all child exits verified. Exact lock hash-pair/schema export rejects unknown fields and mismatched hashes;strict source gate remains unchanged.",
+    "supervisorTests": "33 passed normal and optimized Python; zero failed/skipped; owned child exits verified. Exact composed-lock tampering rejected; all9 SDK stages inherit isolated props and leave parent admission unchanged.",
     "pythonAst": "PASS",
     "projectXml": "PASS",
     "workflowYaml": "PASS actionlint on exact workflow; external shellcheck/pyflakes not installed or invoked",
     "boundSourceHashes": "38 canonical Git blob hashes pinned; BFF csproj changes only accepted framework patch; all13 other prior BFF bindings unchanged; Server project added",
     "initialGitleaks": "FAIL manifest public commit metadata; retained",
     "finalGitleaks": "PASS scoped source; exact final seal qualification recorded separately",
-    "nativeBuildTestsFormatCoverageAudit": "Run39951630163 initial Release0W/0E,12/12 native cases,format/audit PASS. Baseline build0W/0E;four precise quoted failures/four ordinary passes. Model restored,then source gate FAILED dirty Intranet;restored build/tests NOT RUN.",
+    "nativeBuildTestsFormatCoverageAudit": "Run39954103801 initial Release0W/0E,12/12 native cases,format/audit PASS. Historical build0W/0E,four precise quoted failures/four ordinary passes;model restored. Strict source gate rejected BFF lock. Restored build/tests NOT RUN. Ordinary39954103766 initial350 passed;restored suite349/350 due observation race. Successor hosted checks required.",
     "publishedProducerBindings": "Auth d05c1ed ordinary39727079106 and BFF accepted229fb0d ordinary38954318992 plus applicable joins successful; joined execution remains pending",
-    "gitIndexRawCommit": "V17 raw committed-byte verification required after commit",
+    "gitIndexRawCommit": "V18 raw committed-byte verification required after commit",
     "actualHostPoolRegression": "1 native case PASS;9 fixture receipts each register and clear7pools;all3hosts disposed;no cleanup failures/retained ownership. Pool bookkeeping alone is not backend socket proof; native groups and containers also absent.",
     "hostDisposalOrderRegressions": "3 native cases PASS: fault,timeout/late completion,successful ordering.",
-    "actualGateControls": "Linux39949886541 real EOF/release and absence passed;38-source preflight/admission passed;all5native groups and containers absent."
+    "actualGateControls": "Linux39954103801 EOF/release and exact helper absence passed;38 bindings and8GiB admission passed. All7 native groups absent;final cleanup PASS;no remaining containers."
   },
-  "resources": "No local SDK/container/server/browser allocation. Hosted native groups absent;9fixtures disposed;final cleanup PASS;no remaining containers. CLI exit receipts retained.",
+  "resources": "No local SDK/container/server/browser allocation. Hosted7 native groups absent,17 fixtures disposed,final cleanup PASS with no containers. Owned Python control processes exited.",
   "files": [
     {
       "path": "HostDisposalFailureRegressionTests.cs",
@@ -35,7 +35,7 @@
     },
     {
       "path": "HOSTED-EXECUTION.md",
-      "sha256": "a8fd8fb4e8090aebedc7ee79c5a7070444aa8913fb80b74fba497238f26e9ebf"
+      "sha256": "1da231e746ff9fbb8187f4f1664f3b5ce7793589451d111dbba8045532937196"
     },
     {
       "path": "HostPoolCleanupRegressionTests.cs",
@@ -67,7 +67,7 @@
     },
     {
       "path": "run_hosted_join.py",
-      "sha256": "cad26f82fa734df2fc56385c2ba4a85b214d9222297194fb0554b60b24b66b30"
+      "sha256": "e3682950d71b796bfcf1795c1c54a8fc1f0d8f8df16985ae8693570c4cf5671e"
     },
     {
       "path": "source-bindings.json",
@@ -75,7 +75,7 @@
     },
     {
       "path": "test_run_hosted_join.py",
-      "sha256": "1c264a1bb8621e8dee5c0135a4a130d7daff40fdb8f8fcf5381891ebbf9074f6"
+      "sha256": "2edcf09a6f71f283720b31438281729b23a9aabb8c107f8b770ea490062e9e7c"
     },
     {
       "path": "verify_packet.py",
@@ -92,6 +92,14 @@
     {
       "path": "test_causal_baseline.py",
       "sha256": "209ebe908010d6f71d478953361d2e33f9a6105ceab08f07d52caaadf6e395cd"
+    },
+    {
+      "path": "composed-lock.props",
+      "sha256": "7e72120830b4b3e0849c63bd3863c4797deddd6eabf7c976b3429ae649130970"
+    },
+    {
+      "path": "composed-bff.packages.lock.json",
+      "sha256": "20f61f6207e89e260dd41d44e246ee9d052b237a97a63cc7fef24d30c6117cd6"
     }
   ],
   "externalEvidence": [
@@ -134,8 +142,8 @@
       "tree": "5031d608d117ecbd9ff2b562356d036b025cbf1b"
     }
   },
-  "version": "V17 capture exact composed BFF dependency lock without source exemption",
-  "supersedesSourceManifestSha256": "9d89d07ca04c33e716d157406aa9761767aae5bf724916e14d5c3629d7f3519e",
+  "version": "V18 immutable composed BFF lock with project-specific locked restore",
+  "supersedesSourceManifestSha256": "e06a811332dddcc3add5ce82d76655c86b692994b1a2601c72806fa5eae579c3",
   "dispatchHold": "One exact-head hosted joined attempt authorized after coordinator source/effects review; actual Linux gate controls must pass before SDK admission. Existing guards and cleanup are mandatory.",
   "authoredPoolCleanupRegressionCases": 1,
   "nativeExecutedPoolCleanupRegressionCases": 1,
@@ -143,5 +151,5 @@
   "authoredHostDisposalRegressionCases": 3,
   "nativeExecutedHostDisposalRegressionCases": 3,
   "hostFailureCustody": "Preserve pools/containers/runtime-only keys/lease if any actual host disposal fails or times out; poison admission; supervisor final removal requires exact native group absence",
-  "causalBaseline": "Run39952813709 repeated exact four quoted rejection/four control pass;model restored. Only BFF NuGet lock changed;validated exact composed-lock capture pending,no exemption/reset."
+  "causalBaseline": "Run39954103801 exact historical baseline qualified and model restored;strict source gate failed BFF lock. Exact captured graph is sealed for separate locked restore; restored12-case proof pending."
 }

@@ -11,6 +11,17 @@ import run_hosted_join as supervisor
 
 
 class SourceBindingTests(unittest.TestCase):
+    def test_composed_lock_rejects_changed_dependency_graph(self):
+        supervisor.verify_composed_lock()
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            lock = json.loads((supervisor.PACKET / "composed-bff.packages.lock.json").read_bytes())
+            lock["dependencies"]["net10.0"]["MassTransit"]["resolved"] = "9.2.2"
+            (root / "composed-bff.packages.lock.json").write_text(json.dumps(lock))
+            with patch.object(supervisor, "PACKET", root):
+                with self.assertRaisesRegex(ValueError, "composed BFF lock changed"):
+                    supervisor.verify_composed_lock()
+
     def test_composed_lock_export_requires_exact_hashes_and_allowlisted_nuget_schema(self):
         value = {"version": 1, "dependencies": {"net10.0": {"Example.Package": {
             "type": "Direct", "requested": "[1.0.0, )", "resolved": "1.0.0", "contentHash": "a" * 86 + "==",
@@ -76,6 +87,7 @@ class SourceBindingTests(unittest.TestCase):
                 self.assertEqual("true", supervisor.os.environ["GITHUB_ACTIONS"])
                 self.assertEqual("false", env["GITHUB_ACTIONS"])
                 self.assertEqual("true", env["UseLocalMalievDependencies"])
+                self.assertEqual(str(supervisor.PACKET / "composed-lock.props"), env["CustomAfterMicrosoftCommonProps"])
                 stages.append(stage)
                 if stage == "package-audit":
                     (target / "package-audit.log").write_text(json.dumps({"projects": [{"frameworks": []}]}))

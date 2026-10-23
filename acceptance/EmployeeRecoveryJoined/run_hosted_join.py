@@ -77,6 +77,13 @@ def capture_composed_lock(before, after, output):
         "packages": delta}, indent=2))
 
 
+def verify_composed_lock():
+    raw = (PACKET / "composed-bff.packages.lock.json").read_bytes()
+    if hashlib.sha256(raw).hexdigest() != BFF_LOCK_AFTER:
+        raise ValueError("Reviewed composed BFF lock changed")
+    validate_nuget_lock(raw)
+
+
 def record_source_changes(root, output):
     paths = [path for path in command(["git", "-C", str(root), "diff", "HEAD", "--name-only", "-z"]).split("\0") if path]
     if len(paths) > 64:
@@ -388,6 +395,7 @@ def main():
     if heads["defaults"] != "1fec4ef5c8c24fd57806b952182ae6bdb2d6a7fa" or heads["contracts"] != "78e48ffc4ee000df0510cba5e7c7a3c4c4d539d7":
         raise ValueError("Joined shared dependency pins must match the reviewed source packet")
     pins = verify_sources(roots, heads)
+    verify_composed_lock()
     if roots["defaults"].parent != roots["contracts"].parent:
         raise ValueError("Shared dependencies must occupy the same isolated workspace")
     args.output.mkdir(parents=True, exist_ok=False)
@@ -409,6 +417,7 @@ def main():
                RecoveryNotificationRoot=str(roots["notification"]), MalievWorkspaceRoot=str(roots["defaults"].parent),
                # Match ordinary source CI's local-project graph only inside SDK children.
                GITHUB_ACTIONS="false", UseLocalMalievDependencies="true", UseSharedCompilation="false",
+               CustomAfterMicrosoftCommonProps=str(PACKET / "composed-lock.props"),
                DOTNET_PROCESSOR_COUNT="2", MSBUILDDISABLENODEREUSE="1", DOTNET_CLI_TELEMETRY_OPTOUT="1",
                DOTNET_GCHeapHardLimit="0x100000000")
     properties = ["-p:RecoveryAuthRoot=" + str(roots["auth"]), "-p:RecoveryIntranetRoot=" + str(roots["intranet"]),
@@ -458,6 +467,8 @@ def main():
                     "--logger", "trx", "--results-directory", str(args.output.resolve() / "trx-restored"),
                     *properties], restored_env, args.output, "restored-test", run, deadline)
         verify_restored(args.output)
+        verify_composed_lock()
+        verify_sources(roots, heads, args.output / "final-source-changes.json")
     finally:
         try:
             cleanup["stages"] = json.loads((args.output / "run-owner.json").read_text())["stages"]
