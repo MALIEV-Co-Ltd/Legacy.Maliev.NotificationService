@@ -11,6 +11,34 @@ import run_hosted_join as supervisor
 
 
 class SourceBindingTests(unittest.TestCase):
+    def test_composed_lock_export_requires_exact_hashes_and_allowlisted_nuget_schema(self):
+        value = {"version": 1, "dependencies": {"net10.0": {"Example.Package": {
+            "type": "Direct", "requested": "[1.0.0, )", "resolved": "1.0.0", "contentHash": "a" * 86 + "==",
+            "dependencies": {"Example.Dependency": "1.0.0"}}}}}
+        before = json.dumps(value).encode()
+        for defect in (None, "hash", "field", "version", "dependency", "content hash", "target"):
+            with self.subTest(defect=defect), tempfile.TemporaryDirectory() as directory:
+                root = Path(directory)
+                changed = copy.deepcopy(value)
+                item = changed["dependencies"]["net10.0"]["Example.Package"]
+                item["resolved"] = "1.0.1"
+                if defect == "field": item["credential"] = "must never export"
+                if defect == "version": item["resolved"] = "https://secret.invalid"
+                if defect == "dependency": item["dependencies"]["bad/key"] = "1.0.0"
+                if defect == "content hash": item["contentHash"] = "not a content hash"
+                if defect == "target": changed["dependencies"]["unknown"] = {}
+                after = json.dumps(changed).encode()
+                with patch.object(supervisor, "BFF_LOCK_BEFORE", hashlib.sha256(before).hexdigest()), \
+                     patch.object(supervisor, "BFF_LOCK_AFTER", "bad" if defect == "hash" else hashlib.sha256(after).hexdigest()):
+                    if defect:
+                        with self.assertRaises(ValueError): supervisor.capture_composed_lock(before, after, root)
+                        self.assertFalse((root / "composed-bff.packages.lock.json").exists())
+                    else:
+                        supervisor.capture_composed_lock(before, after, root)
+                        self.assertEqual(after, (root / "composed-bff.packages.lock.json").read_bytes())
+                        delta = json.loads((root / "composed-lock-delta.json").read_text())["packages"]
+                        self.assertEqual("1.0.1", delta[0]["after"]["resolved"])
+
     def test_dirty_source_diagnostic_records_only_bounded_paths_hashes_and_sizes(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)

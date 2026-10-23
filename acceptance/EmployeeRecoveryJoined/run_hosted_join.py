@@ -17,10 +17,64 @@ PACKET = Path(__file__).resolve().parent
 MIN_AVAILABLE_KIB = 8 * 1024 * 1024
 LABEL = "maliev.validation.notification62.run"
 SDK_GATE = "import os,sys\nif os.read(0,1) != b'1': sys.exit(125)\nos.execvpe(sys.argv[1],sys.argv[1:],os.environ)\n"
+BFF_LOCK = "Legacy.Maliev.Intranet.Bff/packages.lock.json"
+BFF_LOCK_BEFORE = "9db1aa34e5170a7912923961637c0a4a9b0fa11bd6164169ca3111e820dfb885"
+BFF_LOCK_AFTER = "20f61f6207e89e260dd41d44e246ee9d052b237a97a63cc7fef24d30c6117cd6"
 
 
 def command(args, **kwargs):
     return subprocess.run(args, capture_output=True, text=True, timeout=30, check=True, **kwargs).stdout.strip()
+
+
+def validate_nuget_lock(raw):
+    if len(raw) > 1024 * 1024:
+        raise ValueError("Composed lock exceeds the reviewed byte bound")
+    value = json.loads(raw)
+    if set(value) != {"version", "dependencies"} or value["version"] != 1 or set(value["dependencies"]) != {"net10.0"}:
+        raise ValueError("Unexpected NuGet lock schema")
+    packages = value["dependencies"]["net10.0"]
+    if not isinstance(packages, dict) or len(packages) > 512:
+        raise ValueError("Unexpected NuGet package inventory")
+    def package_id(name):
+        return isinstance(name, str) and re.fullmatch(r"[A-Za-z0-9_.-]{1,100}", name)
+    def version(text):
+        return isinstance(text, str) and re.fullmatch(r"[A-Za-z0-9.+*(),\[\] -]{1,100}", text)
+    for name, item in packages.items():
+        if (not package_id(name) or not isinstance(item, dict)
+                or set(item) - {"type", "requested", "resolved", "contentHash", "dependencies"}
+                or item.get("type") not in ("Direct", "Transitive", "Project")):
+            raise ValueError("Unexpected NuGet package metadata")
+        for key in ("requested", "resolved"):
+            if key in item and not version(item[key]):
+                raise ValueError("Unexpected NuGet package version")
+        if "contentHash" in item and (not isinstance(item["contentHash"], str)
+                or not re.fullmatch(r"[A-Za-z0-9+/]{86}==", item["contentHash"])):
+            raise ValueError("Unexpected NuGet content hash")
+        dependencies = item.get("dependencies", {})
+        if (not isinstance(dependencies, dict) or len(dependencies) > 512
+                or any(not package_id(key) or not version(val) for key, val in dependencies.items())):
+            raise ValueError("Unexpected NuGet dependency metadata")
+    return packages
+
+
+def capture_composed_lock(before, after, output):
+    if (hashlib.sha256(before).hexdigest() != BFF_LOCK_BEFORE
+            or hashlib.sha256(after).hexdigest() != BFF_LOCK_AFTER):
+        raise ValueError("Composed lock differs from the observed exact hash pair")
+    old, new = validate_nuget_lock(before), validate_nuget_lock(after)
+    delta = []
+    for name in sorted(set(old) | set(new)):
+        previous, current = old.get(name, {}), new.get(name, {})
+        if previous != current:
+            delta.append({"package": name,
+                          "before": {key: previous[key] for key in ("type", "requested", "resolved") if key in previous},
+                          "after": {key: current[key] for key in ("type", "requested", "resolved") if key in current},
+                          "dependenciesChanged": previous.get("dependencies") != current.get("dependencies"),
+                          "contentHashChanged": previous.get("contentHash") != current.get("contentHash")})
+    (output / "composed-bff.packages.lock.json").write_bytes(after)
+    (output / "composed-lock-delta.json").write_text(json.dumps({
+        "path": BFF_LOCK, "beforeSha256": BFF_LOCK_BEFORE, "afterSha256": BFF_LOCK_AFTER,
+        "packages": delta}, indent=2))
 
 
 def record_source_changes(root, output):
@@ -28,6 +82,7 @@ def record_source_changes(root, output):
     if len(paths) > 64:
         raise ValueError("Source-change diagnostic exceeds the reviewed path bound")
     rows = []
+    composed = None
     for relative in paths:
         path = (root / relative).resolve()
         if not path.is_relative_to(root.resolve()):
@@ -38,10 +93,14 @@ def record_source_changes(root, output):
         before = subprocess.run(["git", "-C", str(root), "show", "HEAD:" + relative],
                                 capture_output=True, check=True, timeout=30).stdout
         after = path.read_bytes() if path.exists() else None
+        if root.name == "Legacy.Maliev.Intranet" and relative == BFF_LOCK and after is not None:
+            composed = (before, after)
         rows.append({"path": relative, "beforeSize": len(before), "beforeSha256": hashlib.sha256(before).hexdigest(),
                      "afterSize": len(after) if after is not None else None,
                      "afterSha256": hashlib.sha256(after).hexdigest() if after is not None else None})
     output.write_text(json.dumps({"repository": root.name, "trackedChanges": rows}, indent=2))
+    if composed is not None:
+        capture_composed_lock(*composed, output.parent)
 
 
 def verify_sources(roots, heads, diagnostics=None):
