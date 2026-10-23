@@ -5,7 +5,7 @@
   "sourceBindings": 38,
   "producerPins": "12/12 PASS",
   "authoredJoinedCases": 8,
-  "nativeExecutedJoinedCases": null,
+  "nativeExecutedJoinedCases": 8,
   "bootstrap": "Actual Auth/BFF/Notification Programs implemented; only external Brevo controlled; real CSRF, service login, RS256, worker and disposable PostgreSQL/Redis",
   "hostedWorkflow": "Implemented source only; exact published producer heads and Root review required",
   "validation": {
@@ -16,14 +16,14 @@
     "boundSourceHashes": "38 canonical Git blob hashes pinned; BFF csproj changes only accepted framework patch; all13 other prior BFF bindings unchanged; Server project added",
     "initialGitleaks": "FAIL manifest public commit metadata; retained",
     "finalGitleaks": "PASS scoped source; exact final seal qualification recorded separately",
-    "nativeBuildTestsFormatCoverageAudit": "Run39948760743 restore and all producer builds passed; acceptance Release build FAILED with 0 warnings and 7 nullable/analyzer errors. Native tests/format/audit NOT RUN.",
+    "nativeBuildTestsFormatCoverageAudit": "Run39949145343 Release PASS 0 warnings/errors; 12/12 native cases PASS,0 failures/skips. Format FAILED22 whitespace diagnostics; package audit NOT RUN; exact-head revalidation remains required.",
     "publishedProducerBindings": "Auth d05c1ed ordinary39727079106 and BFF accepted229fb0d ordinary38954318992 plus applicable joins successful; joined execution remains pending",
-    "gitIndexRawCommit": "V13 raw committed-byte verification required after commit",
-    "actualHostPoolRegression": "1 authored NOT RUN; 8 joined cases unchanged; runtime pool/socket absence NOT QUALIFIED",
-    "hostDisposalOrderRegressions": "3 authored NOT RUN: fault, timeout/late completion, successful ordering",
-    "actualGateControls": "Linux39948760743 EOF/release and exact helper absence passed; 38 bindings and8GiB admission passed. Restore/build groups absent, final cleanup PASS, no containers allocated."
+    "gitIndexRawCommit": "V14 raw committed-byte verification required after commit",
+    "actualHostPoolRegression": "1 native case PASS;9 fixture receipts each register and clear7pools;all3hosts disposed;no cleanup failures/retained ownership. Pool bookkeeping alone is not backend socket proof; native groups and containers also absent.",
+    "hostDisposalOrderRegressions": "3 native cases PASS: fault,timeout/late completion,successful ordering.",
+    "actualGateControls": "Linux39949145343 EOF/release and exact helper absence passed;38-source preflight and8GiB admission passed. All4native groups absent;final cleanup PASS;no remaining containers."
   },
-  "resources": "No local SDK/container/server/browser allocation. Hosted failed build has exact process-group absence and no container allocation; CLI exit receipts retained.",
+  "resources": "No local SDK/container/server/browser allocation. Hosted native groups absent;9fixtures disposed;final cleanup PASS;no remaining containers. CLI exit receipts retained.",
   "files": [
     {
       "path": "HostDisposalFailureRegressionTests.cs",
@@ -35,7 +35,7 @@
     },
     {
       "path": "HOSTED-EXECUTION.md",
-      "sha256": "772406fca701aaaf7c7468c353cca5c820c19979cb2abcf26f5646c0c2f33ed5"
+      "sha256": "d447b7de6fc79160808758412cbec4b349ac060f73f2ebab3fe3f57587f74382"
     },
     {
       "path": "HostPoolCleanupRegressionTests.cs",
@@ -59,7 +59,7 @@
     },
     {
       "path": "RecoveryJoinFixture.cs",
-      "sha256": "9c3839140f150d311ebd2f683b31431203a9a1b1f4276b8e3e93b90bef177945"
+      "sha256": "d6eae87d382d87b4909e3806e1aec3e4f94b5f347760475fcbfc21da84616a54"
     },
     {
       "path": "resource-ledger.json",
@@ -126,13 +126,13 @@
       "tree": "5031d608d117ecbd9ff2b562356d036b025cbf1b"
     }
   },
-  "version": "V13 acceptance fixture nullable configuration and assertion fixes",
-  "supersedesSourceManifestSha256": "529671dd7d6eb924b0ed9f6ed5f21af923f46ff4857e5e58080911793f7695bf",
+  "version": "V14 hosted fixture formatting with native results retained",
+  "supersedesSourceManifestSha256": "d36029afd956ce89dc1171d89ff47a214fc432ed300944675728a867443e4190",
   "dispatchHold": "One exact-head hosted joined attempt authorized after coordinator source/effects review; actual Linux gate controls must pass before SDK admission. Existing guards and cleanup are mandatory.",
   "authoredPoolCleanupRegressionCases": 1,
-  "nativeExecutedPoolCleanupRegressionCases": null,
+  "nativeExecutedPoolCleanupRegressionCases": 1,
   "poolCleanup": "Actual host effective identities captured by lifecycle observer before worker StartAsync; fixture/bootstrap identities also retained; no global ClearAllPools or policy changes; backend absence unproven",
   "authoredHostDisposalRegressionCases": 3,
-  "nativeExecutedHostDisposalRegressionCases": null,
+  "nativeExecutedHostDisposalRegressionCases": 3,
   "hostFailureCustody": "Preserve pools/containers/runtime-only keys/lease if any actual host disposal fails or times out; poison admission; supervisor final removal requires exact native group absence"
 }

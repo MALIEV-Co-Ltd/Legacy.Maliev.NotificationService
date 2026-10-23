@@ -152,7 +152,7 @@ public sealed class RecoveryJoinFixture : IAsyncDisposable
         command.CommandTimeout = 15;
         await command.ExecuteNonQueryAsync(token);
         var value = new NpgsqlConnectionStringBuilder(postgres.GetConnectionString())
-            { Database = database, Timeout = 10, CommandTimeout = 15, MaxPoolSize = 8 }.ConnectionString;
+        { Database = database, Timeout = 10, CommandTimeout = 15, MaxPoolSize = 8 }.ConnectionString;
         connections.Add(value);
         return value;
     }
@@ -188,7 +188,7 @@ public sealed class RecoveryJoinFixture : IAsyncDisposable
     {
         lease.Token.ThrowIfCancellationRequested();
         var client = bff!.CreateClient(new WebApplicationFactoryClientOptions
-            { BaseAddress = PublicOrigin, AllowAutoRedirect = false, HandleCookies = true });
+        { BaseAddress = PublicOrigin, AllowAutoRedirect = false, HandleCookies = true });
         client.Timeout = TimeSpan.FromSeconds(30);
         return client;
     }
@@ -205,10 +205,13 @@ public sealed class RecoveryJoinFixture : IAsyncDisposable
 
     private Dictionary<string, string?> Common() => new()
     {
-        ["Jwt:Issuer"] = Issuer, ["Jwt:Audience"] = Audience, ["Jwt:KeyId"] = "joined-recovery",
+        ["Jwt:Issuer"] = Issuer,
+        ["Jwt:Audience"] = Audience,
+        ["Jwt:KeyId"] = "joined-recovery",
         ["Jwt:PublicKeyPem"] = signing.ExportSubjectPublicKeyInfoPem(),
         ["Jwt:PublicKey"] = Convert.ToBase64String(Encoding.UTF8.GetBytes(signing.ExportSubjectPublicKeyInfoPem())),
-        ["Logging:LogLevel:Default"] = "Warning", ["CORS:AllowedOrigins"] = PublicOrigin.ToString(),
+        ["Logging:LogLevel:Default"] = "Warning",
+        ["CORS:AllowedOrigins"] = PublicOrigin.ToString(),
     };
 
     private static void Configure(IWebHostBuilder builder, string root, Dictionary<string, string?> settings)
@@ -341,9 +344,12 @@ public sealed class RecoveryJoinFixture : IAsyncDisposable
                 Assert.Single(request.Headers.GetValues("api-key"));
                 Assert.True(capture.Payloads.Count < 16);
                 capture.Payloads.Add(await request.Content!.ReadFromJsonAsync<JsonElement>(token));
-                return new((HttpStatusCode)capture.Status) { Content = JsonContent.Create(capture.Status == 201
+                return new((HttpStatusCode)capture.Status)
+                {
+                    Content = JsonContent.Create(capture.Status == 201
                     ? new { messageId = "isolated-provider-capture" } as object
-                    : new { code = "invalid_parameter", message = "controlled rejection" }) };
+                    : new { code = "invalid_parameter", message = "controlled rejection" })
+                };
             }
         }
     }
@@ -420,15 +426,29 @@ public sealed class RecoveryJoinFixture : IAsyncDisposable
         redisId ??= Id(() => redis.Id);
         var value = new
         {
-            run, fixtureId, phase, created, expires = created.AddMinutes(4),
-            pid = process.Id, processStartUtc = process.StartTime.ToUniversalTime(), executable = Environment.ProcessPath,
-            hosts = new[] { "AuthProgram", "BffProgram", "NotificationProgram" }, hostPorts = Array.Empty<int>(),
-            transport = "in-process TestServer, no listening host/provider ports", persistentData = false,
-            postgresId, redisId,
-            postgresPort = Port(() => postgres.GetMappedPublicPort(5432)), redisPort = Port(() => redis.GetMappedPublicPort(6379)),
-            binding = "127.0.0.1", volumeNames = Array.Empty<string>(), mountPolicy = "tmpfs only; independently inspected by hosted supervisor",
-            ownershipLabel = "maliev.validation.notification62.run", cleanupFailures,
-            registeredPoolCount = connections.Count, clearedPoolCount = clearedConnections.Count,
+            run,
+            fixtureId,
+            phase,
+            created,
+            expires = created.AddMinutes(4),
+            pid = process.Id,
+            processStartUtc = process.StartTime.ToUniversalTime(),
+            executable = Environment.ProcessPath,
+            hosts = new[] { "AuthProgram", "BffProgram", "NotificationProgram" },
+            hostPorts = Array.Empty<int>(),
+            transport = "in-process TestServer, no listening host/provider ports",
+            persistentData = false,
+            postgresId,
+            redisId,
+            postgresPort = Port(() => postgres.GetMappedPublicPort(5432)),
+            redisPort = Port(() => redis.GetMappedPublicPort(6379)),
+            binding = "127.0.0.1",
+            volumeNames = Array.Empty<string>(),
+            mountPolicy = "tmpfs only; independently inspected by hosted supervisor",
+            ownershipLabel = "maliev.validation.notification62.run",
+            cleanupFailures,
+            registeredPoolCount = connections.Count,
+            clearedPoolCount = clearedConnections.Count,
             allRegisteredPoolsCleared = AllRegisteredPoolsCleared,
             dependentCleanupDeferred,
             supervisorCustodyReceipt = Path.GetFullPath(Path.Combine(resourceDirectory, "..", "run-owner.json")),
