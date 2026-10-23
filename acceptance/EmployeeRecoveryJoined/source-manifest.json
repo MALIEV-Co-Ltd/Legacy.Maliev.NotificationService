@@ -9,16 +9,16 @@
   "bootstrap": "Actual Auth/BFF/Notification Programs implemented; only external Brevo controlled; real CSRF, service login, RS256, worker and disposable PostgreSQL/Redis",
   "hostedWorkflow": "Implemented source only; exact published producer heads and Root review required",
   "validation": {
-    "supervisorTests": "30 passed normal and optimized Python;0failed/skipped;all child exits verified. Exact historical mutation restores on controlled failure;case/outcome/route/cleanup/exit qualification fails closed.",
+    "supervisorTests": "31 passed normal and optimized Python;0failed/skipped;all child exits verified. Bounded path/hash/size diagnostic emits no raw contents; strict source gate unchanged.",
     "pythonAst": "PASS",
     "projectXml": "PASS",
     "workflowYaml": "PASS actionlint on exact workflow; external shellcheck/pyflakes not installed or invoked",
     "boundSourceHashes": "38 canonical Git blob hashes pinned; BFF csproj changes only accepted framework patch; all13 other prior BFF bindings unchanged; Server project added",
     "initialGitleaks": "FAIL manifest public commit metadata; retained",
     "finalGitleaks": "PASS scoped source; exact final seal qualification recorded separately",
-    "nativeBuildTestsFormatCoverageAudit": "Exact ccb3917 run39949886541 Release0W/0E,12/12 native cases,format and package audit PASS;ordinary39949886551 PASS. New causal and disposed-count assertions NOT RUN until successor hosted execution.",
+    "nativeBuildTestsFormatCoverageAudit": "Run39951630163 initial Release0W/0E,12/12 native cases,format/audit PASS. Baseline build0W/0E;four precise quoted failures/four ordinary passes. Model restored,then source gate FAILED dirty Intranet;restored build/tests NOT RUN.",
     "publishedProducerBindings": "Auth d05c1ed ordinary39727079106 and BFF accepted229fb0d ordinary38954318992 plus applicable joins successful; joined execution remains pending",
-    "gitIndexRawCommit": "V15 raw committed-byte verification required after commit",
+    "gitIndexRawCommit": "V16 raw committed-byte verification required after commit",
     "actualHostPoolRegression": "1 native case PASS;9 fixture receipts each register and clear7pools;all3hosts disposed;no cleanup failures/retained ownership. Pool bookkeeping alone is not backend socket proof; native groups and containers also absent.",
     "hostDisposalOrderRegressions": "3 native cases PASS: fault,timeout/late completion,successful ordering.",
     "actualGateControls": "Linux39949886541 real EOF/release and absence passed;38-source preflight/admission passed;all5native groups and containers absent."
@@ -35,7 +35,7 @@
     },
     {
       "path": "HOSTED-EXECUTION.md",
-      "sha256": "bbfd29a88004b93573c6c4c9ca4e271259604bceb1e822159a196953cea454c0"
+      "sha256": "ed7b5bccdf3c5a0c1dc76a58444fdd20dfc40b06782c01951150c3c53a9613ea"
     },
     {
       "path": "HostPoolCleanupRegressionTests.cs",
@@ -67,7 +67,7 @@
     },
     {
       "path": "run_hosted_join.py",
-      "sha256": "0ba1d5cf81f69ebe1edfbeb946a8f8b33ab06adbe0e285a1982cd47f06b68bc6"
+      "sha256": "497ee42ad3bd7c08aff25d21dff8d85763990f726415c532c3ab5f9d12a5a590"
     },
     {
       "path": "source-bindings.json",
@@ -75,7 +75,7 @@
     },
     {
       "path": "test_run_hosted_join.py",
-      "sha256": "224b7e3e380bb7b3b7d0c75e1932df8e3a7813ced25bc31ef2ca38a998bc68b4"
+      "sha256": "acc4cf80d740ad689aeaab4a6cd602b890952815c0f414dd38a83e17ebd159a2"
     },
     {
       "path": "verify_packet.py",
@@ -134,8 +134,8 @@
       "tree": "5031d608d117ecbd9ff2b562356d036b025cbf1b"
     }
   },
-  "version": "V15 exact historical mailbox baseline and restored join qualification",
-  "supersedesSourceManifestSha256": "64b068588186563874f0a405b8f87823bd3539a4c1bbdbd5fc49ac57333ae792",
+  "version": "V16 bounded source-change diagnosis retaining strict restoration gate",
+  "supersedesSourceManifestSha256": "32b14a947dca1e0caba60f42201446d11edb890b7ad61d9ccf6c059ddae529f2",
   "dispatchHold": "One exact-head hosted joined attempt authorized after coordinator source/effects review; actual Linux gate controls must pass before SDK admission. Existing guards and cleanup are mandatory.",
   "authoredPoolCleanupRegressionCases": 1,
   "nativeExecutedPoolCleanupRegressionCases": 1,
@@ -143,5 +143,5 @@
   "authoredHostDisposalRegressionCases": 3,
   "nativeExecutedHostDisposalRegressionCases": 3,
   "hostFailureCustody": "Preserve pools/containers/runtime-only keys/lease if any actual host disposal fails or times out; poison admission; supervisor final removal requires exact native group absence",
-  "causalBaseline": "Reviewed exact historical two-annotation swap, strict4quoted reject/4ordinary pass plus real route counts, finally byte restoration and exact12 restored green;hosted execution pending."
+  "causalBaseline": "Run39951630163 exact historical baseline qualified with route counts;model restoration true. Full source gate failed dirty Intranet; bounded diagnostic pending; no exemption/reset allowed."
 }

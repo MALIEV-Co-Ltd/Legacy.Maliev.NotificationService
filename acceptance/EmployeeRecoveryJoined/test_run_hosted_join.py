@@ -11,6 +11,27 @@ import run_hosted_join as supervisor
 
 
 class SourceBindingTests(unittest.TestCase):
+    def test_dirty_source_diagnostic_records_only_bounded_paths_hashes_and_sizes(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            before, after = b'{"version":"before"}', b'{"version":"after"}'
+            (root / "packages.lock.json").write_bytes(after)
+            report = root / "diagnostic.json"
+            with patch.object(supervisor, "command", side_effect=["packages.lock.json\0", str(len(before))]), \
+                 patch.object(supervisor.subprocess, "run", return_value=Mock(stdout=before)):
+                supervisor.record_source_changes(root, report)
+            row = json.loads(report.read_text())["trackedChanges"][0]
+            self.assertEqual({"path": "packages.lock.json", "beforeSize": len(before), "afterSize": len(after),
+                              "beforeSha256": hashlib.sha256(before).hexdigest(),
+                              "afterSha256": hashlib.sha256(after).hexdigest()}, row)
+            self.assertNotIn('"version"', report.read_text())
+            for paths, size in (("\0".join(str(index) for index in range(65)), "0"),
+                                ("../outside", "0"), ("packages.lock.json", str(1024 * 1024 + 1))):
+                with patch.object(supervisor, "command", side_effect=[paths, size]), \
+                     patch.object(supervisor.subprocess, "run") as read:
+                    with self.assertRaises(ValueError): supervisor.record_source_changes(root, report)
+                    read.assert_not_called()
+
     def test_local_project_graph_is_scoped_to_sdk_children(self):
         with tempfile.TemporaryDirectory() as directory:
             output = Path(directory) / "results"

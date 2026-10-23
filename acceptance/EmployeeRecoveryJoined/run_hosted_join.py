@@ -23,7 +23,28 @@ def command(args, **kwargs):
     return subprocess.run(args, capture_output=True, text=True, timeout=30, check=True, **kwargs).stdout.strip()
 
 
-def verify_sources(roots, heads):
+def record_source_changes(root, output):
+    paths = [path for path in command(["git", "-C", str(root), "diff", "HEAD", "--name-only", "-z"]).split("\0") if path]
+    if len(paths) > 64:
+        raise ValueError("Source-change diagnostic exceeds the reviewed path bound")
+    rows = []
+    for relative in paths:
+        path = (root / relative).resolve()
+        if not path.is_relative_to(root.resolve()):
+            raise ValueError("Source-change diagnostic escapes the checkout")
+        size = int(command(["git", "-C", str(root), "cat-file", "-s", "HEAD:" + relative]))
+        if size > 1024 * 1024 or (path.exists() and path.stat().st_size > 1024 * 1024):
+            raise ValueError("Source-change diagnostic exceeds the reviewed byte bound")
+        before = subprocess.run(["git", "-C", str(root), "show", "HEAD:" + relative],
+                                capture_output=True, check=True, timeout=30).stdout
+        after = path.read_bytes() if path.exists() else None
+        rows.append({"path": relative, "beforeSize": len(before), "beforeSha256": hashlib.sha256(before).hexdigest(),
+                     "afterSize": len(after) if after is not None else None,
+                     "afterSha256": hashlib.sha256(after).hexdigest() if after is not None else None})
+    output.write_text(json.dumps({"repository": root.name, "trackedChanges": rows}, indent=2))
+
+
+def verify_sources(roots, heads, diagnostics=None):
     bindings = json.loads((PACKET / "source-bindings.json").read_text())
     for name, root in roots.items():
         expected = heads[name]
@@ -37,6 +58,8 @@ def verify_sources(roots, heads):
         if candidate and command(["git", "-C", str(root), "rev-parse", "HEAD^{tree}"]) != candidate["tree"]:
             raise ValueError("Published producer tree mismatch: " + name)
         if command(["git", "-C", str(root), "status", "--porcelain", "--untracked-files=no"]):
+            if diagnostics is not None:
+                record_source_changes(root, diagnostics)
             raise ValueError("Hosted source checkout is dirty: " + name)
         for item in bindings["files"]:
             if item["repo"] == name:
@@ -368,7 +391,7 @@ def main():
                         str(args.output.resolve() / "trx-baseline"), *properties], baseline_env, args.output,
                        "baseline-test", run, deadline, expected_exit=1)
             verify_baseline(args.output)
-        verify_sources(roots, heads)
+        verify_sources(roots, heads, args.output / "restored-source-changes.json")
         restored_env = dict(env, N62_RESOURCE_DIRECTORY=str(args.output.resolve() / "resources-restored"))
         run_native(["dotnet", "build", "JoinedRecovery.AcceptanceTests.csproj", "-c", "Release", "--no-restore",
                     "-warnaserror", *properties], env, args.output, "restored-build", run, deadline)
