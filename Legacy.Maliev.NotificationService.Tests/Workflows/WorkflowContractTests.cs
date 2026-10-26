@@ -30,6 +30,7 @@ public sealed class WorkflowContractTests
     {
         BuildAndTest_RejectsPreviousUploadArtifactPin();
         WorkflowContractValidator.Validate(Workflow);
+        AssertMutationRejected("ref: " + WorkflowContractValidator.AccountingSourceRevision, "ref: c22e94a8202964a85ee69b96d5fe62cdc1fafe55");
         AssertMutationRejected("timeout-minutes: 45", "timeout-minutes: 450");
         AssertMutationRejected("fetch-depth: 0", "fetch-depth: 1");
         AssertMutationRejected("timeout-minutes: 20", "timeout-minutes: 200");
@@ -57,7 +58,14 @@ public sealed class WorkflowContractTests
     [InlineData("ref: c22e94a8202964a85ee69b96d5fe62cdc1fafe55", "ref: main")]
     [InlineData("repository: MALIEV-Co-Ltd/Legacy.Maliev.AccountingService", "repository: MALIEV-Co-Ltd/Legacy.Maliev.OrderService")]
     [InlineData("path: .dependencies/Legacy.Maliev.AccountingService", "path: .dependencies/other-accounting")]
-    public void BuildAndTest_RejectsChangedJoinedConsumer(string original, string replacement) => AssertMutationRejected(original, replacement);
+    public void BuildAndTest_RejectsChangedJoinedConsumer(string original, string replacement)
+    {
+        // Preserve the accepted case identity while testing the current reviewed producer.
+        var needle = original == "ref: c22e94a8202964a85ee69b96d5fe62cdc1fafe55"
+            ? "ref: " + WorkflowContractValidator.AccountingSourceRevision
+            : original;
+        AssertMutationRejected(needle, replacement);
+    }
 
     [Theory]
     [InlineData("ref: cda7e5f6817e9462f058eaf6638da58c27e75024", "ref: main")]
@@ -224,6 +232,7 @@ public sealed class WorkflowContractTests
 
 internal static partial class WorkflowContractValidator
 {
+    internal const string AccountingSourceRevision = "a0e65818cd33ef1cdf71227bbc37f6df638d9fab";
     private const string CheckoutAction = "actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1";
     private const string SharedValidationAction = "MALIEV-Co-Ltd/Legacy.Maliev.Workflows/actions/dotnet-validate@73dd7304ffe85ec504389fd7664cc39070b9f148";
 
@@ -358,7 +367,7 @@ internal static partial class WorkflowContractValidator
             new Dictionary<string, string>(StringComparer.Ordinal)
             {
                 ["repository"] = "MALIEV-Co-Ltd/Legacy.Maliev.AccountingService",
-                ["ref"] = "c22e94a8202964a85ee69b96d5fe62cdc1fafe55",
+                ["ref"] = AccountingSourceRevision,
                 ["path"] = ".dependencies/Legacy.Maliev.AccountingService",
                 ["persist-credentials"] = "false",
             });
