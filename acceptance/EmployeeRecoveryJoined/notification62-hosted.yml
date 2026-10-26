@@ -1,0 +1,153 @@
+name: Genuine employee recovery join
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'acceptance/EmployeeRecoveryJoined/**'
+      - '.github/workflows/notification62-hosted.yml'
+  workflow_dispatch:
+    inputs:
+      auth_head:
+        description: Reviewed published Auth recovery commit (40 hex SHA)
+        required: true
+        default: d05c1ed990303beb2fba630b49c78adca9d0b610
+      intranet_head:
+        description: Reviewed published BFF recovery commit (40 hex SHA)
+        required: true
+        default: 229fb0d80f697b2c079da1f44baf4ce472181bde
+      notification_head:
+        description: Reviewed Notification commit including this acceptance slice (40 hex SHA)
+        required: true
+
+permissions:
+  contents: read
+
+concurrency:
+  group: notification62-genuine-join
+  cancel-in-progress: false
+
+jobs:
+  joined:
+    if: >-
+      github.event_name == 'workflow_dispatch' ||
+      (github.event.pull_request.number == 71 &&
+       github.event.pull_request.head.ref == 'codex/notification62-v6-clean-source-20261011' &&
+       github.event.pull_request.head.repo.full_name == github.repository)
+    runs-on: ubuntu-latest
+    timeout-minutes: 55
+    env:
+      IDENTITY_SOURCE_REVISION: d05c1ed990303beb2fba630b49c78adca9d0b610
+      INTRANET_HEAD: 229fb0d80f697b2c079da1f44baf4ce472181bde
+      INPUT_IDENTITY_SOURCE_REVISION: ${{ inputs.auth_head }}
+      INPUT_INTRANET_HEAD: ${{ inputs.intranet_head }}
+      NOTIFICATION_HEAD: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || inputs.notification_head }}
+      DEFAULTS_HEAD: 1fec4ef5c8c24fd57806b952182ae6bdb2d6a7fa
+      CONTRACTS_HEAD: 78e48ffc4ee000df0510cba5e7c7a3c4c4d539d7
+      N62_REQUIRED_MEM_KIB: '8388608'
+    steps:
+      - name: Require explicit immutable caller heads
+        run: |
+          python3 -B - <<'PY'
+          import os,re
+          if os.environ['GITHUB_EVENT_NAME'] == 'workflow_dispatch':
+              if os.environ['GITHUB_REF'] != 'refs/heads/main' or os.environ['NOTIFICATION_HEAD'] != os.environ['GITHUB_SHA']:
+                  raise SystemExit('Manual Notification input must equal the protected-main workflow revision')
+              for key in ('IDENTITY_SOURCE_REVISION','INTRANET_HEAD'):
+                  if os.environ['INPUT_'+key] != os.environ[key]:
+                      raise SystemExit('Manual producer input differs from reviewed head: '+key)
+          for key in ('IDENTITY_SOURCE_REVISION','INTRANET_HEAD','NOTIFICATION_HEAD'):
+              if not re.fullmatch('[0-9a-f]{40}',os.environ[key]):
+                  raise SystemExit('Explicit reviewed immutable SHA required: '+key)
+          PY
+      - name: Checkout exact Notification candidate
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          ref: ${{ env.NOTIFICATION_HEAD }}
+          persist-credentials: false
+      - name: Checkout exact Auth candidate
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          repository: MALIEV-Co-Ltd/Legacy.Maliev.AuthService
+          ref: ${{ env.IDENTITY_SOURCE_REVISION }}
+          path: .joined/Legacy.Maliev.AuthService
+          persist-credentials: false
+      - name: Checkout exact BFF candidate
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          repository: MALIEV-Co-Ltd/Legacy.Maliev.Intranet
+          ref: ${{ env.INTRANET_HEAD }}
+          path: .joined/Legacy.Maliev.Intranet
+          persist-credentials: false
+      - name: Checkout exact shared host dependency
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          repository: MALIEV-Co-Ltd/Legacy.Maliev.ServiceDefaults
+          ref: 1fec4ef5c8c24fd57806b952182ae6bdb2d6a7fa
+          path: .joined/Legacy.Maliev.ServiceDefaults
+          persist-credentials: false
+      - name: Checkout exact compatibility contracts
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          repository: MALIEV-Co-Ltd/Legacy.Maliev.CompatibilityContracts
+          ref: 78e48ffc4ee000df0510cba5e7c7a3c4c4d539d7
+          path: .joined/Legacy.Maliev.CompatibilityContracts
+          persist-credentials: false
+      - name: Verify source seal and supervisor safety tests
+        working-directory: acceptance/EmployeeRecoveryJoined
+        run: |
+          python3 -B verify_packet.py
+          python3 -B -m unittest test_run_hosted_join.py test_causal_baseline.py -v
+      - name: Verify real Linux gate controls before SDK admission
+        working-directory: acceptance/EmployeeRecoveryJoined
+        run: python3 -B verify_gate_runtime.py "$GITHUB_WORKSPACE/joined-gate-results"
+      - name: Verify exact sources and resource admission before SDK setup
+        working-directory: acceptance/EmployeeRecoveryJoined
+        run: |
+          python3 -B - <<'PY'
+          import os,json
+          from pathlib import Path
+          from run_hosted_join import verify_sources,admit
+          workspace=Path(os.environ['GITHUB_WORKSPACE'])
+          roots={'auth':workspace/'.joined/Legacy.Maliev.AuthService',
+                 'intranet':workspace/'.joined/Legacy.Maliev.Intranet',
+                 'notification':workspace,
+                 'defaults':workspace/'.joined/Legacy.Maliev.ServiceDefaults',
+                 'contracts':workspace/'.joined/Legacy.Maliev.CompatibilityContracts'}
+          heads={'auth':os.environ['IDENTITY_SOURCE_REVISION'],
+                 'intranet':os.environ['INTRANET_HEAD'],
+                 'notification':os.environ['NOTIFICATION_HEAD'],
+                 'defaults':os.environ['DEFAULTS_HEAD'],
+                 'contracts':os.environ['CONTRACTS_HEAD']}
+          result={'sources':verify_sources(roots,heads),'admission':admit()}
+          (workspace/'joined-preflight.json').write_text(json.dumps(result,indent=2))
+          PY
+      - name: Setup ordinary SDK for this hosted job
+        uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68
+        with:
+          dotnet-version: 10.0.x
+      - name: Build and execute the genuine join
+        working-directory: acceptance/EmployeeRecoveryJoined
+        run: |
+          python3 -B run_hosted_join.py --execute \
+            --auth-root "$GITHUB_WORKSPACE/.joined/Legacy.Maliev.AuthService" --auth-head "$IDENTITY_SOURCE_REVISION" \
+            --intranet-root "$GITHUB_WORKSPACE/.joined/Legacy.Maliev.Intranet" --intranet-head "$INTRANET_HEAD" \
+            --notification-root "$GITHUB_WORKSPACE" --notification-head "$NOTIFICATION_HEAD" \
+            --defaults-root "$GITHUB_WORKSPACE/.joined/Legacy.Maliev.ServiceDefaults" --defaults-head "$DEFAULTS_HEAD" \
+            --contracts-root "$GITHUB_WORKSPACE/.joined/Legacy.Maliev.CompatibilityContracts" --contracts-head "$CONTRACTS_HEAD" \
+            --output "$GITHUB_WORKSPACE/joined-results"
+      - name: Verify final owned-resource absence
+        if: always()
+        working-directory: acceptance/EmployeeRecoveryJoined
+        run: python3 -B run_hosted_join.py --cleanup-only "$GITHUB_WORKSPACE/joined-results"
+      - name: Preserve source and native receipts
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: notification62-joined-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            joined-results
+            joined-preflight.json
+            joined-gate-results
+          if-no-files-found: warn
+          retention-days: 7

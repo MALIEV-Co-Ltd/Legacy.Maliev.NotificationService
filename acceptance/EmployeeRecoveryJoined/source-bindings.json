@@ -1,0 +1,232 @@
+{
+  "producerManifestSha256": "990cda3a2c3d6c2b41fd0e01572c3c53d9b166aaafa8a2c2e7f9a99d5a351f42",
+  "sharedDependency": "1fec4ef5c8c24fd57806b952182ae6bdb2d6a7fa (accepted Auth producer ordinary CI dependency; isolated joined lane only)",
+  "files": [
+    {
+      "repo": "auth",
+      "path": "Legacy.Maliev.AuthService.Application/EmployeeSelfServiceContracts.cs",
+      "sha256": "7d54bff0e56f470936ba175c50d45443efcb435d7b6b2cff4735bfe8efea57ce"
+    },
+    {
+      "repo": "auth",
+      "path": "Legacy.Maliev.AuthService.Application/EmployeeRecoveryEmailAttribute.cs",
+      "sha256": "fc3c078b1b152302b2b891ea5b811102dc218ece6d66adc4ab53dd860bb709e5"
+    },
+    {
+      "repo": "auth",
+      "path": "Legacy.Maliev.AuthService.Tests/EmployeeRecoveryHttpTests.cs",
+      "sha256": "d701aa31ceb52f25d10381cf39a3b37ec6456f5e3a29e76f5b77a693531b5e4d"
+    },
+    {
+      "repo": "intranet",
+      "path": "Legacy.Maliev.Intranet.Contracts/EmployeeRecoveryContracts.cs",
+      "sha256": "bb1d657bf20fcf40aaf5dc15be616b38ab3e9b4f1f9b34d0b6e0b72734a2fad5",
+      "checkoutEol": "crlf"
+    },
+    {
+      "repo": "intranet",
+      "path": "Legacy.Maliev.Intranet.Contracts/EmployeeRecoveryEmailAttribute.cs",
+      "sha256": "a26d59d996499fe62d1831d3aded56e86382328dde77bf7f542e35649fd8dafc",
+      "checkoutEol": "crlf"
+    },
+    {
+      "repo": "intranet",
+      "path": "Legacy.Maliev.Intranet.Tests/BffEmployeeRecoveryContractTests.cs",
+      "sha256": "0f808fd11fc08c78e7479d301328987203282273c9e0f58bb4995da462eb0b55",
+      "checkoutEol": "crlf"
+    },
+    {
+      "repo": "auth",
+      "path": "Legacy.Maliev.AuthService.Api/Program.cs",
+      "sha256": "1c6a02eb81858f3efa4e4252fb4a4426feeb2ef526be338fc2ff31e67448af0c"
+    },
+    {
+      "repo": "auth",
+      "path": "Legacy.Maliev.AuthService.Api/Authorization/EmployeeSelfServicePermissions.cs",
+      "sha256": "b874e7d1ccb2f55d86b420a88741c2074cb70be9dddf239ab2ef3deb07bed75c"
+    },
+    {
+      "repo": "auth",
+      "path": "Legacy.Maliev.AuthService.Infrastructure/ServiceAuthentication.cs",
+      "sha256": "304a25fdb444db8b5754a785d063c571da6a055b0f6311814437903af671c046"
+    },
+    {
+      "repo": "auth",
+      "path": "Legacy.Maliev.AuthService.Infrastructure/RsaAccessTokenIssuer.cs",
+      "sha256": "73a13fd39a35d86feec178123e9ddf7e43c754bc303400fbf93c02fc303b71ca"
+    },
+    {
+      "repo": "auth",
+      "path": "Legacy.Maliev.AuthService.Infrastructure/EmployeeRecoveryWorker.cs",
+      "sha256": "e2a489cb5524fc0a044235e8924361691ebb2c5b942777bac1eed0ee8e119d2e"
+    },
+    {
+      "repo": "auth",
+      "path": "Legacy.Maliev.AuthService.Infrastructure/EmployeeSelfService.cs",
+      "sha256": "3d959993f7e975fc2a561d4efd00a4daa9e451d36a16f0cd02b68ea5fa53640a"
+    },
+    {
+      "repo": "auth",
+      "path": "Legacy.Maliev.AuthService.Infrastructure/RefreshSessionDbContext.cs",
+      "sha256": "2c0233b91a1698135a07ca4d472dd57c5167e6b4bcd9bf6dd1c0eb2daba63f4f"
+    },
+    {
+      "repo": "auth",
+      "path": "Legacy.Maliev.AuthService.Infrastructure/LegacyIdentityContexts.cs",
+      "sha256": "dd2fa6a2d101d8775d3db70a647f1ef1cce28431f82b64d117f9c0ec49a3b125"
+    },
+    {
+      "repo": "intranet",
+      "path": "Legacy.Maliev.Intranet.Bff/Program.cs",
+      "sha256": "b95eb7de9e355efce916095625446ece4c309d431a4947fe50c3a74cb7bd2023",
+      "checkoutEol": "crlf"
+    },
+    {
+      "repo": "intranet",
+      "path": "Legacy.Maliev.Intranet.Bff/Employees/EmployeeRecoveryEndpointMapper.cs",
+      "sha256": "952ebfc9458f1da98039d25eba5c2cd9b8cf5588a6e0e1c39d11fc0d0ea2c980",
+      "checkoutEol": "crlf"
+    },
+    {
+      "repo": "intranet",
+      "path": "Legacy.Maliev.Intranet.Bff/Employees/EmployeeRecoveryProxies.cs",
+      "sha256": "7b0936f9e21422c0e29e648e50805bc859037077d5507e7a3973fb2695d819b0",
+      "checkoutEol": "crlf"
+    },
+    {
+      "repo": "intranet",
+      "path": "Legacy.Maliev.Intranet.Server/Auth/ServiceAccessTokenProvider.cs",
+      "sha256": "f1ed6a46897d1683a414d0f966efe1801adaf8ecea15c806b36f92ad5a1ceeac",
+      "checkoutEol": "crlf"
+    },
+    {
+      "repo": "intranet",
+      "path": "Legacy.Maliev.Intranet.Server/Auth/LegacyServiceAuthenticationHandler.cs",
+      "sha256": "d1d3e7910f3890831a70026a24a3bf541ccc3b77b28e0c6720a92e5152eb1442",
+      "checkoutEol": "crlf"
+    },
+    {
+      "repo": "intranet",
+      "path": "Legacy.Maliev.Intranet.Server/Auth/LegacyDataProtection.cs",
+      "sha256": "5d05e8af5e119f82683f47daa8b636b752c10989e72c88ee0931bee2a29e2429",
+      "checkoutEol": "crlf"
+    },
+    {
+      "repo": "notification",
+      "path": "Legacy.Maliev.NotificationService.Api/Program.cs",
+      "sha256": "82bfb67f05298972d78d578d8c52fe1b068b37faefae822045ec40630afa0d82"
+    },
+    {
+      "repo": "notification",
+      "path": "Legacy.Maliev.NotificationService.Api/Controllers/NotificationsController.cs",
+      "sha256": "533ce46a249be6bad7bc61eabbafafdd33ac11ec368714e3e4f29edab7ad9c4b"
+    },
+    {
+      "repo": "notification",
+      "path": "Legacy.Maliev.NotificationService.Application/Services/NotificationApplicationService.cs",
+      "sha256": "eedc6a8589c6a2467aa69b8fb8c174a110199d7d5ac426a458237a038b69fe82"
+    },
+    {
+      "repo": "notification",
+      "path": "Legacy.Maliev.NotificationService.Data/BrevoNotificationTransport.cs",
+      "sha256": "caaf81ebc0347e52229e080213b2da3990cd6fa87d46199d1745f47a3c2b1063"
+    },
+    {
+      "repo": "notification",
+      "path": "Legacy.Maliev.NotificationService.Data/BrevoNotificationProvider.cs",
+      "sha256": "2e4237e1b597b210f932f7b6f7f0c9c8e40127763ef57360c0a68e07af03ff23"
+    },
+    {
+      "repo": "auth",
+      "path": "Legacy.Maliev.AuthService.Api/Legacy.Maliev.AuthService.Api.csproj",
+      "sha256": "810d6d42d23487250d06cfaad502ea05d55e3d92a4e0def1e8c754b510e686b3"
+    },
+    {
+      "repo": "auth",
+      "path": "Legacy.Maliev.AuthService.Infrastructure/Legacy.Maliev.AuthService.Infrastructure.csproj",
+      "sha256": "a5e407c0e9eeeeeaec25e4640a79e194fe9f97f656413c0b2abc06858efaadac"
+    },
+    {
+      "repo": "auth",
+      "path": "Legacy.Maliev.AuthService.Infrastructure/LegacyJwtBearerConfiguration.cs",
+      "sha256": "f2872666646a0f527eabd2c0d1f040093339e586614baa3a37331765e4835158"
+    },
+    {
+      "repo": "auth",
+      "path": "Legacy.Maliev.AuthService.Infrastructure/EmployeeIdentityAdminService.cs",
+      "sha256": "75b133c914697c80ecbf87a329bb0e5ebbf538983a5e32074e52b7bdfbf96145"
+    },
+    {
+      "repo": "intranet",
+      "path": "Legacy.Maliev.Intranet.Bff/Legacy.Maliev.Intranet.Bff.csproj",
+      "sha256": "a7fac43f5f7779353ff051364c04b2b7deda79daff7d0b6f8536c22cb06a593d"
+    },
+    {
+      "repo": "intranet",
+      "path": "Legacy.Maliev.Intranet.Bff/AntiforgeryValidationFilter.cs",
+      "sha256": "be4927d511526c04f3f74836281e478be6c3d0f187505764349ef30a19ed081f",
+      "checkoutEol": "crlf"
+    },
+    {
+      "repo": "intranet",
+      "path": "Legacy.Maliev.Intranet.Server/Auth/LegacyJwtValidation.cs",
+      "sha256": "3f92026e585252bc20042d4d2529f48a11d6e2cb6380a2623fbc281f3020b4c9",
+      "checkoutEol": "crlf"
+    },
+    {
+      "repo": "intranet",
+      "path": "Legacy.Maliev.Intranet.Server/Auth/LegacyDataProtectionResources.cs",
+      "sha256": "5bf94dcdcb17d345cf706601216e2b98bc316240a54d7d3ffe90e53c6b319ee0",
+      "checkoutEol": "crlf"
+    },
+    {
+      "repo": "notification",
+      "path": "Legacy.Maliev.NotificationService.Api/Legacy.Maliev.NotificationService.Api.csproj",
+      "sha256": "c7a8d7e3c29fa72dc23a25673e9e367f620f05d0d0a3bbe2303ddfe31b2e9373"
+    },
+    {
+      "repo": "notification",
+      "path": "Legacy.Maliev.NotificationService.Api/Authorization/NotificationPermissions.cs",
+      "sha256": "095a6a53569964d34b338e0410a71814b97a1a16361eed273d175b56cd2c861b"
+    },
+    {
+      "repo": "auth",
+      "path": "Legacy.Maliev.AuthService.Infrastructure/ServiceCollectionExtensions.cs",
+      "sha256": "222d3a5e28af5c92da613bd2b17256bc6684c6670a07e925f19aa525a48dfbd2"
+    },
+    {
+      "repo": "intranet",
+      "path": ".gitattributes",
+      "sha256": "d659a5a32a52085fc2ef5ca8b58cded13e1091f177651a87a6c9ee3e0751e68f"
+    },
+    {
+      "repo": "intranet",
+      "path": "Legacy.Maliev.Intranet.Server/Legacy.Maliev.Intranet.Server.csproj",
+      "sha256": "67350c616681b218035cd1411e0be2efe43a9b4341804368c104117197451fc6"
+    }
+  ],
+  "bases": [
+    {
+      "repo": "auth",
+      "base": "f7079f133b1e607b8909636a5114ebccc73b27bc"
+    },
+    {
+      "repo": "intranet",
+      "base": "de42dde53cd9db800340fdca95d43fff0233bd19"
+    },
+    {
+      "repo": "notification",
+      "base": "d407cc6c15afd2eb90dac9fb3f2096a70fd46788"
+    }
+  ],
+  "candidateHeads": {
+    "auth": {
+      "head": "d05c1ed990303beb2fba630b49c78adca9d0b610",
+      "tree": "98da44c2c74c6a51d98026e5a39b1024e7f6abef"
+    },
+    "intranet": {
+      "head": "229fb0d80f697b2c079da1f44baf4ce472181bde",
+      "tree": "5031d608d117ecbd9ff2b562356d036b025cbf1b"
+    }
+  }
+}
