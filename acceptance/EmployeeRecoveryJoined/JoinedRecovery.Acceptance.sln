@@ -1,0 +1,13 @@
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JoinedRecovery.AcceptanceTests", "JoinedRecovery.AcceptanceTests.csproj", "{8637F043-42F1-4A98-B559-B648DF52F58C}"
+EndProject
+Global
+    GlobalSection(SolutionConfigurationPlatforms) = preSolution
+        Release|Any CPU = Release|Any CPU
+    EndGlobalSection
+    GlobalSection(ProjectConfigurationPlatforms) = postSolution
+        {8637F043-42F1-4A98-B559-B648DF52F58C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+        {8637F043-42F1-4A98-B559-B648DF52F58C}.Release|Any CPU.Build.0 = Release|Any CPU
+    EndGlobalSection
+EndGlobal

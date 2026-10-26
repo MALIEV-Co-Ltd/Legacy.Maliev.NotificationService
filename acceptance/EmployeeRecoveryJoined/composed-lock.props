@@ -1,0 +1,8 @@
+<Project>
+  <!-- The reviewed joined graph uses a newer accepted ServiceDefaults than the BFF checkout. -->
+  <PropertyGroup Condition="'$(MSBuildProjectFullPath)' == '$(RecoveryIntranetRoot)/Legacy.Maliev.Intranet.Bff/Legacy.Maliev.Intranet.Bff.csproj'">
+    <NuGetLockFilePath>$(MSBuildThisFileDirectory)composed-bff.packages.lock.json</NuGetLockFilePath>
+    <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
+    <RestoreLockedMode>true</RestoreLockedMode>
+  </PropertyGroup>
+</Project>
