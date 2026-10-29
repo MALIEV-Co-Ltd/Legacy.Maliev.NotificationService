@@ -441,5 +441,128 @@ class CleanupBoundaryTests(unittest.TestCase):
                 supervisor.require_native_absence(output, json.loads((output / "run-owner.json").read_text()))
 
 
+
+class PacketV20SuccessorTests(unittest.TestCase):
+    def test_v20_packet_rejects_predecessor_and_workflow_tampering(self):
+        import os, runpy, shutil
+        from unittest.mock import patch
+        original = Path(__file__).resolve().parent
+        with tempfile.TemporaryDirectory() as directory:
+            workspace = Path(directory)
+            packet = workspace / "acceptance" / "EmployeeRecoveryJoined"
+            shutil.copytree(original, packet)
+            installed = workspace / ".github" / "workflows" / "notification62-hosted.yml"
+            installed.parent.mkdir(parents=True)
+            installed.write_bytes((packet / "notification62-hosted.yml").read_bytes())
+            def verify():
+                with patch.dict(os.environ, {"GITHUB_ACTIONS": "true", "GITHUB_WORKSPACE": str(workspace)}):
+                    runpy.run_path(str(packet / "verify_packet.py"))
+            verify()
+            for relative in ("v19-source-manifest.json", "v19-notification62-hosted.yml", "v19-verify_packet.py.txt", "v19-test_run_hosted_join.py.txt", "notification62-hosted.yml"):
+                path = packet / relative
+                before = path.read_bytes()
+                try:
+                    path.write_bytes(before + b"tampered")
+                    with self.subTest(path=relative), self.assertRaises(SystemExit): verify()
+                finally: path.write_bytes(before)
+            before = installed.read_bytes()
+            try:
+                installed.write_bytes((packet / "v19-notification62-hosted.yml").read_bytes())
+                with self.assertRaises(SystemExit): verify()
+            finally: installed.write_bytes(before)
+            manifest_path = packet / "source-manifest.json"
+            saved_manifest = manifest_path.read_bytes()
+            saved_packet = (packet / "notification62-hosted.yml").read_bytes()
+            for altered in ((packet / "v19-notification62-hosted.yml").read_bytes(), saved_packet + b"\n# extra action drift\n"):
+                try:
+                    (packet / "notification62-hosted.yml").write_bytes(altered)
+                    installed.write_bytes(altered)
+                    value = json.loads(saved_manifest)
+                    next(row for row in value["files"] if row["path"] == "notification62-hosted.yml")["sha256"] = hashlib.sha256(altered).hexdigest()
+                    manifest_path.write_text(json.dumps(value))
+                    with self.assertRaises(SystemExit): verify()
+                finally:
+                    (packet / "notification62-hosted.yml").write_bytes(saved_packet)
+                    installed.write_bytes(saved_packet)
+                    manifest_path.write_bytes(saved_manifest)
+            before = manifest_path.read_bytes()
+            try:
+                value = json.loads(before)
+                value["supersedesSourceManifestSha256"] = "0" * 64
+                manifest_path.write_text(json.dumps(value))
+                with self.assertRaises(SystemExit): verify()
+            finally: manifest_path.write_bytes(before)
+
+    def test_resealed_predecessors_and_consistent_metadata_still_refuse(self):
+        import os, runpy, shutil
+        from unittest.mock import patch
+        original = Path(__file__).resolve().parent
+        with tempfile.TemporaryDirectory() as directory:
+            workspace = Path(directory)
+            packet = workspace / "acceptance" / "EmployeeRecoveryJoined"
+            shutil.copytree(original, packet)
+            installed = workspace / ".github" / "workflows" / "notification62-hosted.yml"
+            installed.parent.mkdir(parents=True)
+            installed.write_bytes((packet / "notification62-hosted.yml").read_bytes())
+            manifest_path = packet / "source-manifest.json"
+            manifest_before = manifest_path.read_bytes()
+            current_workflow = (packet / "notification62-hosted.yml").read_bytes()
+            anchors = ("v19-source-manifest.json", "v19-notification62-hosted.yml", "v19-verify_packet.py.txt", "v19-test_run_hosted_join.py.txt")
+            for relative in anchors:
+                path = packet / relative
+                before = path.read_bytes()
+                try:
+                    altered = before + b"\n "
+                    path.write_bytes(altered)
+                    value = json.loads(manifest_before)
+                    next(row for row in value["files"] if row["path"] == relative)["sha256"] = hashlib.sha256(altered).hexdigest()
+                    if relative == "v19-source-manifest.json":
+                        value["supersedesSourceManifestSha256"] = hashlib.sha256(altered).hexdigest()
+                    if relative == "v19-notification62-hosted.yml":
+                        candidate = altered.replace(b"actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02", b"actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9")
+                        (packet / "notification62-hosted.yml").write_bytes(candidate)
+                        installed.write_bytes(candidate)
+                        next(row for row in value["files"] if row["path"] == "notification62-hosted.yml")["sha256"] = hashlib.sha256(candidate).hexdigest()
+                    manifest_path.write_text(json.dumps(value))
+                    with self.subTest(path=relative), patch.dict(os.environ, {"GITHUB_ACTIONS": "true", "GITHUB_WORKSPACE": str(workspace)}), self.assertRaisesRegex(SystemExit, "V19 predecessor archive mismatch"):
+                        runpy.run_path(str(packet / "verify_packet.py"))
+                finally:
+                    path.write_bytes(before)
+                    manifest_path.write_bytes(manifest_before)
+                    (packet / "notification62-hosted.yml").write_bytes(current_workflow)
+                    installed.write_bytes(current_workflow)
+
+    def test_resealed_policy_roster_and_control_tampering_refused(self):
+        import os, runpy, shutil
+        from unittest.mock import patch
+        with tempfile.TemporaryDirectory() as directory:
+            workspace = Path(directory)
+            packet = workspace / "acceptance" / "EmployeeRecoveryJoined"
+            shutil.copytree(Path(__file__).resolve().parent, packet)
+            installed = workspace / ".github" / "workflows" / "notification62-hosted.yml"
+            installed.parent.mkdir(parents=True)
+            installed.write_bytes((packet / "notification62-hosted.yml").read_bytes())
+            manifest_path = packet / "source-manifest.json"
+            before = manifest_path.read_bytes()
+            for mode in ("identity", "duplicate", "unrelated-reseal", "test-remove", "test-reseal"):
+                value = json.loads(before)
+                target = packet / ("HOSTED-EXECUTION.md" if mode == "unrelated-reseal" else "test_run_hosted_join.py")
+                target_before = target.read_bytes()
+                try:
+                    if mode == "identity": value["producerManifestSha256"] = "0" * 64
+                    elif mode == "duplicate": value["files"].append(dict(value["files"][0]))
+                    elif mode == "test-remove": value["files"] = [row for row in value["files"] if row["path"] != "test_run_hosted_join.py"]
+                    else:
+                        altered = target_before + b"\n# tampered and resealed\n"
+                        target.write_bytes(altered)
+                        next(row for row in value["files"] if row["path"] == target.name)["sha256"] = hashlib.sha256(altered).hexdigest()
+                    manifest_path.write_text(json.dumps(value))
+                    expected = {"identity": "V19 source policy or identity changed", "duplicate": "Duplicate packet seal refused", "unrelated-reseal": "Unreviewed V19 packet seal or roster change", "test-remove": "Unreviewed V19 packet seal or roster change", "test-reseal": "Exact V20 packet controls required"}[mode]
+                    with self.subTest(mode=mode), patch.dict(os.environ, {"GITHUB_ACTIONS": "true", "GITHUB_WORKSPACE": str(workspace)}), self.assertRaisesRegex(SystemExit, expected):
+                        runpy.run_path(str(packet / "verify_packet.py"))
+                finally:
+                    target.write_bytes(target_before)
+                    manifest_path.write_bytes(before)
+
 if __name__ == "__main__":
     unittest.main()

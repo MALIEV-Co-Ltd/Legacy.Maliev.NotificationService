@@ -40,7 +40,7 @@ jobs:
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
           repository: MALIEV-Co-Ltd/Legacy.Maliev.AccountingService
-          ref: c22e94a8202964a85ee69b96d5fe62cdc1fafe55
+          ref: a0e65818cd33ef1cdf71227bbc37f6df638d9fab
           path: .dependencies/Legacy.Maliev.AccountingService
           persist-credentials: false
       - name: Check out the actual Intranet BFF consumer
@@ -71,7 +71,7 @@ jobs:
         run: python3 scripts/verify-runner-coverage.py runner-results
       - name: Preserve validation evidence
         if: always()
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
         with:
           name: notification-validation-${{ github.sha }}
           path: runner-results
