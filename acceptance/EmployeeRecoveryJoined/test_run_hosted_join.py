@@ -564,5 +564,176 @@ class PacketV20SuccessorTests(unittest.TestCase):
                     target.write_bytes(target_before)
                     manifest_path.write_bytes(before)
 
+class ClientLockDiagnosticTests(unittest.TestCase):
+    @staticmethod
+    def lock(resolved="1.0.0"):
+        value = {"version": 1, "dependencies": {"net10.0": {
+            "Example.Package" + str(index): {"type": "Direct", "requested": "[1.0.0, )",
+                "resolved": resolved, "contentHash": "a" * 86 + "==", "dependencies": {}}
+            for index in range(46)}, "net10.0/browser-wasm": {}}}
+        raw = json.dumps(value).encode()
+        return raw + b" " * (17423 - len(raw))
+
+    def test_client_diagnostic_exists_before_any_native_change(self):
+        self.assertTrue(hasattr(supervisor, "capture_client_lock"), "Bounded Client lock diagnostic is missing")
+
+    def test_client_validator_rejects_unknown_secret_duplicate_and_target_fields(self):
+        valid = self.lock()
+        cases = []
+        for defect in ("secret", "target", "browser", "version", "url", "dependency", "hash", "inventory"):
+            value = json.loads(valid)
+            item = value["dependencies"]["net10.0"]["Example.Package0"]
+            if defect == "secret": item["credential"] = "must never export"
+            if defect == "target": value["dependencies"]["unknown"] = {}
+            if defect == "browser": value["dependencies"]["net10.0/browser-wasm"] = {"Unexpected": {}}
+            if defect == "version": value["version"] = True
+            if defect == "url": item["resolved"] = "https://private.invalid"
+            if defect == "dependency": item["dependencies"] = {"bad/name": "1.0.0"}
+            if defect == "hash": item["contentHash"] = "not a content hash"
+            if defect == "inventory": value["dependencies"]["net10.0"] = {}
+            cases.append((defect, json.dumps(value).encode()))
+        cases.extend((("duplicate", b'{"version":1,"version":1,"dependencies":{}}'),
+                      ("oversize", b" " * (1024 * 1024 + 1))))
+        self.assertEqual(46, len(supervisor.validate_client_lock(valid)))
+        for defect, raw in cases:
+            with self.subTest(defect=defect), self.assertRaises(ValueError):
+                supervisor.validate_client_lock(raw)
+
+    def test_client_capture_requires_exact_real_hash_size_and_safe_schema(self):
+        self.assertEqual("5a5a3573661f026329975b267c99d2e5e30f599418a46f9e57cbeff71dde04b4", supervisor.CLIENT_LOCK_BEFORE)
+        self.assertEqual("745d4156890f0c048c30139009253a10bc55888c6e111c45c1d4d5bbdd829a1c", supervisor.CLIENT_LOCK_AFTER)
+        before, after = self.lock(), self.lock("1.0.1")
+        for defect in (None, "before hash", "after hash", "size", "schema"):
+            with self.subTest(defect=defect), tempfile.TemporaryDirectory() as directory:
+                output = Path(directory)
+                candidate = after
+                if defect == "size": candidate = after[:-1]
+                if defect == "schema": candidate = after.replace(b'"resolved"', b'"password"', 1)
+                with patch.object(supervisor, "CLIENT_LOCK_BEFORE", "0" * 64 if defect == "before hash" else hashlib.sha256(before).hexdigest()), \
+                     patch.object(supervisor, "CLIENT_LOCK_AFTER", "0" * 64 if defect == "after hash" else hashlib.sha256(candidate).hexdigest()):
+                    if defect:
+                        with self.assertRaises(ValueError): supervisor.capture_client_lock(before, candidate, output)
+                        self.assertEqual([], list(output.iterdir()))
+                    else:
+                        supervisor.capture_client_lock(before, candidate, output)
+                        self.assertEqual(candidate, (output / "diagnostic-client.packages.lock.json").read_bytes())
+                        delta = json.loads((output / "diagnostic-client-lock-delta.json").read_text())
+                        self.assertEqual(supervisor.CLIENT_LOCK, delta["path"])
+                        self.assertEqual(46, len(delta["packages"]))
+                        self.assertEqual("1.0.1", delta["packages"][0]["after"]["resolved"])
+                        self.assertEqual("DIAGNOSTIC_ONLY_SOURCE_REJECTION_PRESERVED", delta["classification"])
+
+    def test_client_dirty_source_still_raises_after_diagnostic_capture(self):
+        before, after = self.lock(), self.lock("1.0.1")
+        with tempfile.TemporaryDirectory() as directory:
+            packet = Path(directory)
+            root = packet / "Legacy.Maliev.Intranet"
+            path = root / "Legacy.Maliev.Intranet.Client" / "packages.lock.json"
+            path.parent.mkdir(parents=True)
+            path.write_bytes(after)
+            (packet / "source-bindings.json").write_text(json.dumps({"files": []}))
+            report = packet / "restored-source-changes.json"
+            with patch.object(supervisor, "PACKET", packet), \
+                 patch.object(supervisor, "command", side_effect=["a" * 40, " M " + supervisor.CLIENT_LOCK,
+                     supervisor.CLIENT_LOCK + "\0", "17423"]), \
+                 patch.object(supervisor.subprocess, "run", return_value=Mock(stdout=before)), \
+                 patch.object(supervisor, "CLIENT_LOCK_BEFORE", hashlib.sha256(before).hexdigest()), \
+                 patch.object(supervisor, "CLIENT_LOCK_AFTER", hashlib.sha256(after).hexdigest()):
+                with self.assertRaisesRegex(ValueError, "Hosted source checkout is dirty"):
+                    supervisor.verify_sources({"intranet": root}, {"intranet": "a" * 40}, report)
+            self.assertTrue((packet / "diagnostic-client.packages.lock.json").is_file())
+            self.assertEqual(after, path.read_bytes())
+
+    def test_client_capture_never_overwrites_existing_output(self):
+        before, after = self.lock(), self.lock("1.0.1")
+        for name in ("diagnostic-client.packages.lock.json", "diagnostic-client-lock-delta.json"):
+            with self.subTest(name=name), tempfile.TemporaryDirectory() as directory:
+                output = Path(directory)
+                (output / name).write_bytes(b"existing evidence")
+                with patch.object(supervisor, "CLIENT_LOCK_BEFORE", hashlib.sha256(before).hexdigest()), \
+                     patch.object(supervisor, "CLIENT_LOCK_AFTER", hashlib.sha256(after).hexdigest()):
+                    with self.assertRaises(ValueError): supervisor.capture_client_lock(before, after, output)
+                self.assertEqual(b"existing evidence", (output / name).read_bytes())
+
+    def test_client_capture_path_requires_exact_repository_and_regular_file(self):
+        before, after = self.lock(), self.lock("1.0.1")
+        for defect in ("repository", "path", "symlink", "extra path"):
+            with self.subTest(defect=defect), tempfile.TemporaryDirectory() as directory:
+                base = Path(directory)
+                root = base / ("WrongRepository" if defect == "repository" else "Legacy.Maliev.Intranet")
+                relative = "other.lock.json" if defect == "path" else supervisor.CLIENT_LOCK
+                path = root / relative
+                path.parent.mkdir(parents=True)
+                path.write_bytes(after)
+                paths = relative + ("\0other.file" if defect == "extra path" else "")
+                with patch.object(supervisor, "command", side_effect=[paths, "17423", "17423"]), \
+                     patch.object(supervisor.subprocess, "run", return_value=Mock(stdout=before)), \
+                     patch.object(supervisor, "CLIENT_LOCK_BEFORE", hashlib.sha256(before).hexdigest()), \
+                     patch.object(supervisor, "CLIENT_LOCK_AFTER", hashlib.sha256(after).hexdigest()), \
+                     patch.object(Path, "is_symlink", return_value=defect == "symlink"):
+                    if defect == "symlink":
+                        with self.assertRaises(ValueError): supervisor.record_source_changes(root, base / "diagnostic.json")
+                    elif defect == "extra path":
+                        # Generic hash diagnostics may still inspect all changed files, but Client bytes are never exported.
+                        (root / "other.file").write_bytes(after)
+                        supervisor.record_source_changes(root, base / "diagnostic.json")
+                    else:
+                        supervisor.record_source_changes(root, base / "diagnostic.json")
+                self.assertFalse((base / "diagnostic-client.packages.lock.json").exists())
+
+
+class PacketV21DiagnosticTests(unittest.TestCase):
+    def test_v21_declares_diagnostic_only_successor(self):
+        manifest = json.loads((supervisor.PACKET / "source-manifest.json").read_bytes())
+        self.assertEqual("V21 bounded Client lock diagnostic successor", manifest["version"])
+        self.assertEqual("9fe8a568f2b605f4a7fd35a016bb729a5aeb8e6719b9fd6f3a6cdc8fc5a0db80",
+                         manifest["supersedesSourceManifestSha256"])
+
+    def test_v21_resealed_v20_archives_and_expanded_delta_are_refused(self):
+        import os, runpy, shutil
+        with tempfile.TemporaryDirectory() as directory:
+            workspace = Path(directory)
+            packet = workspace / "acceptance" / "EmployeeRecoveryJoined"
+            shutil.copytree(supervisor.PACKET, packet)
+            installed = workspace / ".github" / "workflows" / "notification62-hosted.yml"
+            installed.parent.mkdir(parents=True)
+            installed.write_bytes((packet / "notification62-hosted.yml").read_bytes())
+            manifest_path = packet / "source-manifest.json"
+            before = manifest_path.read_bytes()
+            for name in ("v20-source-manifest.json", "v20-run_hosted_join.py.txt", "v20-verify_packet.py.txt",
+                         "v20-test_run_hosted_join.py.txt", "v20-notification62-hosted.yml"):
+                archive = packet / name
+                original = archive.read_bytes()
+                try:
+                    changed = original + b"\n "
+                    archive.write_bytes(changed)
+                    value = json.loads(before)
+                    next(row for row in value["files"] if row["path"] == name)["sha256"] = hashlib.sha256(changed).hexdigest()
+                    if name == "v20-source-manifest.json": value["supersedesSourceManifestSha256"] = hashlib.sha256(changed).hexdigest()
+                    manifest_path.write_text(json.dumps(value))
+                    with self.subTest(archive=name), patch.dict(os.environ, {"GITHUB_ACTIONS": "true", "GITHUB_WORKSPACE": str(workspace)}), \
+                         self.assertRaisesRegex(SystemExit, "V20 predecessor archive mismatch"):
+                        runpy.run_path(str(packet / "verify_packet.py"))
+                finally:
+                    archive.write_bytes(original)
+                    manifest_path.write_bytes(before)
+            for name in ("run_hosted_join.py", "source-bindings.json", "composed-lock.props", "notification62-hosted.yml"):
+                target = packet / name
+                original = target.read_bytes()
+                try:
+                    changed = original + b"\n# unreviewed and resealed\n"
+                    target.write_bytes(changed)
+                    value = json.loads(before)
+                    next(row for row in value["files"] if row["path"] == name)["sha256"] = hashlib.sha256(changed).hexdigest()
+                    manifest_path.write_text(json.dumps(value))
+                    if name == "notification62-hosted.yml": installed.write_bytes(changed)
+                    with self.subTest(file=name), patch.dict(os.environ, {"GITHUB_ACTIONS": "true", "GITHUB_WORKSPACE": str(workspace)}), self.assertRaises(SystemExit):
+                        runpy.run_path(str(packet / "verify_packet.py"))
+                finally:
+                    target.write_bytes(original)
+                    manifest_path.write_bytes(before)
+                    installed.write_bytes((packet / "notification62-hosted.yml").read_bytes())
+
+
 if __name__ == "__main__":
     unittest.main()

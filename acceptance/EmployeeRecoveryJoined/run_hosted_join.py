@@ -20,6 +20,9 @@ SDK_GATE = "import os,sys\nif os.read(0,1) != b'1': sys.exit(125)\nos.execvpe(sy
 BFF_LOCK = "Legacy.Maliev.Intranet.Bff/packages.lock.json"
 BFF_LOCK_BEFORE = "9db1aa34e5170a7912923961637c0a4a9b0fa11bd6164169ca3111e820dfb885"
 BFF_LOCK_AFTER = "20f61f6207e89e260dd41d44e246ee9d052b237a97a63cc7fef24d30c6117cd6"
+CLIENT_LOCK = "Legacy.Maliev.Intranet.Client/packages.lock.json"
+CLIENT_LOCK_BEFORE = "5a5a3573661f026329975b267c99d2e5e30f599418a46f9e57cbeff71dde04b4"
+CLIENT_LOCK_AFTER = "745d4156890f0c048c30139009253a10bc55888c6e111c45c1d4d5bbdd829a1c"
 
 
 def command(args, **kwargs):
@@ -84,13 +87,65 @@ def verify_composed_lock():
     validate_nuget_lock(raw)
 
 
+def validate_client_lock(raw):
+    if len(raw) > 1024 * 1024:
+        raise ValueError("Client lock exceeds the reviewed byte bound")
+    def unique_fields(pairs):
+        value = {}
+        for key, item in pairs:
+            if key in value:
+                raise ValueError("Duplicate Client lock field")
+            value[key] = item
+        return value
+    value = json.loads(raw, object_pairs_hook=unique_fields)
+    if (not isinstance(value, dict) or set(value) != {"version", "dependencies"}
+            or type(value["version"]) is not int or value["version"] != 1
+            or not isinstance(value["dependencies"], dict)
+            or set(value["dependencies"]) != {"net10.0", "net10.0/browser-wasm"}
+            or value["dependencies"]["net10.0/browser-wasm"] != {}):
+        raise ValueError("Unexpected Client lock schema")
+    packages = validate_nuget_lock(json.dumps({"version": 1, "dependencies": {
+        "net10.0": value["dependencies"]["net10.0"]}}).encode())
+    if not packages:
+        raise ValueError("Empty Client lock inventory")
+    return packages
+
+
+def capture_client_lock(before, after, output):
+    if (len(before) != 17423 or len(after) != 17423
+            or hashlib.sha256(before).hexdigest() != CLIENT_LOCK_BEFORE
+            or hashlib.sha256(after).hexdigest() != CLIENT_LOCK_AFTER):
+        raise ValueError("Client lock differs from the observed exact hash and size pair")
+    old, new = validate_client_lock(before), validate_client_lock(after)
+    delta = [{"package": name,
+              "before": old.get(name), "after": new.get(name)}
+             for name in sorted(set(old) | set(new)) if old.get(name) != new.get(name)]
+    lock_path = output / "diagnostic-client.packages.lock.json"
+    delta_path = output / "diagnostic-client-lock-delta.json"
+    if any(path.exists() or path.is_symlink() for path in (lock_path, delta_path)):
+        raise ValueError("Existing Client diagnostic evidence must not be overwritten")
+    with lock_path.open("xb") as stream:
+        stream.write(after)
+    with delta_path.open("x", encoding="utf-8") as stream:
+        stream.write(json.dumps({
+        "classification": "DIAGNOSTIC_ONLY_SOURCE_REJECTION_PRESERVED", "path": CLIENT_LOCK,
+        "beforeSha256": CLIENT_LOCK_BEFORE, "afterSha256": CLIENT_LOCK_AFTER,
+        "beforeSize": len(before), "afterSize": len(after), "packages": delta}, indent=2))
+
+
 def record_source_changes(root, output):
     paths = [path for path in command(["git", "-C", str(root), "diff", "HEAD", "--name-only", "-z"]).split("\0") if path]
     if len(paths) > 64:
         raise ValueError("Source-change diagnostic exceeds the reviewed path bound")
     rows = []
     composed = None
+    client = None
     for relative in paths:
+        if root.name == "Legacy.Maliev.Intranet" and relative == CLIENT_LOCK:
+            lexical = root / relative
+            if (root.is_symlink() or lexical.parent.is_symlink() or lexical.is_symlink()
+                    or not lexical.is_file()):
+                raise ValueError("Client lock diagnostic requires a regular non-symlink file")
         path = (root / relative).resolve()
         if not path.is_relative_to(root.resolve()):
             raise ValueError("Source-change diagnostic escapes the checkout")
@@ -102,12 +157,16 @@ def record_source_changes(root, output):
         after = path.read_bytes() if path.exists() else None
         if root.name == "Legacy.Maliev.Intranet" and relative == BFF_LOCK and after is not None:
             composed = (before, after)
+        if root.name == "Legacy.Maliev.Intranet" and paths == [CLIENT_LOCK] and after is not None:
+            client = (before, after)
         rows.append({"path": relative, "beforeSize": len(before), "beforeSha256": hashlib.sha256(before).hexdigest(),
                      "afterSize": len(after) if after is not None else None,
                      "afterSha256": hashlib.sha256(after).hexdigest() if after is not None else None})
     output.write_text(json.dumps({"repository": root.name, "trackedChanges": rows}, indent=2))
     if composed is not None:
         capture_composed_lock(*composed, output.parent)
+    if client is not None:
+        capture_client_lock(*client, output.parent)
 
 
 def verify_sources(roots, heads, diagnostics=None):
