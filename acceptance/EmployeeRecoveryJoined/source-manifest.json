@@ -67,7 +67,7 @@
     },
     {
       "path": "run_hosted_join.py",
-      "sha256": "e3682950d71b796bfcf1795c1c54a8fc1f0d8f8df16985ae8693570c4cf5671e"
+      "sha256": "5815a5c0181992bf82c99db48f4b0a8dbb4d35c8e93d8c2f5628ec8ca4469de1"
     },
     {
       "path": "source-bindings.json",
@@ -75,11 +75,11 @@
     },
     {
       "path": "test_run_hosted_join.py",
-      "sha256": "16b0a59e6745cf7cf9f0b0228525c88a78cd66429a1df6db820d1354b96861b2"
+      "sha256": "75a5f03909c39df93cf56defaa04a57ae3d1d225403b51471e50adb5bda786ab"
     },
     {
       "path": "verify_packet.py",
-      "sha256": "055331d9ab6c6863ce87dbb6345cd8107fe888dda5cbded3290076d7dbc5ac92"
+      "sha256": "6cb9d293a18d436d00d6cae3769ee92680aa8d190fd45c14e9eb2935c65ada60"
     },
     {
       "path": "verify_gate_runtime.py",
@@ -116,6 +116,26 @@
     {
       "path": "v19-test_run_hosted_join.py.txt",
       "sha256": "7f54961720fd5c1a2943e86956c12710e3085d400f902e581ae63bf29d8a5427"
+    },
+    {
+      "path": "v20-source-manifest.json",
+      "sha256": "9fe8a568f2b605f4a7fd35a016bb729a5aeb8e6719b9fd6f3a6cdc8fc5a0db80"
+    },
+    {
+      "path": "v20-run_hosted_join.py.txt",
+      "sha256": "e3682950d71b796bfcf1795c1c54a8fc1f0d8f8df16985ae8693570c4cf5671e"
+    },
+    {
+      "path": "v20-verify_packet.py.txt",
+      "sha256": "055331d9ab6c6863ce87dbb6345cd8107fe888dda5cbded3290076d7dbc5ac92"
+    },
+    {
+      "path": "v20-test_run_hosted_join.py.txt",
+      "sha256": "16b0a59e6745cf7cf9f0b0228525c88a78cd66429a1df6db820d1354b96861b2"
+    },
+    {
+      "path": "v20-notification62-hosted.yml",
+      "sha256": "ff3dcad38a8fc42a2c1870c755c58f72d4a6fcf49f1d424e272cfb5b2485b4b9"
     }
   ],
   "externalEvidence": [
@@ -158,9 +178,9 @@
       "tree": "5031d608d117ecbd9ff2b562356d036b025cbf1b"
     }
   },
-  "version": "V20 artifact transport action successor",
-  "supersedesSourceManifestSha256": "9093b2bfc93c5bc3fde1d2d86ff8d4e578bc410983271270aeeaf19e5288a7a8",
-  "dispatchHold": "V20 joined native validation requires a new explicit scoped authorization; historical V19 evidence remains historical.",
+  "version": "V21 bounded Client lock diagnostic successor",
+  "supersedesSourceManifestSha256": "9fe8a568f2b605f4a7fd35a016bb729a5aeb8e6719b9fd6f3a6cdc8fc5a0db80",
+  "dispatchHold": "V21 diagnostic acquisition requires new explicit scoped authorization; source drift remains rejected and historical native evidence remains historical.",
   "authoredPoolCleanupRegressionCases": 1,
   "nativeExecutedPoolCleanupRegressionCases": 1,
   "poolCleanup": "Actual host effective identities captured by lifecycle observer before worker StartAsync; fixture/bootstrap identities also retained; no global ClearAllPools or policy changes; backend absence unproven",
