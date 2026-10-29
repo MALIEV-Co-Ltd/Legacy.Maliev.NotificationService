@@ -111,6 +111,16 @@ def validate_client_lock(raw):
     return packages
 
 
+def verify_composed_client_lock():
+    path = PACKET / "composed-client.packages.lock.json"
+    if path.is_symlink():
+        raise ValueError("Reviewed composed Client lock is a symlink")
+    raw = path.read_bytes()
+    if len(raw) != 17423 or hashlib.sha256(raw).hexdigest() != CLIENT_LOCK_AFTER:
+        raise ValueError("Reviewed composed Client lock changed")
+    validate_client_lock(raw)
+
+
 def capture_client_lock(before, after, output):
     if (len(before) != 17423 or len(after) != 17423
             or hashlib.sha256(before).hexdigest() != CLIENT_LOCK_BEFORE
@@ -455,6 +465,7 @@ def main():
         raise ValueError("Joined shared dependency pins must match the reviewed source packet")
     pins = verify_sources(roots, heads)
     verify_composed_lock()
+    verify_composed_client_lock()
     if roots["defaults"].parent != roots["contracts"].parent:
         raise ValueError("Shared dependencies must occupy the same isolated workspace")
     args.output.mkdir(parents=True, exist_ok=False)
@@ -527,6 +538,7 @@ def main():
                     *properties], restored_env, args.output, "restored-test", run, deadline)
         verify_restored(args.output)
         verify_composed_lock()
+        verify_composed_client_lock()
         verify_sources(roots, heads, args.output / "final-source-changes.json")
     finally:
         try:

@@ -684,7 +684,7 @@ class ClientLockDiagnosticTests(unittest.TestCase):
 
 class PacketV21DiagnosticTests(unittest.TestCase):
     def test_v21_declares_diagnostic_only_successor(self):
-        manifest = json.loads((supervisor.PACKET / "source-manifest.json").read_bytes())
+        manifest = json.loads((supervisor.PACKET / "v21-source-manifest.json").read_bytes())
         self.assertEqual("V21 bounded Client lock diagnostic successor", manifest["version"])
         self.assertEqual("9fe8a568f2b605f4a7fd35a016bb729a5aeb8e6719b9fd6f3a6cdc8fc5a0db80",
                          manifest["supersedesSourceManifestSha256"])
@@ -733,6 +733,69 @@ class PacketV21DiagnosticTests(unittest.TestCase):
                     target.write_bytes(original)
                     manifest_path.write_bytes(before)
                     installed.write_bytes((packet / "notification62-hosted.yml").read_bytes())
+
+
+
+class ComposedClientLockTests(unittest.TestCase):
+    def test_composed_client_is_exact_observed_safe_graph(self):
+        supervisor.verify_composed_client_lock()
+        raw = (supervisor.PACKET / "composed-client.packages.lock.json").read_bytes()
+        self.assertEqual(17423, len(raw))
+        self.assertEqual(supervisor.CLIENT_LOCK_AFTER, hashlib.sha256(raw).hexdigest())
+        self.assertEqual(46, len(supervisor.validate_client_lock(raw)))
+
+    def test_composed_client_refuses_missing_modified_and_symlink_lock(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            path = root / "composed-client.packages.lock.json"
+            with patch.object(supervisor, "PACKET", root):
+                with self.assertRaises(FileNotFoundError): supervisor.verify_composed_client_lock()
+                path.write_bytes(b"{}")
+                with self.assertRaisesRegex(ValueError, "composed Client lock changed"):
+                    supervisor.verify_composed_client_lock()
+                with patch.object(Path, "is_symlink", return_value=True):
+                    with self.assertRaisesRegex(ValueError, "symlink"):
+                        supervisor.verify_composed_client_lock()
+
+    def test_client_props_only_exact_project_and_packet_relative_lock(self):
+        import xml.etree.ElementTree as ET
+        tree = ET.fromstring((supervisor.PACKET / "composed-lock.props").read_bytes())
+        groups = tree.findall("PropertyGroup")
+        self.assertEqual(2, len(groups))
+        expected = "'$(MSBuildProjectFullPath)' == '$(RecoveryIntranetRoot)/Legacy.Maliev.Intranet.Client/Legacy.Maliev.Intranet.Client.csproj'"
+        client = [group for group in groups if group.get("Condition") == expected]
+        self.assertEqual(1, len(client))
+        self.assertEqual({"NuGetLockFilePath": "$(MSBuildThisFileDirectory)composed-client.packages.lock.json",
+                          "RestorePackagesWithLockFile": "true", "RestoreLockedMode": "true"},
+                         {node.tag: node.text for node in client[0]})
+        self.assertEqual(3, len(client[0]))
+
+    def test_v22_retains_exact_v21_and_rejects_resealed_client_or_props(self):
+        import os, runpy, shutil
+        with tempfile.TemporaryDirectory() as directory:
+            workspace = Path(directory)
+            packet = workspace / "acceptance" / "EmployeeRecoveryJoined"
+            shutil.copytree(supervisor.PACKET, packet)
+            manifest_path = packet / "source-manifest.json"
+            before = manifest_path.read_bytes()
+            with patch.dict(os.environ, {"GITHUB_ACTIONS": "false"}):
+                runpy.run_path(str(packet / "verify_packet.py"))
+            for name in ("composed-client.packages.lock.json", "composed-lock.props", "v21-source-manifest.json",
+                         "v21-run_hosted_join.py.txt", "v21-test_run_hosted_join.py.txt", "v21-verify_packet.py.txt",
+                         "v21-composed-lock.props"):
+                target = packet / name
+                original = target.read_bytes()
+                try:
+                    changed = original + b"\n "
+                    target.write_bytes(changed)
+                    value = json.loads(before)
+                    next(row for row in value["files"] if row["path"] == name)["sha256"] = hashlib.sha256(changed).hexdigest()
+                    manifest_path.write_text(json.dumps(value))
+                    with self.subTest(file=name), patch.dict(os.environ, {"GITHUB_ACTIONS": "false"}), self.assertRaises(SystemExit):
+                        runpy.run_path(str(packet / "verify_packet.py"))
+                finally:
+                    target.write_bytes(original)
+                    manifest_path.write_bytes(before)
 
 
 if __name__ == "__main__":

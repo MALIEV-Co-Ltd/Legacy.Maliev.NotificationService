@@ -1,0 +1,191 @@
+{
+  "classification": "SOURCE_IMPLEMENTED_JOINED_NATIVE_VALIDATION_PENDING",
+  "owner": "notification_delivery subagent under current migration coordinator",
+  "producerManifestSha256": "990cda3a2c3d6c2b41fd0e01572c3c53d9b166aaafa8a2c2e7f9a99d5a351f42",
+  "sourceBindings": 38,
+  "producerPins": "12/12 PASS",
+  "authoredJoinedCases": 8,
+  "nativeExecutedJoinedCases": 8,
+  "bootstrap": "Actual Auth/BFF/Notification Programs implemented; only external Brevo controlled; real CSRF, service login, RS256, worker and disposable PostgreSQL/Redis",
+  "hostedWorkflow": "Implemented source only; exact published producer heads and Root review required",
+  "validation": {
+    "supervisorTests": "34 passed normal and optimized Python; zero failed/skipped; owned child exits verified. Actual pre-checkout inline guard rejects alternate valid SHA and non-main ref; prior guard reproduced both failures.",
+    "pythonAst": "PASS",
+    "projectXml": "PASS",
+    "workflowYaml": "PASS actionlint on exact workflow; external shellcheck/pyflakes not installed or invoked",
+    "boundSourceHashes": "38 canonical Git blob hashes pinned; BFF csproj changes only accepted framework patch; all13 other prior BFF bindings unchanged; Server project added",
+    "initialGitleaks": "FAIL manifest public commit metadata; retained",
+    "finalGitleaks": "PASS scoped source; exact final seal qualification recorded separately",
+    "nativeBuildTestsFormatCoverageAudit": "Exact922fdc4 joined39955446441 PASS:3 Release builds0W/0E;12 initial,4 precise quoted baseline failures/4 ordinary passes,12 restored;format/audit PASS. Ordinary39955446805 PASS:350 initial/350 restored;unchanged coverage83.10/95.03/96.33/100%. Successor exact-head and protected-main checks required.",
+    "publishedProducerBindings": "Auth d05c1ed ordinary39727079106 and BFF accepted229fb0d ordinary38954318992 plus applicable joins successful; joined execution remains pending",
+    "gitIndexRawCommit": "V19 raw committed-byte verification required after commit",
+    "actualHostPoolRegression": "1 native case PASS;9 fixture receipts each register and clear7pools;all3hosts disposed;no cleanup failures/retained ownership. Pool bookkeeping alone is not backend socket proof; native groups and containers also absent.",
+    "hostDisposalOrderRegressions": "3 native cases PASS: fault,timeout/late completion,successful ordering.",
+    "actualGateControls": "Linux39955446441 EOF/release and exact helper absence passed;38 bindings and8GiB admission passed. All9 native groups absent;final cleanup PASS;no remaining containers."
+  },
+  "resources": "No local SDK/container/server/browser allocation. Hosted9 native groups absent,26 fixtures disposed,final cleanup PASS with no containers. Owned Python control processes exited.",
+  "files": [
+    {
+      "path": "HostDisposalFailureRegressionTests.cs",
+      "sha256": "0aa14a5c5e6d377597472f51a4a837cc1fe57e12492b038c898823fb6a281c70"
+    },
+    {
+      "path": "HostDisposalGate.cs",
+      "sha256": "cd3127e1de1b4212d633c2d232601ad1e245b8e24818612208d8ebc63310f32e"
+    },
+    {
+      "path": "HOSTED-EXECUTION.md",
+      "sha256": "bba128761081306a18e90d1cc9e4a808a39bbdfd6347387bc2c45da9a528f939"
+    },
+    {
+      "path": "HostPoolCleanupRegressionTests.cs",
+      "sha256": "45b1a8396731612f0b8b922f35c846e600486d145d8a22c8561554e9f7189800"
+    },
+    {
+      "path": "JoinedRecovery.Acceptance.sln",
+      "sha256": "f36051ad3413246f56255fdaa1d949f03ca3fce42da3077d23d1d68d9621d23c"
+    },
+    {
+      "path": "JoinedRecovery.AcceptanceTests.csproj",
+      "sha256": "30f563f35fad6a00cdd457be9efc6dfd5bbd5d4a0faa0f145fb9e84a78a6bc2a"
+    },
+    {
+      "path": "JoinedRecoveryTests.cs",
+      "sha256": "c7c3d17be09e844da47987b94144ee3e505e54655a205d3c86695b058ed809b5"
+    },
+    {
+      "path": "notification62-hosted.yml",
+      "sha256": "ff3dcad38a8fc42a2c1870c755c58f72d4a6fcf49f1d424e272cfb5b2485b4b9"
+    },
+    {
+      "path": "RecoveryJoinFixture.cs",
+      "sha256": "30f49849636ad7605c4de96ae62bbb885c9dd9774ba57f8ab073f7f5e402bf0c"
+    },
+    {
+      "path": "resource-ledger.json",
+      "sha256": "1e4c3dcab7bb58afcb154335d09e4385ff5e8488ba6b55fc516ad1508d1bae17"
+    },
+    {
+      "path": "run_hosted_join.py",
+      "sha256": "5815a5c0181992bf82c99db48f4b0a8dbb4d35c8e93d8c2f5628ec8ca4469de1"
+    },
+    {
+      "path": "source-bindings.json",
+      "sha256": "1c743af6ccf45f64bb45ea6843a2073dee6892d62e7aeeac79eabbb6ede197bb"
+    },
+    {
+      "path": "test_run_hosted_join.py",
+      "sha256": "75a5f03909c39df93cf56defaa04a57ae3d1d225403b51471e50adb5bda786ab"
+    },
+    {
+      "path": "verify_packet.py",
+      "sha256": "6cb9d293a18d436d00d6cae3769ee92680aa8d190fd45c14e9eb2935c65ada60"
+    },
+    {
+      "path": "verify_gate_runtime.py",
+      "sha256": "c742647987961ddea64719507e8c18cdd7f61bdd37325e6f69b41724e6dae361"
+    },
+    {
+      "path": "causal_baseline.py",
+      "sha256": "7a3b81a2e70cb7eef6134818da38501b225503dab3f570070c3d0ab8fa4419b2"
+    },
+    {
+      "path": "test_causal_baseline.py",
+      "sha256": "209ebe908010d6f71d478953361d2e33f9a6105ceab08f07d52caaadf6e395cd"
+    },
+    {
+      "path": "composed-lock.props",
+      "sha256": "7e72120830b4b3e0849c63bd3863c4797deddd6eabf7c976b3429ae649130970"
+    },
+    {
+      "path": "composed-bff.packages.lock.json",
+      "sha256": "20f61f6207e89e260dd41d44e246ee9d052b237a97a63cc7fef24d30c6117cd6"
+    },
+    {
+      "path": "v19-source-manifest.json",
+      "sha256": "9093b2bfc93c5bc3fde1d2d86ff8d4e578bc410983271270aeeaf19e5288a7a8"
+    },
+    {
+      "path": "v19-notification62-hosted.yml",
+      "sha256": "6ec629c83585ff815adb514eb25b0ae892245b23ab8ec6554452eaede9cacf9c"
+    },
+    {
+      "path": "v19-verify_packet.py.txt",
+      "sha256": "c94443baea808b430b0840e1c45f1287407d1d1dc7d50ee3ddc35c9d4715ec54"
+    },
+    {
+      "path": "v19-test_run_hosted_join.py.txt",
+      "sha256": "7f54961720fd5c1a2943e86956c12710e3085d400f902e581ae63bf29d8a5427"
+    },
+    {
+      "path": "v20-source-manifest.json",
+      "sha256": "9fe8a568f2b605f4a7fd35a016bb729a5aeb8e6719b9fd6f3a6cdc8fc5a0db80"
+    },
+    {
+      "path": "v20-run_hosted_join.py.txt",
+      "sha256": "e3682950d71b796bfcf1795c1c54a8fc1f0d8f8df16985ae8693570c4cf5671e"
+    },
+    {
+      "path": "v20-verify_packet.py.txt",
+      "sha256": "055331d9ab6c6863ce87dbb6345cd8107fe888dda5cbded3290076d7dbc5ac92"
+    },
+    {
+      "path": "v20-test_run_hosted_join.py.txt",
+      "sha256": "16b0a59e6745cf7cf9f0b0228525c88a78cd66429a1df6db820d1354b96861b2"
+    },
+    {
+      "path": "v20-notification62-hosted.yml",
+      "sha256": "ff3dcad38a8fc42a2c1870c755c58f72d4a6fcf49f1d424e272cfb5b2485b4b9"
+    }
+  ],
+  "externalEvidence": [
+    {
+      "path": "D:\\codex-temp\\2026-10-03\\legacy-code-files-20261003\\outputs\\notification62-bootstrap-v2-validation.json",
+      "sha256": "5e3e9c4d2c76809a6739a0cc4c6001efd91fb762d1d1f7c483f1503db6eccb9f"
+    },
+    {
+      "path": "D:\\codex-temp\\2026-10-03\\legacy-code-files-20261003\\outputs\\notification62-bootstrap-v2-gitleaks-redacted.json",
+      "sha256": "c3ac8d14fa09c25e4962e6f02ce7d4b37a60c0c1769183f22da940c433d5279c"
+    },
+    {
+      "path": "D:\\codex-temp\\2026-10-03\\legacy-code-files-20261003\\outputs\\notification62-bootstrap-v2-original-bindings.json",
+      "sha256": "57b9fbb46356ed95fd45eb01951bb79a888f8fd8b699e276d86c49a3c5ac8a71"
+    },
+    {
+      "path": "D:\\codex-temp\\2026-10-03\\legacy-code-files-20261003\\outputs\\notification62-bootstrap-v2-manifest-finding-classification.json",
+      "sha256": "1c5cf0f2938fe7edc5fa93bb57f6d301e86dddf57866c9b25590394b7c553670"
+    },
+    {
+      "path": "D:\\codex-temp\\2026-10-03\\legacy-code-files-20261003\\outputs\\notification62-bootstrap-v2-gitleaks-report-custody.json",
+      "sha256": "b39a7fe9302072a0134868326d5bdb4178a3ae055a715db1010b958632bc7ff1"
+    },
+    {
+      "path": "D:\\codex-temp\\2026-10-03\\legacy-code-files-20261003\\outputs\\notification62-bootstrap-v2-gitleaks-final.log",
+      "sha256": "b6a17562474e4ee61a5e4e31e7458895d1c9efcd8e53a5b1cb0c22826830edfc"
+    },
+    {
+      "path": "D:\\codex-temp\\2026-10-03\\legacy-code-files-20261003\\outputs\\notification62-published-producer-binding-v2.json",
+      "sha256": "17ca6f6c2f82bd4861ce73882d5f200d47c5ee586b85459654b74a4b983caf03"
+    }
+  ],
+  "candidateHeads": {
+    "auth": {
+      "head": "d05c1ed990303beb2fba630b49c78adca9d0b610",
+      "tree": "98da44c2c74c6a51d98026e5a39b1024e7f6abef"
+    },
+    "intranet": {
+      "head": "229fb0d80f697b2c079da1f44baf4ce472181bde",
+      "tree": "5031d608d117ecbd9ff2b562356d036b025cbf1b"
+    }
+  },
+  "version": "V21 bounded Client lock diagnostic successor",
+  "supersedesSourceManifestSha256": "9fe8a568f2b605f4a7fd35a016bb729a5aeb8e6719b9fd6f3a6cdc8fc5a0db80",
+  "dispatchHold": "V21 diagnostic acquisition requires new explicit scoped authorization; source drift remains rejected and historical native evidence remains historical.",
+  "authoredPoolCleanupRegressionCases": 1,
+  "nativeExecutedPoolCleanupRegressionCases": 1,
+  "poolCleanup": "Actual host effective identities captured by lifecycle observer before worker StartAsync; fixture/bootstrap identities also retained; no global ClearAllPools or policy changes; backend absence unproven",
+  "authoredHostDisposalRegressionCases": 3,
+  "nativeExecutedHostDisposalRegressionCases": 3,
+  "hostFailureCustody": "Preserve pools/containers/runtime-only keys/lease if any actual host disposal fails or times out; poison admission; supervisor final removal requires exact native group absence",
+  "causalBaseline": "Exact922fdc4 run39955446441 historical4quoted failures/4ordinary passes qualified;model restored;strict sources clean and exact12 restored tests passed. Successor exact-head validation required."
+}

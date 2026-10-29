@@ -5,4 +5,10 @@
     <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
     <RestoreLockedMode>true</RestoreLockedMode>
   </PropertyGroup>
+  <!-- Preserve the pinned Client checkout while composing the observed hosted SDK graph. -->
+  <PropertyGroup Condition="'$(MSBuildProjectFullPath)' == '$(RecoveryIntranetRoot)/Legacy.Maliev.Intranet.Client/Legacy.Maliev.Intranet.Client.csproj'">
+    <NuGetLockFilePath>$(MSBuildThisFileDirectory)composed-client.packages.lock.json</NuGetLockFilePath>
+    <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
+    <RestoreLockedMode>true</RestoreLockedMode>
+  </PropertyGroup>
 </Project>

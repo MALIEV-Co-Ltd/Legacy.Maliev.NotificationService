@@ -67,7 +67,7 @@
     },
     {
       "path": "run_hosted_join.py",
-      "sha256": "5815a5c0181992bf82c99db48f4b0a8dbb4d35c8e93d8c2f5628ec8ca4469de1"
+      "sha256": "2b8f5e23580a58a96b66de063b5e4d234734cb1ac4c7e1b7e17f80056ba5b41d"
     },
     {
       "path": "source-bindings.json",
@@ -75,11 +75,11 @@
     },
     {
       "path": "test_run_hosted_join.py",
-      "sha256": "75a5f03909c39df93cf56defaa04a57ae3d1d225403b51471e50adb5bda786ab"
+      "sha256": "1a868eec80949e86460a7b229f0dc63dbc4155630c7e6f9b28d9f498e766dd03"
     },
     {
       "path": "verify_packet.py",
-      "sha256": "6cb9d293a18d436d00d6cae3769ee92680aa8d190fd45c14e9eb2935c65ada60"
+      "sha256": "393e138b62b3d0e5602b769f08b6705d9fc815f7ca68850b98af4531d991edbd"
     },
     {
       "path": "verify_gate_runtime.py",
@@ -95,7 +95,7 @@
     },
     {
       "path": "composed-lock.props",
-      "sha256": "7e72120830b4b3e0849c63bd3863c4797deddd6eabf7c976b3429ae649130970"
+      "sha256": "535fa46ed087958f3c3c0914d3afb0d91a44e04c61a0ba38e4561bc9be0f5715"
     },
     {
       "path": "composed-bff.packages.lock.json",
@@ -136,6 +136,30 @@
     {
       "path": "v20-notification62-hosted.yml",
       "sha256": "ff3dcad38a8fc42a2c1870c755c58f72d4a6fcf49f1d424e272cfb5b2485b4b9"
+    },
+    {
+      "path": "v21-source-manifest.json",
+      "sha256": "0fbb189ba01f5889687d092e2e57c42fbab1ca61c84183ba8a11a443010e79e3"
+    },
+    {
+      "path": "v21-run_hosted_join.py.txt",
+      "sha256": "5815a5c0181992bf82c99db48f4b0a8dbb4d35c8e93d8c2f5628ec8ca4469de1"
+    },
+    {
+      "path": "v21-test_run_hosted_join.py.txt",
+      "sha256": "75a5f03909c39df93cf56defaa04a57ae3d1d225403b51471e50adb5bda786ab"
+    },
+    {
+      "path": "v21-verify_packet.py.txt",
+      "sha256": "6cb9d293a18d436d00d6cae3769ee92680aa8d190fd45c14e9eb2935c65ada60"
+    },
+    {
+      "path": "v21-composed-lock.props",
+      "sha256": "7e72120830b4b3e0849c63bd3863c4797deddd6eabf7c976b3429ae649130970"
+    },
+    {
+      "path": "composed-client.packages.lock.json",
+      "sha256": "745d4156890f0c048c30139009253a10bc55888c6e111c45c1d4d5bbdd829a1c"
     }
   ],
   "externalEvidence": [
@@ -178,9 +202,9 @@
       "tree": "5031d608d117ecbd9ff2b562356d036b025cbf1b"
     }
   },
-  "version": "V21 bounded Client lock diagnostic successor",
-  "supersedesSourceManifestSha256": "9fe8a568f2b605f4a7fd35a016bb729a5aeb8e6719b9fd6f3a6cdc8fc5a0db80",
-  "dispatchHold": "V21 diagnostic acquisition requires new explicit scoped authorization; source drift remains rejected and historical native evidence remains historical.",
+  "version": "V22 composed Client lock successor",
+  "supersedesSourceManifestSha256": "0fbb189ba01f5889687d092e2e57c42fbab1ca61c84183ba8a11a443010e79e3",
+  "dispatchHold": "V22 composed Client joined validation requires new explicit scoped authorization; historical evidence remains historical.",
   "authoredPoolCleanupRegressionCases": 1,
   "nativeExecutedPoolCleanupRegressionCases": 1,
   "poolCleanup": "Actual host effective identities captured by lifecycle observer before worker StartAsync; fixture/bootstrap identities also retained; no global ClearAllPools or policy changes; backend absence unproven",
