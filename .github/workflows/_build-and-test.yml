@@ -57,6 +57,30 @@ jobs:
         run: |
           python3 -m unittest discover -s scripts -p test_preload_postgres_image.py -v
           python3 scripts/preload-postgres-image.py
+      - name: Check out reviewed resource guard
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          repository: MALIEV-Co-Ltd/Legacy.Maliev.Workflows
+          ref: 7a449b36fe5f4f7b9e436d2c6063321480aa4a3f
+          path: .dependencies/Legacy.Maliev.Workflows
+          persist-credentials: false
+          sparse-checkout: |
+            scripts/Invoke-JwtSigningResourceScan.ps1
+            scripts/JwtSigningResourceScanner.ps1
+          sparse-checkout-cone-mode: 'false'
+      - name: Scan tracked JWT and provider resources
+        timeout-minutes: 2
+        shell: pwsh
+        run: |-
+          $ErrorActionPreference = 'Stop'
+          $tools = Join-Path $env:GITHUB_WORKSPACE '.dependencies/Legacy.Maliev.Workflows/scripts'
+          foreach ($name in @('Invoke-JwtSigningResourceScan.ps1', 'JwtSigningResourceScanner.ps1')) {
+              if (-not (Test-Path -LiteralPath (Join-Path $tools $name) -PathType Leaf)) {
+                  [Console]::Error.WriteLine('[jwt-resource-scan] FAILED: trusted scanner unavailable; details redacted')
+                  exit 1
+              }
+          }
+          & (Join-Path $tools 'Invoke-JwtSigningResourceScan.ps1') -RepositoryPath $env:GITHUB_WORKSPACE
       - name: Validate .NET solution
         uses: MALIEV-Co-Ltd/Legacy.Maliev.Workflows/actions/dotnet-validate@73dd7304ffe85ec504389fd7664cc39070b9f148
         with:

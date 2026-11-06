@@ -11,6 +11,42 @@ from prove_attachment_name import CHANNELS, CLASS, FORMATS, LEGACY, MODERN, buil
 N = "{http://microsoft.com/schemas/VisualStudio/TeamTest/2010}"
 
 
+def source207_fixture_rows():
+    # Independent literal inventory of the approved C# cases, not the gate's roster.
+    caller = "Legacy.Maliev.NotificationService.Tests.Workflows.ProviderResourceGuardCallerTests"
+    workflow = "Legacy.Maliev.NotificationService.Tests.Workflows.WorkflowContractTests"
+    cases = []
+    method = "ActualCaller_RejectsTrackedRootResourceFromNestedDirectory"
+    for name in ("JwtSigningKey", "BrevoApiKey"):
+        for extension in (".resx", ".Designer.cs", ".xml"):
+            cases.append((caller, method, f'{caller}.{method}(name: "{name}", extension: "{extension}")'))
+    for method in (
+        "ActualCaller_AcceptsEmptyCredentialsAndOrdinaryNonCredentialResources",
+        "ActualCaller_IgnoresUntrackedResource",
+        "ActualCaller_RejectsMalformedTrackedResourceWithoutEchoingContents",
+        "ActualCaller_RejectsDeletedTrackedRootResource",
+        "ActualCaller_ExcludesSeparateUntrackedRepository",
+        "MetadataChild_TerminalBeforeExecutableObservationJoinsWithoutInventedIdentity",
+        "MetadataChild_LiveUnknownIdentityNeverSignalsAndJoinsAfterOwnedInputCloses",
+    ):
+        cases.append((caller, method, caller + "." + method))
+    method = "ActualCaller_FailsClosedWhenTrustedHelperIsMissing"
+    for script in ("Invoke-JwtSigningResourceScan.ps1", "JwtSigningResourceScanner.ps1"):
+        cases.append((caller, method, f'{caller}.{method}(script: "{script}")'))
+    method = "BuildAndTest_RejectsChangedProviderGuardProducerOrCaller"
+    for original, replacement in (
+        ("ref: 7a449b36fe5f4f7b9e436d2c6063321480aa4a3f", "ref: main"),
+        ("ref: 7a449b36fe5f4f7b9e436d2c6063321480aa4a3f", "ref: 73dd7304ffe85ec504389fd7664cc39070b9f148"),
+        ("path: .dependencies/Legacy.Maliev.Workflows", "path: .dependencies/unreviewed-guard"),
+        ("sparse-checkout-cone-mode: 'false'", "sparse-checkout-cone-mode: 'true'"),
+        ("-RepositoryPath $env:GITHUB_WORKSPACE", "-RepositoryPath $PSScriptRoot"),
+        ("timeout-minutes: 2\\n        shell: pwsh", "timeout-minutes: 20\\n        shell: pwsh"),
+    ):
+        cases.append((workflow, method, f'{workflow}.{method}(original: "{original}", replacement: "{replacement}")'))
+    assert len(cases) == len(set(cases)) == 21
+    return cases
+
+
 class AttachmentNameProofTests(unittest.TestCase):
     def test_group_exit_wait_is_bounded_and_never_terminates(self):
         clock = [0.0]
@@ -168,6 +204,8 @@ class AttachmentNameProofTests(unittest.TestCase):
         for row in inventory["rows"]:
             for _ in range(row["executions"]):
                 append(row["className"], row["method"], row["testName"])
+        for cls, method, name in source207_fixture_rows():
+            append(cls, method, name)
         observer = "Legacy.Maliev.NotificationService.Tests.Controllers.NotificationHostTransportHttpTests"
         for method in (
             "RegisteredHealth_IdentifiesOnlyTheServingHostWithoutSuccessfulProbeLogs",
@@ -177,7 +215,7 @@ class AttachmentNameProofTests(unittest.TestCase):
             append(observer, method, observer + "." + method)
         counters = root.find(".//" + N + "Counters")
         for name in ("total", "executed", "passed"):
-            counters.set(name, "350")
+            counters.set(name, "371")
         return root, inventory
 
     def check_full(self, root, inventory):
@@ -189,7 +227,8 @@ class AttachmentNameProofTests(unittest.TestCase):
     def test_full350_retains_all_frozen327_and_twenty_attachment_identities(self):
         root, inventory = self.full_fixture()
         rows = self.check_full(root, inventory)
-        self.assertEqual(350, len(rows))
+        self.assertEqual(371, len(rows))
+        self.assertEqual(350, len(rows) - len(source207_fixture_rows()))
         self.assertEqual(22, sum(row["class"] == "Legacy.Maliev.NotificationService.Tests.Controllers.NotificationHostTransportHttpTests"
                                  and not row["name"].endswith((
                                      ".RegisteredHealth_IdentifiesOnlyTheServingHostWithoutSuccessfulProbeLogs",
@@ -205,7 +244,7 @@ class AttachmentNameProofTests(unittest.TestCase):
                 definitions.remove(definitions[-1])
                 results.remove(results[-1])
                 for key in ("total", "executed", "passed"):
-                    root.find(".//" + N + "Counters").set(key, "349")
+                    root.find(".//" + N + "Counters").set(key, "370")
             elif mutation == "duplicate":
                 definitions[-1].set("name", definitions[-2].get("name"))
                 definitions[-1].find(N + "TestMethod").set("name", definitions[-2].find(N + "TestMethod").get("name"))
@@ -242,18 +281,18 @@ class AttachmentNameProofTests(unittest.TestCase):
             counters = root.find(".//" + N + "Counters")
             if mutation == "failed":
                 result.set("outcome", "Failed")
-                counters.set("passed", "349")
+                counters.set("passed", "370")
                 counters.set("failed", "1")
                 root.find(N + "ResultSummary").set("outcome", "Failed")
             elif mutation == "skipped":
                 result.set("outcome", "NotExecuted")
-                counters.set("passed", "349")
+                counters.set("passed", "370")
             elif mutation == "error-info":
                 ET.SubElement(ET.SubElement(result, N + "Output"), N + "ErrorInfo")
             elif mutation == "run-error":
                 ET.SubElement(ET.SubElement(root.find(N + "ResultSummary"), N + "RunInfos"), N + "RunInfo", outcome="Error")
             elif mutation == "counter":
-                counters.set("passed", "351")
+                counters.set("passed", "372")
             elif mutation == "nested-summary":
                 ET.SubElement(ET.SubElement(root, N + "Extension"), N + "ResultSummary", outcome="Failed")
             elif mutation == "nested-counter":
@@ -263,6 +302,57 @@ class AttachmentNameProofTests(unittest.TestCase):
                 ET.SubElement(ET.SubElement(root, N + "Extension"), N + name)
             with self.subTest(mutation=mutation), self.assertRaises(ValueError):
                 self.check_full(root, inventory)
+
+    def test_source207_requires_exact_twenty_one_new_tuples_and_every_old_identity(self):
+        for mutation in ("drop-old", "drop-new", "duplicate-new", "substitute-old", "argument-drift", "unknown-same-class", "extra"):
+            root, inventory = self.full_fixture()
+            definitions, results = root.find(N + "TestDefinitions"), root.find(N + "Results")
+            first_new = 20 + 327
+            if mutation.startswith("drop-"):
+                index = 20 if mutation == "drop-old" else first_new
+                definitions.remove(definitions[index])
+                results.remove(results[index])
+            elif mutation == "extra":
+                definition, result = deepcopy(definitions[first_new]), deepcopy(results[first_new])
+                definition.set("id", "unexpected-extra")
+                definition.find(N + "Execution").set("id", "unexpected-execution")
+                result.set("testId", "unexpected-extra")
+                result.set("executionId", "unexpected-execution")
+                definitions.append(definition)
+                results.append(result)
+            elif mutation in ("duplicate-new", "substitute-old"):
+                index = first_new + 1 if mutation == "duplicate-new" else 20
+                original = definitions[first_new]
+                definitions[index].set("name", original.get("name"))
+                for key in ("className", "name"):
+                    definitions[index].find(N + "TestMethod").set(key, original.find(N + "TestMethod").get(key))
+                results[index].set("testName", original.get("name"))
+            else:
+                definition = definitions[first_new]
+                method = definition.find(N + "TestMethod")
+                if mutation == "unknown-same-class":
+                    method.set("name", "UnreviewedAdditionalCase")
+                    name = method.get("className") + ".UnreviewedAdditionalCase"
+                else:
+                    name = definition.get("name").replace('name: "JwtSigningKey"', 'name: "ChangedKey"')
+                definition.set("name", name)
+                results[first_new].set("testName", name)
+            for key in ("total", "executed", "passed"):
+                root.find(".//" + N + "Counters").set(key, str(len(results)))
+            with self.subTest(mutation=mutation), self.assertRaises(ValueError):
+                self.check_full(root, inventory)
+
+    def test_historical350_is_not_successor371_and_inventory_stays327(self):
+        root, inventory = self.full_fixture()
+        definitions, results = root.find(N + "TestDefinitions"), root.find(N + "Results")
+        for _ in range(21):
+            definitions.remove(definitions[347])
+            results.remove(results[347])
+        for key in ("total", "executed", "passed"):
+            root.find(".//" + N + "Counters").set(key, "350")
+        self.assertEqual(327, sum(row["executions"] for row in inventory["rows"]))
+        with self.assertRaises(ValueError):
+            self.check_full(root, inventory)
 
 
 

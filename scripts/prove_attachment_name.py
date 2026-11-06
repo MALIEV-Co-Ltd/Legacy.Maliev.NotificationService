@@ -30,6 +30,29 @@ OBSERVER_METHODS = {
     "OrdinaryProviderFailure_RecordsOneHandledFailureWithoutHealthOrSyntheticIdentity",
 }
 OBSERVER_IDENTITIES = {(OBSERVER_CLASS, method, OBSERVER_CLASS + "." + method) for method in OBSERVER_METHODS}
+SOURCE207_IDENTITIES = frozenset({
+    ("Legacy.Maliev.NotificationService.Tests.Workflows.ProviderResourceGuardCallerTests", "ActualCaller_RejectsTrackedRootResourceFromNestedDirectory", "Legacy.Maliev.NotificationService.Tests.Workflows.ProviderResourceGuardCallerTests.ActualCaller_RejectsTrackedRootResourceFromNestedDirectory(name: \"JwtSigningKey\", extension: \".resx\")"),
+    ("Legacy.Maliev.NotificationService.Tests.Workflows.ProviderResourceGuardCallerTests", "ActualCaller_RejectsTrackedRootResourceFromNestedDirectory", "Legacy.Maliev.NotificationService.Tests.Workflows.ProviderResourceGuardCallerTests.ActualCaller_RejectsTrackedRootResourceFromNestedDirectory(name: \"JwtSigningKey\", extension: \".Designer.cs\")"),
+    ("Legacy.Maliev.NotificationService.Tests.Workflows.ProviderResourceGuardCallerTests", "ActualCaller_RejectsTrackedRootResourceFromNestedDirectory", "Legacy.Maliev.NotificationService.Tests.Workflows.ProviderResourceGuardCallerTests.ActualCaller_RejectsTrackedRootResourceFromNestedDirectory(name: \"JwtSigningKey\", extension: \".xml\")"),
+    ("Legacy.Maliev.NotificationService.Tests.Workflows.ProviderResourceGuardCallerTests", "ActualCaller_RejectsTrackedRootResourceFromNestedDirectory", "Legacy.Maliev.NotificationService.Tests.Workflows.ProviderResourceGuardCallerTests.ActualCaller_RejectsTrackedRootResourceFromNestedDirectory(name: \"BrevoApiKey\", extension: \".resx\")"),
+    ("Legacy.Maliev.NotificationService.Tests.Workflows.ProviderResourceGuardCallerTests", "ActualCaller_RejectsTrackedRootResourceFromNestedDirectory", "Legacy.Maliev.NotificationService.Tests.Workflows.ProviderResourceGuardCallerTests.ActualCaller_RejectsTrackedRootResourceFromNestedDirectory(name: \"BrevoApiKey\", extension: \".Designer.cs\")"),
+    ("Legacy.Maliev.NotificationService.Tests.Workflows.ProviderResourceGuardCallerTests", "ActualCaller_RejectsTrackedRootResourceFromNestedDirectory", "Legacy.Maliev.NotificationService.Tests.Workflows.ProviderResourceGuardCallerTests.ActualCaller_RejectsTrackedRootResourceFromNestedDirectory(name: \"BrevoApiKey\", extension: \".xml\")"),
+    ("Legacy.Maliev.NotificationService.Tests.Workflows.ProviderResourceGuardCallerTests", "ActualCaller_AcceptsEmptyCredentialsAndOrdinaryNonCredentialResources", "Legacy.Maliev.NotificationService.Tests.Workflows.ProviderResourceGuardCallerTests.ActualCaller_AcceptsEmptyCredentialsAndOrdinaryNonCredentialResources"),
+    ("Legacy.Maliev.NotificationService.Tests.Workflows.ProviderResourceGuardCallerTests", "ActualCaller_IgnoresUntrackedResource", "Legacy.Maliev.NotificationService.Tests.Workflows.ProviderResourceGuardCallerTests.ActualCaller_IgnoresUntrackedResource"),
+    ("Legacy.Maliev.NotificationService.Tests.Workflows.ProviderResourceGuardCallerTests", "ActualCaller_RejectsMalformedTrackedResourceWithoutEchoingContents", "Legacy.Maliev.NotificationService.Tests.Workflows.ProviderResourceGuardCallerTests.ActualCaller_RejectsMalformedTrackedResourceWithoutEchoingContents"),
+    ("Legacy.Maliev.NotificationService.Tests.Workflows.ProviderResourceGuardCallerTests", "ActualCaller_RejectsDeletedTrackedRootResource", "Legacy.Maliev.NotificationService.Tests.Workflows.ProviderResourceGuardCallerTests.ActualCaller_RejectsDeletedTrackedRootResource"),
+    ("Legacy.Maliev.NotificationService.Tests.Workflows.ProviderResourceGuardCallerTests", "ActualCaller_ExcludesSeparateUntrackedRepository", "Legacy.Maliev.NotificationService.Tests.Workflows.ProviderResourceGuardCallerTests.ActualCaller_ExcludesSeparateUntrackedRepository"),
+    ("Legacy.Maliev.NotificationService.Tests.Workflows.ProviderResourceGuardCallerTests", "MetadataChild_TerminalBeforeExecutableObservationJoinsWithoutInventedIdentity", "Legacy.Maliev.NotificationService.Tests.Workflows.ProviderResourceGuardCallerTests.MetadataChild_TerminalBeforeExecutableObservationJoinsWithoutInventedIdentity"),
+    ("Legacy.Maliev.NotificationService.Tests.Workflows.ProviderResourceGuardCallerTests", "MetadataChild_LiveUnknownIdentityNeverSignalsAndJoinsAfterOwnedInputCloses", "Legacy.Maliev.NotificationService.Tests.Workflows.ProviderResourceGuardCallerTests.MetadataChild_LiveUnknownIdentityNeverSignalsAndJoinsAfterOwnedInputCloses"),
+    ("Legacy.Maliev.NotificationService.Tests.Workflows.ProviderResourceGuardCallerTests", "ActualCaller_FailsClosedWhenTrustedHelperIsMissing", "Legacy.Maliev.NotificationService.Tests.Workflows.ProviderResourceGuardCallerTests.ActualCaller_FailsClosedWhenTrustedHelperIsMissing(script: \"Invoke-JwtSigningResourceScan.ps1\")"),
+    ("Legacy.Maliev.NotificationService.Tests.Workflows.ProviderResourceGuardCallerTests", "ActualCaller_FailsClosedWhenTrustedHelperIsMissing", "Legacy.Maliev.NotificationService.Tests.Workflows.ProviderResourceGuardCallerTests.ActualCaller_FailsClosedWhenTrustedHelperIsMissing(script: \"JwtSigningResourceScanner.ps1\")"),
+    ("Legacy.Maliev.NotificationService.Tests.Workflows.WorkflowContractTests", "BuildAndTest_RejectsChangedProviderGuardProducerOrCaller", "Legacy.Maliev.NotificationService.Tests.Workflows.WorkflowContractTests.BuildAndTest_RejectsChangedProviderGuardProducerOrCaller(original: \"ref: 7a449b36fe5f4f7b9e436d2c6063321480aa4a3f\", replacement: \"ref: main\")"),
+    ("Legacy.Maliev.NotificationService.Tests.Workflows.WorkflowContractTests", "BuildAndTest_RejectsChangedProviderGuardProducerOrCaller", "Legacy.Maliev.NotificationService.Tests.Workflows.WorkflowContractTests.BuildAndTest_RejectsChangedProviderGuardProducerOrCaller(original: \"ref: 7a449b36fe5f4f7b9e436d2c6063321480aa4a3f\", replacement: \"ref: 73dd7304ffe85ec504389fd7664cc39070b9f148\")"),
+    ("Legacy.Maliev.NotificationService.Tests.Workflows.WorkflowContractTests", "BuildAndTest_RejectsChangedProviderGuardProducerOrCaller", "Legacy.Maliev.NotificationService.Tests.Workflows.WorkflowContractTests.BuildAndTest_RejectsChangedProviderGuardProducerOrCaller(original: \"path: .dependencies/Legacy.Maliev.Workflows\", replacement: \"path: .dependencies/unreviewed-guard\")"),
+    ("Legacy.Maliev.NotificationService.Tests.Workflows.WorkflowContractTests", "BuildAndTest_RejectsChangedProviderGuardProducerOrCaller", "Legacy.Maliev.NotificationService.Tests.Workflows.WorkflowContractTests.BuildAndTest_RejectsChangedProviderGuardProducerOrCaller(original: \"sparse-checkout-cone-mode: 'false'\", replacement: \"sparse-checkout-cone-mode: 'true'\")"),
+    ("Legacy.Maliev.NotificationService.Tests.Workflows.WorkflowContractTests", "BuildAndTest_RejectsChangedProviderGuardProducerOrCaller", "Legacy.Maliev.NotificationService.Tests.Workflows.WorkflowContractTests.BuildAndTest_RejectsChangedProviderGuardProducerOrCaller(original: \"-RepositoryPath $env:GITHUB_WORKSPACE\", replacement: \"-RepositoryPath $PSScriptRoot\")"),
+    ("Legacy.Maliev.NotificationService.Tests.Workflows.WorkflowContractTests", "BuildAndTest_RejectsChangedProviderGuardProducerOrCaller", "Legacy.Maliev.NotificationService.Tests.Workflows.WorkflowContractTests.BuildAndTest_RejectsChangedProviderGuardProducerOrCaller(original: \"timeout-minutes: 2\\n        shell: pwsh\", replacement: \"timeout-minutes: 20\\n        shell: pwsh\")"),
+})
 
 
 def require(condition, message):
@@ -125,11 +148,15 @@ def verify_full(path, inventory):
     require(not tree.findall(".//t:ErrorInfo", NS)
             and not any(info.get("outcome") in {"Error", "Failed"} for info in tree.findall(".//t:RunInfo", NS)),
             "Full suite contains an error notice")
-    require(len(rows) == 350 and all(r["outcome"] == "Passed" and not r["errorInfo"] for r in rows), "Full suite must pass all 350")
+    require(len(rows) == 371 and all(r["outcome"] == "Passed" and not r["errorInfo"] for r in rows), "Full suite must pass all 371")
     identity = lambda row: (row["class"], row["method"], row["name"])
     observers = Counter(identity(row) for row in rows if identity(row) in OBSERVER_IDENTITIES)
     require(observers == Counter({key: 1 for key in OBSERVER_IDENTITIES}), "Full suite changed exact three observer identities")
-    prior = Counter(identity(row) for row in rows if row["class"] != CLASS and identity(row) not in OBSERVER_IDENTITIES)
+    source207 = Counter(identity(row) for row in rows if identity(row) in SOURCE207_IDENTITIES)
+    require(len(SOURCE207_IDENTITIES) == 21 and source207 == Counter({key: 1 for key in SOURCE207_IDENTITIES}),
+            "Full suite changed exact twenty-one source207 identities")
+    prior = Counter(identity(row) for row in rows if row["class"] != CLASS
+                    and identity(row) not in OBSERVER_IDENTITIES and identity(row) not in SOURCE207_IDENTITIES)
     expected = Counter({(r["className"], r["method"], r["testName"]): r["executions"] for r in inventory["rows"]})
     require(sum(expected.values()) == 327 and prior == expected, "Full suite changed accepted 327 identities")
     verify_focus_rows([r for r in rows if r["class"] == CLASS], False)
