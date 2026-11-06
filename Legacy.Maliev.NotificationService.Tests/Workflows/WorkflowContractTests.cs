@@ -38,6 +38,16 @@ public sealed class WorkflowContractTests
         AssertMutationRejected("python3 -B -m unittest discover -s scripts -p test_prove_attachment_name.py", "echo skipped causal controls");
     }
 
+    [Theory]
+    [InlineData("ref: 7a449b36fe5f4f7b9e436d2c6063321480aa4a3f", "ref: main")]
+    [InlineData("ref: 7a449b36fe5f4f7b9e436d2c6063321480aa4a3f", "ref: 73dd7304ffe85ec504389fd7664cc39070b9f148")]
+    [InlineData("path: .dependencies/Legacy.Maliev.Workflows", "path: .dependencies/unreviewed-guard")]
+    [InlineData("sparse-checkout-cone-mode: 'false'", "sparse-checkout-cone-mode: 'true'")]
+    [InlineData("-RepositoryPath $env:GITHUB_WORKSPACE", "-RepositoryPath $PSScriptRoot")]
+    [InlineData("timeout-minutes: 2\n        shell: pwsh", "timeout-minutes: 20\n        shell: pwsh")]
+    public void BuildAndTest_RejectsChangedProviderGuardProducerOrCaller(string original, string replacement) =>
+        AssertMutationRejected(original, replacement);
+
     [Fact]
     public void BuildAndTest_RejectsSharedActionMainWithPinnedShaComment()
     {
@@ -235,6 +245,17 @@ internal static partial class WorkflowContractValidator
     internal const string AccountingSourceRevision = "a0e65818cd33ef1cdf71227bbc37f6df638d9fab";
     private const string CheckoutAction = "actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1";
     private const string SharedValidationAction = "MALIEV-Co-Ltd/Legacy.Maliev.Workflows/actions/dotnet-validate@73dd7304ffe85ec504389fd7664cc39070b9f148";
+    private const string ProviderGuardRun = """
+        $ErrorActionPreference = 'Stop'
+        $tools = Join-Path $env:GITHUB_WORKSPACE '.dependencies/Legacy.Maliev.Workflows/scripts'
+        foreach ($name in @('Invoke-JwtSigningResourceScan.ps1', 'JwtSigningResourceScanner.ps1')) {
+            if (-not (Test-Path -LiteralPath (Join-Path $tools $name) -PathType Leaf)) {
+                [Console]::Error.WriteLine('[jwt-resource-scan] FAILED: trusted scanner unavailable; details redacted')
+                exit 1
+            }
+        }
+        & (Join-Path $tools 'Invoke-JwtSigningResourceScan.ps1') -RepositoryPath $env:GITHUB_WORKSPACE
+        """;
 
     public static void Validate(string workflow)
     {
@@ -280,9 +301,9 @@ internal static partial class WorkflowContractValidator
         RejectDuplicatedValidationActionsAndCommands(jobs);
 
         var steps = RequireSequence(validateJob, "steps");
-        if (steps.Children.Count != 11)
+        if (steps.Children.Count != 13)
         {
-            throw new InvalidOperationException("Validate job must contain five checkouts, consumer verification, bounded image preload, validation, bounded causal proof and two evidence steps.");
+            throw new InvalidOperationException("Validate job must retain its eleven validation steps and exactly two pinned provider guard steps.");
         }
 
         var environment = RequireMapping(validateJob, "env");
@@ -296,7 +317,7 @@ internal static partial class WorkflowContractValidator
         RequireScalarValue(environment, "VSTestLogger", "trx");
         RequireScalarValue(environment, "VSTestResultsDirectory", "${{ github.workspace }}/runner-results");
 
-        var causal = RequireMapping(steps.Children[8], "causal proof");
+        var causal = RequireMapping(steps.Children[10], "causal proof");
         if (causal.Children.Count != 3)
         {
             throw new InvalidOperationException("Causal proof must contain only name, bounded timeout and exact run.");
@@ -305,7 +326,7 @@ internal static partial class WorkflowContractValidator
         RequireScalarValue(causal, "name", "Prove legacy attachment filename correction causally");
         RequireScalarValue(causal, "timeout-minutes", "20");
         RequireScalarValue(causal, "run", "python3 -B -m unittest discover -s scripts -p test_prove_attachment_name.py\npython3 -B scripts/prove_attachment_name.py runner-results");
-        var gate = RequireMapping(steps.Children[9], "coverage gate");
+        var gate = RequireMapping(steps.Children[11], "coverage gate");
         if (gate.Children.Count != 2)
         {
             throw new InvalidOperationException("Coverage gate must contain only name and run.");
@@ -313,7 +334,7 @@ internal static partial class WorkflowContractValidator
 
         RequireScalarValue(gate, "name", "Gate owned production coverage");
         RequireScalarValue(gate, "run", "python3 scripts/verify-runner-coverage.py runner-results");
-        var evidence = RequireMapping(steps.Children[10], "evidence upload");
+        var evidence = RequireMapping(steps.Children[12], "evidence upload");
         if (evidence.Children.Count != 4)
         {
             throw new InvalidOperationException("Evidence upload must contain exactly name, if, uses and with.");
@@ -394,6 +415,25 @@ internal static partial class WorkflowContractValidator
         RequireScalarValue(preload, "run", "python3 -m unittest discover -s scripts -p test_preload_postgres_image.py -v\npython3 scripts/preload-postgres-image.py\n");
         ValidateStep(
             steps.Children[7],
+            CheckoutAction,
+            new Dictionary<string, string>(StringComparer.Ordinal)
+            {
+                ["repository"] = "MALIEV-Co-Ltd/Legacy.Maliev.Workflows",
+                ["ref"] = "7a449b36fe5f4f7b9e436d2c6063321480aa4a3f",
+                ["path"] = ".dependencies/Legacy.Maliev.Workflows",
+                ["persist-credentials"] = "false",
+                ["sparse-checkout"] = "scripts/Invoke-JwtSigningResourceScan.ps1\nscripts/JwtSigningResourceScanner.ps1\n",
+                ["sparse-checkout-cone-mode"] = "false",
+            });
+        var providerGuard = RequireMapping(steps.Children[8], "provider resource guard");
+        if (providerGuard.Children.Count != 4)
+            throw new InvalidOperationException("Provider guard must contain only name, bounded timeout, shell and exact run.");
+        RequireScalarValue(providerGuard, "name", "Scan tracked JWT and provider resources");
+        RequireScalarValue(providerGuard, "timeout-minutes", "2");
+        RequireScalarValue(providerGuard, "shell", "pwsh");
+        RequireScalarValue(providerGuard, "run", ProviderGuardRun);
+        ValidateStep(
+            steps.Children[9],
             SharedValidationAction,
             new Dictionary<string, string>(StringComparer.Ordinal)
             {
