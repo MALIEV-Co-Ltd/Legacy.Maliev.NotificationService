@@ -21,7 +21,7 @@ RUN dotnet publish Legacy.Maliev.NotificationService.Api/Legacy.Maliev.Notificat
     --configuration Release --no-restore --output /app /p:UseAppHost=false \
     -p:MalievWorkspaceRoot=/dependencies
 
-FROM mcr.microsoft.com/dotnet/aspnet:10.0 AS runtime
+FROM mcr.microsoft.com/dotnet/aspnet:11.0 AS runtime
 WORKDIR /app
 COPY --from=build --chown=$APP_UID:$APP_UID /app .
 USER $APP_UID
