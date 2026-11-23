@@ -29,7 +29,7 @@ gitleaks git . --redact=100 --exit-code 0 --no-banner --no-color
 
 ## Service conventions
 
-- Runtime: .NET 10.
+- Runtime: .NET 11.
 - OpenAPI UI: Scalar through `Legacy.Maliev.ServiceDefaults` (compatibility namespace retained); no Swashbuckle.
 - Logging: built-in `ILogger<T>` only; do not reintroduce `Maliev.LoggerService`.
 - Auth: legacy `/Emails/*` endpoints remain authenticated.

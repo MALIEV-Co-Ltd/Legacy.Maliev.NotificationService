@@ -25,7 +25,7 @@ try
     builder.AddNotificationHostTransportPolicy();
     builder.AddStandardOpenApi(
         title: "Legacy MALIEV Notification Service API",
-        description: "Temporary .NET 10 compatibility service preserving the legacy email notification API contract.");
+        description: "Temporary .NET 11 compatibility service preserving the legacy email notification API contract.");
     // Literal registrations let the API compilation attach its generated XML documentation transformers.
     builder.Services.AddOpenApi("v1");
     builder.Services.AddOpenApi("v2");
